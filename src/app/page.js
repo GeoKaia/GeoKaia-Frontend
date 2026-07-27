@@ -24,7 +24,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center p-8 bg-gray-50">
       <header className="mb-8 w-full max-w-5xl text-center">
         <h1 className="text-4xl font-bold text-green-600 mb-4">
-          GeoKaia Frontend 🌿
+          GeoKaia Frontend 
         </h1>
         <p className="text-lg text-gray-700 bg-white px-6 py-3 rounded-lg shadow-sm inline-block">
           Estado del servidor: <span className="font-semibold">{mensaje}</span>

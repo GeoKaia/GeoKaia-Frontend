@@ -1,3 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #B8722E;
+  --color-secondary: #D9A15B;
+  --color-accent: #1B5A6B;
+  --color-accent-dark: #0F3D4A;
+  --color-brand-bg: #ffffff;
+  --color-brand-text: #2B2B2B;
+}
+
+@keyframes pin-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.pin-premium {
+  animation: pin-pulse 1.6s ease-in-out infinite;
+}

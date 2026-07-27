@@ -1,0 +1,90 @@
+import { CATEGORIAS } from '@/lib/api';
+
+export default function PlaceCard({ lugar }) {
+  const cat = CATEGORIAS[lugar.categoria] || { label: lugar.categoria, emoji: '📍' };
+  const esPremium = lugar.tier === 'PREMIUM';
+
+  const urlWaze = `https://waze.com/ul?ll=${lugar.latitud},${lugar.longitud}&navigate=yes`;
+  const urlGoogleMaps = `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
+  const urlWhatsapp = lugar.whatsapp
+    ? `https://wa.me/${lugar.whatsapp.replace(/\D/g, '')}`
+    : null;
+
+  return (
+    <div className="w-56 text-brand-text">
+      {lugar.fotoUrl && (
+        <img
+          src={lugar.fotoUrl}
+          alt={lugar.nombre}
+          className="w-full h-28 object-cover rounded-md mb-2"
+        />
+      )}
+
+      <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1 text-white"
+            style={{ backgroundColor: cat.color }}>
+        {cat.emoji} {cat.label}
+      </span>
+
+      <h3 className="font-bold text-base leading-tight">{lugar.nombre}</h3>
+      <p className="text-sm text-gray-600 mt-1 line-clamp-3">{lugar.descripcion}</p>
+
+      {lugar.horarios && (
+        <p className="text-xs text-gray-500 mt-1">🕒 {lugar.horarios}</p>
+      )}
+
+      <div className="flex flex-wrap gap-2 mt-3">
+        <a
+          href={urlGoogleMaps}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs px-2 py-1 rounded bg-accent !text-white hover:opacity-90"
+        >
+          Google Maps
+        </a>
+        <a
+          href={urlWaze}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs px-2 py-1 rounded bg-accent-dark !text-white hover:opacity-90"
+        >
+          Waze
+        </a>
+      </div>
+
+      {esPremium && (
+        <div className="flex flex-wrap gap-2 mt-2 border-t border-gray-100 pt-2">
+          {urlWhatsapp && (
+            <a
+              href={urlWhatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs px-2 py-1 rounded bg-primary !text-white hover:opacity-90"
+            >
+              WhatsApp
+            </a>
+          )}
+          {lugar.menuUrl && (
+            <a
+              href={lugar.menuUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs px-2 py-1 rounded bg-secondary !text-brand-text hover:opacity-90"
+            >
+              Ver menú
+            </a>
+          )}
+          {lugar.panoramaUrl && (
+            <a
+              href={lugar.panoramaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs px-2 py-1 rounded border border-accent !text-accent hover:bg-accent hover:!text-white"
+            >
+              Ver en 360°
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
