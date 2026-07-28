@@ -1,40 +1,71 @@
-"use client"; 
+"use client";
 
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import ChatKaia from "@/components/ChatKaia";
 
 // Importación dinámica apagando el SSR para evitar el error 'window is undefined' de Leaflet
-const MapaBase = dynamic(() => import('@/components/MapaBase'), {
+const MapaBase = dynamic(() => import("@/components/MapaBase"), {
   ssr: false,
-  loading: () => <p className="p-4 text-center text-gray-500 animate-pulse">Cargando mapa interactivo...</p>
+  loading: () => (
+    <p className="p-4 text-center text-brand-text/60 animate-pulse">
+      Cargando mapa interactivo...
+    </p>
+  ),
 });
 
-export default function Home() {
-  const [mensaje, setMensaje] = useState('Cargando conexión con el backend...');
-
-  useEffect(() => {
-    // Ping a la ruta base del backend (actualizado a producción)
-    fetch('https://geokaia-backend.onrender.com/')
-      .then((res) => res.json())
-      .then((data) => setMensaje(data.mensaje))
-      .catch(() => setMensaje('Error conectando al backend ❌. ¿Está encendido?'));
-  }, []);
-
+function BotonNav({ href, color, textColor = "#ffffff", icono, children }) {
   return (
-    <main className="flex min-h-screen flex-col items-center p-8 bg-gray-50">
-      <header className="mb-8 w-full max-w-5xl text-center">
-        <h1 className="text-4xl font-bold text-green-600 mb-4">
-          GeoKaia Frontend 
-        </h1>
-        <p className="text-lg text-gray-700 bg-white px-6 py-3 rounded-lg shadow-sm inline-block">
-          Estado del servidor: <span className="font-semibold">{mensaje}</span>
-        </p>
-      </header>
+    <Link
+      href={href}
+      className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
+      style={{ backgroundColor: color, color: textColor }}
+    >
+      <span>{icono}</span>
+      {children}
+    </Link>
+  );
+}
 
-      {/* Contenedor del Mapa */}
-      <section className="w-full max-w-5xl mx-auto bg-white p-2 rounded-xl shadow-md border border-gray-100">
-        <MapaBase />
-      </section>
-    </main>
+export default function Home() {
+  return (
+    <div className="flex min-h-screen flex-col bg-brand-bg">
+      <Header />
+
+      <main className="flex-1 flex flex-col items-center gap-6 py-6">
+        <ChatKaia />
+
+        <div className="w-full max-w-2xl flex gap-3 px-4">
+          <BotonNav href="/rutas" color="var(--color-primary)" icono="📍">
+            Lista de recorridos
+          </BotonNav>
+          <BotonNav href="/destacados" color="var(--color-accent-dark)" icono="⭐">
+            Lugares Destacados
+          </BotonNav>
+        </div>
+
+        <section className="w-full max-w-4xl px-4">
+          <h2 className="text-center text-sm font-semibold text-brand-text/70 mb-2">
+            Explorá Nicaragua — Mapa de lugares
+          </h2>
+          <div className="bg-white p-2 rounded-xl shadow-md border border-secondary/30">
+            <MapaBase />
+          </div>
+        </section>
+
+        <div className="w-full max-w-2xl flex gap-3 px-4">
+          <BotonNav href="/sobre" color="var(--color-secondary)" textColor="var(--color-brand-text)" icono="📖">
+            Sobre GeoKaia
+          </BotonNav>
+          <BotonNav href="/negocios" color="var(--color-accent)" icono="🏪">
+            Para Negocios
+          </BotonNav>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
