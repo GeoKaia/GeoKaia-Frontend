@@ -1,16 +1,16 @@
-// Paleta extendida en armonía con la de marca (terracota/dorado/teal), para darle
-// un color distinto a cada subcategoria sin quedar atados a los 4 colores de Diana.
+// Paleta extendida en armonía con la de marca oficial (terracota/teal/marrón), para darle
+// un color distinto a cada subcategoria sin quedar atados a los 4 colores de acento del logo.
 const PALETA_EXTENDIDA = [
-  '#B8722E', // terracota (primario)
-  '#1B5A6B', // teal (acento)
-  '#D9A15B', // dorado (secundario)
-  '#6B8E4E', // verde selva
-  '#A6443C', // rojo volcánico
-  '#0F3D4A', // teal oscuro
-  '#C9A227', // mostaza
-  '#4A7C82', // verde agua / laguna
-  '#8B5E83', // ciruela
-  '#7A5C3E', // tierra
+  '#AC6727', // terracota (primario)
+  '#10546F', // teal oscuro (acento)
+  '#2989A3', // teal claro
+  '#6B8548', // verde selva
+  '#9C4A3C', // rojo volcánico
+  '#3A2B1D', // marrón (texto)
+  '#C89B3C', // mostaza
+  '#4F7A72', // verde agua / laguna
+  '#7D5A73', // ciruela
+  '#BCB1A1', // gris cálido
 ];
 
 function hashTexto(texto) {
