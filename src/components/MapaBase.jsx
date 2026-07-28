@@ -1,7 +1,7 @@
 'use client'; // Le dice a Next.js que esto corre estrictamente en el cliente
 
 import { useEffect, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { obtenerLugares, CATEGORIAS } from '@/lib/api';
@@ -33,7 +33,18 @@ function crearIcono(lugar) {
   });
 }
 
-export default function MapaBase() {
+// Ajusta el encuadre del mapa a los puntos de una ruta (se usa desde /rutas/[id]).
+function EncuadrarRuta({ posiciones }) {
+  const map = useMap();
+  useEffect(() => {
+    if (posiciones.length > 0) {
+      map.fitBounds(posiciones, { padding: [40, 40], maxZoom: 12 });
+    }
+  }, [map, posiciones]);
+  return null;
+}
+
+export default function MapaBase({ lugaresIniciales, rutaParadas, mostrarLeyenda = true }) {
   // Coordenadas base (ej. apuntando a Managua/Chiltepe)
   const posicionInicial = [12.1364, -86.2514];
 
@@ -43,19 +54,26 @@ export default function MapaBase() {
     [15.3, -82.2],
   ];
 
-  const [lugares, setLugares] = useState([]);
+  const [lugares, setLugares] = useState(lugaresIniciales ?? []);
   const [subcategoriaActiva, setSubcategoriaActiva] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Si nos pasan los lugares ya armados (ej. los de una ruta puntual), no pedimos todo el catálogo.
+    if (lugaresIniciales) return;
     obtenerLugares()
       .then(setLugares)
       .catch((err) => setError(err.message));
-  }, []);
+  }, [lugaresIniciales]);
 
   const lugaresVisibles = useMemo(
     () => (subcategoriaActiva ? lugares.filter((l) => l.subcategoria === subcategoriaActiva) : lugares),
     [lugares, subcategoriaActiva]
+  );
+
+  const posicionesRuta = useMemo(
+    () => (rutaParadas || []).map((l) => [l.latitud, l.longitud]),
+    [rutaParadas]
   );
 
   return (
@@ -80,6 +98,11 @@ export default function MapaBase() {
           url="https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=Msq4y0V1N90b6dRGfSR6"
         />
 
+        {posicionesRuta.length > 1 && (
+          <Polyline positions={posicionesRuta} pathOptions={{ color: '#10546F', weight: 3, dashArray: '6 8' }} />
+        )}
+        {posicionesRuta.length > 0 && <EncuadrarRuta posiciones={posicionesRuta} />}
+
         {lugaresVisibles.map((lugar) => (
           <Marker
             key={lugar.id}
@@ -93,11 +116,13 @@ export default function MapaBase() {
         ))}
       </MapContainer>
 
-      <LeyendaMapa
-        lugares={lugares}
-        seleccionada={subcategoriaActiva}
-        onSeleccionar={setSubcategoriaActiva}
-      />
+      {mostrarLeyenda && (
+        <LeyendaMapa
+          lugares={lugares}
+          seleccionada={subcategoriaActiva}
+          onSeleccionar={setSubcategoriaActiva}
+        />
+      )}
     </div>
   );
 }

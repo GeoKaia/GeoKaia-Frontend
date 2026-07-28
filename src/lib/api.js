@@ -30,6 +30,21 @@ export function obtenerLugares() {
   return apiFetch("/api/lugares", { cache: "no-store" });
 }
 
+// --- Rutas (público) ---
+
+export function obtenerRutas() {
+  return apiFetch("/api/rutas", { cache: "no-store" });
+}
+
+// --- IA / chat de Kaia (público) ---
+
+export function recomendarRuta(consulta) {
+  return apiFetch("/api/ia/recomendar-ruta", {
+    method: "POST",
+    body: JSON.stringify({ consulta }),
+  });
+}
+
 // --- Panel de negocio (requiere JWT) ---
 
 export function obtenerMiLugar(token) {
