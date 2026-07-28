@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #B8722E;
-  --color-secondary: #D9A15B;
-  --color-accent: #1B5A6B;
-  --color-accent-dark: #0F3D4A;
+  --color-primary: #AC6727;
+  --color-secondary: #BCB1A1;
+  --color-accent: #2989A3;
+  --color-accent-dark: #10546F;
   --color-brand-bg: #ffffff;
-  --color-brand-text: #2B2B2B;
+  --color-brand-text: #3A2B1D;
 }
 
 @keyframes pin-pulse {

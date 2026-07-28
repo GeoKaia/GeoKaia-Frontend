@@ -1,12 +1,12 @@
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://geokaia-backend.onrender.com";
 
-// La paleta de Diana solo trae 4 colores para 5 categorías -> ARTESANIA reutiliza el secundario.
+// La paleta oficial (con logo) solo trae 4 colores de acento para 5 categorías -> ARTESANIA reutiliza GASTRONOMIA.
 export const CATEGORIAS = {
-  GASTRONOMIA: { label: "Gastronomía", color: "#B8722E", emoji: "🍽️" },
-  CULTURA: { label: "Cultura", color: "#1B5A6B", emoji: "🎭" },
-  NATURALEZA: { label: "Naturaleza", color: "#0F3D4A", emoji: "🌋" },
-  HISTORIA: { label: "Historia", color: "#D9A15B", emoji: "🏛️" },
-  ARTESANIA: { label: "Artesanía", color: "#D9A15B", emoji: "🧺" },
+  GASTRONOMIA: { label: "Gastronomía", color: "#AC6727", emoji: "🍽️" },
+  CULTURA: { label: "Cultura", color: "#2989A3", emoji: "🎭" },
+  NATURALEZA: { label: "Naturaleza", color: "#10546F", emoji: "🌋" },
+  HISTORIA: { label: "Historia", color: "#BCB1A1", emoji: "🏛️" },
+  ARTESANIA: { label: "Artesanía", color: "#AC6727", emoji: "🧺" },
 };
 
 async function apiFetch(path, options = {}) {
