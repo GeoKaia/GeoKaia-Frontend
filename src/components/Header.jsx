@@ -1,7 +1,17 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { obtenerToken } from "@/lib/auth";
 
 export default function Header() {
+  const [logueado, setLogueado] = useState(false);
+
+  useEffect(() => {
+    setLogueado(!!obtenerToken());
+  }, []);
+
   return (
     <header className="w-full flex items-center justify-between px-4 py-3 bg-white border-b border-secondary/30">
       <Link href="/" className="flex items-center gap-2">
@@ -18,9 +28,9 @@ export default function Header() {
 
       <div className="flex items-center gap-3">
         <Link
-          href="/negocio/login"
-          aria-label="Ingreso de negocios"
-          title="Ingreso de negocios"
+          href={logueado ? "/panel-negocio" : "/negocio/login"}
+          aria-label={logueado ? "Mi panel de negocio" : "Ingreso de negocios"}
+          title={logueado ? "Mi panel de negocio" : "Ingreso de negocios"}
           className="w-9 h-9 rounded-full border border-accent-dark text-accent-dark flex items-center justify-center hover:bg-accent-dark hover:text-white transition-colors"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

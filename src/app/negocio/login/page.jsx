@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { loginNegocio, verificar2FA } from "@/lib/api";
 import { guardarToken } from "@/lib/auth";
 
 export default function LoginNegocioPage() {
+  const router = useRouter();
   const [step, setStep] = useState("credenciales"); // 'credenciales' | 'codigo' | 'listo'
   const [credenciales, setCredenciales] = useState({ email: "", password: "" });
   const [negocioId, setNegocioId] = useState(null);
@@ -67,9 +69,15 @@ export default function LoginNegocioPage() {
           <h1 className="mb-2 text-2xl font-bold text-[#0F3D4A]">
             ¡Sesión iniciada!
           </h1>
-          <p className="text-sm text-[#2B2B2B]/70">
+          <p className="text-sm text-[#2B2B2B]/70 mb-6">
             Tu sesión es válida por 8 horas. Ya podés acceder al panel de tu negocio.
           </p>
+          <button
+            onClick={() => router.push("/panel-negocio")}
+            className="rounded-lg bg-[#B8722E] px-4 py-2.5 font-semibold text-white transition hover:bg-[#0F3D4A]"
+          >
+            Ir a mi panel
+          </button>
         </div>
       </main>
     );
