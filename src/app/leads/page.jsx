@@ -58,11 +58,11 @@ export default function LeadsPage() {
   if (enviado) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-        <div className="w-full max-w-md rounded-xl border border-[#D9A15B]/40 bg-white p-8 text-center shadow-lg">
-          <h1 className="mb-2 text-2xl font-bold text-[#0F3D4A]">
+        <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 text-center shadow-lg">
+          <h1 className="mb-2 text-2xl font-bold text-accent-dark">
             ¡Gracias por tu interés!
           </h1>
-          <p className="text-sm text-[#2B2B2B]/70">
+          <p className="text-sm text-brand-text/70">
             Nuestro equipo se va a poner en contacto por WhatsApp para contarte
             más sobre el plan premium de GeoKaia.
           </p>
@@ -73,17 +73,17 @@ export default function LeadsPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-md rounded-xl border border-[#D9A15B]/40 bg-white p-8 shadow-lg">
-        <h1 className="mb-1 text-2xl font-bold text-[#0F3D4A]">
+      <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 shadow-lg">
+        <h1 className="mb-1 text-2xl font-bold text-accent-dark">
           Quiero saber más
         </h1>
-        <p className="mb-6 text-sm text-[#2B2B2B]/70">
+        <p className="mb-6 text-sm text-brand-text/70">
           Dejanos tus datos y te contactamos sobre el plan premium para tu negocio.
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label htmlFor="nombreNegocio" className="mb-1 block text-sm font-medium text-[#2B2B2B]">
+            <label htmlFor="nombreNegocio" className="mb-1 block text-sm font-medium text-brand-text">
               Nombre del negocio
             </label>
             <input
@@ -92,13 +92,13 @@ export default function LeadsPage() {
               type="text"
               value={form.nombreNegocio}
               onChange={handleChange}
-              className="w-full rounded-lg border border-[#D9A15B]/50 px-3 py-2 text-[#2B2B2B] outline-none focus:border-[#B8722E] focus:ring-1 focus:ring-[#B8722E]"
+              className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               placeholder="Mi negocio"
             />
           </div>
 
           <div>
-            <label htmlFor="nombreContacto" className="mb-1 block text-sm font-medium text-[#2B2B2B]">
+            <label htmlFor="nombreContacto" className="mb-1 block text-sm font-medium text-brand-text">
               Nombre de contacto
             </label>
             <input
@@ -107,13 +107,13 @@ export default function LeadsPage() {
               type="text"
               value={form.nombreContacto}
               onChange={handleChange}
-              className="w-full rounded-lg border border-[#D9A15B]/50 px-3 py-2 text-[#2B2B2B] outline-none focus:border-[#B8722E] focus:ring-1 focus:ring-[#B8722E]"
+              className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               placeholder="Nombre y apellido"
             />
           </div>
 
           <div>
-            <label htmlFor="whatsapp" className="mb-1 block text-sm font-medium text-[#2B2B2B]">
+            <label htmlFor="whatsapp" className="mb-1 block text-sm font-medium text-brand-text">
               WhatsApp
             </label>
             <input
@@ -122,14 +122,14 @@ export default function LeadsPage() {
               type="tel"
               value={form.whatsapp}
               onChange={handleChange}
-              className="w-full rounded-lg border border-[#D9A15B]/50 px-3 py-2 text-[#2B2B2B] outline-none focus:border-[#B8722E] focus:ring-1 focus:ring-[#B8722E]"
+              className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               placeholder="+505 8888 8888"
             />
           </div>
 
           <div>
-            <label htmlFor="mensaje" className="mb-1 block text-sm font-medium text-[#2B2B2B]">
-              Mensaje <span className="text-[#2B2B2B]/50">(opcional)</span>
+            <label htmlFor="mensaje" className="mb-1 block text-sm font-medium text-brand-text">
+              Mensaje <span className="text-brand-text/50">(opcional)</span>
             </label>
             <textarea
               id="mensaje"
@@ -137,7 +137,7 @@ export default function LeadsPage() {
               rows={3}
               value={form.mensaje}
               onChange={handleChange}
-              className="w-full rounded-lg border border-[#D9A15B]/50 px-3 py-2 text-[#2B2B2B] outline-none focus:border-[#B8722E] focus:ring-1 focus:ring-[#B8722E]"
+              className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               placeholder="Contanos qué te gustaría saber"
             />
           </div>
@@ -151,7 +151,7 @@ export default function LeadsPage() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 rounded-lg bg-[#B8722E] px-4 py-2.5 font-semibold text-white transition hover:bg-[#0F3D4A] disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-2 rounded-lg bg-primary px-4 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Enviando..." : "Enviar"}
           </button>

@@ -65,16 +65,16 @@ export default function LoginNegocioPage() {
   if (step === "listo") {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-        <div className="w-full max-w-md rounded-xl border border-[#D9A15B]/40 bg-white p-8 text-center shadow-lg">
-          <h1 className="mb-2 text-2xl font-bold text-[#0F3D4A]">
+        <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 text-center shadow-lg">
+          <h1 className="mb-2 text-2xl font-bold text-accent-dark">
             ¡Sesión iniciada!
           </h1>
-          <p className="text-sm text-[#2B2B2B]/70 mb-6">
+          <p className="text-sm text-brand-text/70 mb-6">
             Tu sesión es válida por 8 horas. Ya podés acceder al panel de tu negocio.
           </p>
           <button
             onClick={() => router.push("/panel-negocio")}
-            className="rounded-lg bg-[#B8722E] px-4 py-2.5 font-semibold text-white transition hover:bg-[#0F3D4A]"
+            className="rounded-lg bg-primary px-4 py-2.5 font-semibold text-white transition hover:bg-accent-dark"
           >
             Ir a mi panel
           </button>
@@ -85,19 +85,19 @@ export default function LoginNegocioPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-md rounded-xl border border-[#D9A15B]/40 bg-white p-8 shadow-lg">
+      <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 shadow-lg">
         {step === "credenciales" ? (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-[#0F3D4A]">
+            <h1 className="mb-1 text-2xl font-bold text-accent-dark">
               Iniciá sesión
             </h1>
-            <p className="mb-6 text-sm text-[#2B2B2B]/70">
+            <p className="mb-6 text-sm text-brand-text/70">
               Accedé al panel de tu negocio en GeoKaia.
             </p>
 
             <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
               <div>
-                <label htmlFor="email" className="mb-1 block text-sm font-medium text-[#2B2B2B]">
+                <label htmlFor="email" className="mb-1 block text-sm font-medium text-brand-text">
                   Correo electrónico
                 </label>
                 <input
@@ -107,13 +107,13 @@ export default function LoginNegocioPage() {
                   autoComplete="email"
                   value={credenciales.email}
                   onChange={handleCredencialesChange}
-                  className="w-full rounded-lg border border-[#D9A15B]/50 px-3 py-2 text-[#2B2B2B] outline-none focus:border-[#B8722E] focus:ring-1 focus:ring-[#B8722E]"
+                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                   placeholder="tunegocio@correo.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="mb-1 block text-sm font-medium text-[#2B2B2B]">
+                <label htmlFor="password" className="mb-1 block text-sm font-medium text-brand-text">
                   Contraseña
                 </label>
                 <input
@@ -123,7 +123,7 @@ export default function LoginNegocioPage() {
                   autoComplete="current-password"
                   value={credenciales.password}
                   onChange={handleCredencialesChange}
-                  className="w-full rounded-lg border border-[#D9A15B]/50 px-3 py-2 text-[#2B2B2B] outline-none focus:border-[#B8722E] focus:ring-1 focus:ring-[#B8722E]"
+                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                   placeholder="Tu contraseña"
                 />
               </div>
@@ -137,31 +137,31 @@ export default function LoginNegocioPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 rounded-lg bg-[#B8722E] px-4 py-2.5 font-semibold text-white transition hover:bg-[#0F3D4A] disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-2 rounded-lg bg-primary px-4 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Verificando..." : "Continuar"}
               </button>
             </form>
 
-            <p className="mt-6 text-center text-sm text-[#2B2B2B]/70">
+            <p className="mt-6 text-center text-sm text-brand-text/70">
               ¿No tenés cuenta?{" "}
-              <Link href="/negocio/registro" className="font-semibold text-[#1B5A6B] hover:underline">
+              <Link href="/negocio/registro" className="font-semibold text-accent hover:underline">
                 Registrá tu negocio
               </Link>
             </p>
           </>
         ) : (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-[#0F3D4A]">
+            <h1 className="mb-1 text-2xl font-bold text-accent-dark">
               Verificación en dos pasos
             </h1>
-            <p className="mb-6 text-sm text-[#2B2B2B]/70">
+            <p className="mb-6 text-sm text-brand-text/70">
               Ingresá el código de 6 dígitos de tu app Google Authenticator.
             </p>
 
             <form onSubmit={handleCodigoSubmit} className="flex flex-col gap-4">
               <div>
-                <label htmlFor="codigo" className="mb-1 block text-sm font-medium text-[#2B2B2B]">
+                <label htmlFor="codigo" className="mb-1 block text-sm font-medium text-brand-text">
                   Código de verificación
                 </label>
                 <input
@@ -173,7 +173,7 @@ export default function LoginNegocioPage() {
                   maxLength={6}
                   value={codigo}
                   onChange={(e) => setCodigo(e.target.value.replace(/\D/g, ""))}
-                  className="w-full rounded-lg border border-[#D9A15B]/50 px-3 py-2 text-center text-lg tracking-[0.5em] text-[#2B2B2B] outline-none focus:border-[#B8722E] focus:ring-1 focus:ring-[#B8722E]"
+                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-center text-lg tracking-[0.5em] text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                   placeholder="000000"
                 />
               </div>
@@ -187,7 +187,7 @@ export default function LoginNegocioPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 rounded-lg bg-[#1B5A6B] px-4 py-2.5 font-semibold text-white transition hover:bg-[#0F3D4A] disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-2 rounded-lg bg-accent px-4 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Verificando..." : "Verificar y entrar"}
               </button>
@@ -199,7 +199,7 @@ export default function LoginNegocioPage() {
                   setError(null);
                   setCodigo("");
                 }}
-                className="text-sm text-[#2B2B2B]/60 hover:underline"
+                className="text-sm text-brand-text/60 hover:underline"
               >
                 Volver
               </button>
