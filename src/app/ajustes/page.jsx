@@ -1,5 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { obtenerToken, borrarToken } from "@/lib/auth";
 
 const PROXIMAMENTE = [
   { icono: "🌗", texto: "Modo oscuro" },
@@ -8,6 +13,18 @@ const PROXIMAMENTE = [
 ];
 
 export default function AjustesPage() {
+  const router = useRouter();
+  const [logueado, setLogueado] = useState(false);
+
+  useEffect(() => {
+    setLogueado(!!obtenerToken());
+  }, []);
+
+  function handleLogout() {
+    borrarToken();
+    router.push("/");
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
       <Header />
@@ -15,6 +32,18 @@ export default function AjustesPage() {
       <main className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-md flex flex-col gap-4">
           <h1 className="text-2xl font-bold text-brand-text">Ajustes</h1>
+
+          {logueado && (
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-between bg-white border border-red-200 rounded-xl px-4 py-3 text-left hover:bg-red-50 transition-colors"
+            >
+              <span className="flex items-center gap-3 text-sm font-medium text-red-700">
+                <span className="text-lg">🚪</span>
+                Cerrar sesión
+              </span>
+            </button>
+          )}
 
           <div className="flex flex-col gap-2">
             {PROXIMAMENTE.map((item) => (

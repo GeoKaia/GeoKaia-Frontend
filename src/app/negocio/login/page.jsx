@@ -209,6 +209,15 @@ export default function LoginNegocioPage() {
           </>
         )}
       </div>
+
+      {step === "credenciales" && (
+        <Link
+          href="/admin"
+          className="mt-4 text-xs text-brand-text/30 hover:text-brand-text/60 hover:underline"
+        >
+          Acceso administrador
+        </Link>
+      )}
     </main>
   );
 }
