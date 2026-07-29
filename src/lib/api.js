@@ -62,6 +62,31 @@ export function actualizarMiLugar(token, cambios) {
   });
 }
 
+export function crearLugar(token, datos) {
+  return apiFetch("/api/lugares", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(datos),
+  });
+}
+
+// --- Admin (requiere JWT de una cuenta con esAdmin) ---
+
+export function obtenerLugaresPendientes(token) {
+  return apiFetch("/api/lugares/admin/pendientes", {
+    cache: "no-store",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function actualizarEstadoLugar(token, id, estado) {
+  return apiFetch(`/api/lugares/admin/${id}/estado`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ estado }),
+  });
+}
+
 // --- Auth de negocio (público) ---
 
 export function registrarNegocio({ email, password, nombreContacto, whatsapp }) {

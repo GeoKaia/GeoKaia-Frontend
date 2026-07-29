@@ -2,11 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
-import { obtenerMiLugar, actualizarMiLugar } from "@/lib/api";
+import { obtenerMiLugar, actualizarMiLugar, crearLugar, CATEGORIAS } from "@/lib/api";
 import { obtenerToken, borrarToken } from "@/lib/auth";
+
+const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion"), {
+  ssr: false,
+  loading: () => <p className="text-sm text-brand-text/50 animate-pulse">Cargando mapa...</p>,
+});
+
+const FORM_ALTA_VACIO = { nombre: "", descripcion: "", categoria: "GASTRONOMIA", ubicacion: null };
 
 const CAMPOS_TEXTO = [
   { name: "descripcion", label: "Descripción", tipo: "textarea" },
@@ -39,6 +47,9 @@ export default function PanelNegocioPage() {
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState(null);
   const [guardado, setGuardado] = useState(false);
+  const [formAlta, setFormAlta] = useState(FORM_ALTA_VACIO);
+  const [creando, setCreando] = useState(false);
+  const [errorAlta, setErrorAlta] = useState(null);
 
   useEffect(() => {
     const token = obtenerToken();
@@ -80,6 +91,53 @@ export default function PanelNegocioPage() {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setGuardado(false);
+  }
+
+  function handleAltaChange(e) {
+    const { name, value } = e.target;
+    setFormAlta((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function handleAltaSubmit(e) {
+    e.preventDefault();
+    setErrorAlta(null);
+
+    if (!formAlta.nombre.trim() || formAlta.nombre.trim().length < 3) {
+      setErrorAlta("El nombre debe tener al menos 3 caracteres.");
+      return;
+    }
+    if (!formAlta.descripcion.trim() || formAlta.descripcion.trim().length < 10) {
+      setErrorAlta("La descripción debe tener al menos 10 caracteres.");
+      return;
+    }
+    if (!formAlta.ubicacion) {
+      setErrorAlta("Tocá el mapa para marcar dónde está tu negocio.");
+      return;
+    }
+
+    const token = obtenerToken();
+    if (!token) {
+      setEstado("sin-token");
+      return;
+    }
+
+    setCreando(true);
+    try {
+      const data = await crearLugar(token, {
+        nombre: formAlta.nombre.trim(),
+        descripcion: formAlta.descripcion.trim(),
+        categoria: formAlta.categoria,
+        latitud: formAlta.ubicacion.latitud,
+        longitud: formAlta.ubicacion.longitud,
+      });
+      setLugar(data.lugar);
+      setForm({ ...CAMPO_VACIO, descripcion: data.lugar.descripcion || "" });
+      setEstado("listo");
+    } catch (err) {
+      setErrorAlta(err.message);
+    } finally {
+      setCreando(false);
+    }
   }
 
   async function handleSubmit(e) {
@@ -138,14 +196,82 @@ export default function PanelNegocioPage() {
         )}
 
         {estado === "sin-lugar" && (
-          <div className="text-center max-w-sm">
-            <p className="text-brand-text/80">
-              Todavía no tenés un lugar asociado a tu cuenta. Escribinos a{" "}
-              <a href="mailto:geokaia404@gmail.com" className="text-accent-dark underline">
-                geokaia404@gmail.com
-              </a>{" "}
-              para darlo de alta.
+          <div className="w-full max-w-md">
+            <h1 className="text-xl font-bold text-brand-text mb-1">Registrá tu lugar</h1>
+            <p className="text-sm text-brand-text/60 mb-4">
+              Tu lugar queda pendiente de revisión — el equipo de GeoKaia lo aprueba antes de que se vea en el mapa público.
             </p>
+
+            <form onSubmit={handleAltaSubmit} className="flex flex-col gap-4">
+              <div>
+                <label htmlFor="nombre" className="mb-1 block text-sm font-medium text-brand-text">
+                  Nombre del lugar
+                </label>
+                <input
+                  id="nombre"
+                  name="nombre"
+                  type="text"
+                  value={formAlta.nombre}
+                  onChange={handleAltaChange}
+                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  placeholder="Mi negocio"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="descripcion" className="mb-1 block text-sm font-medium text-brand-text">
+                  Descripción
+                </label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  rows={3}
+                  value={formAlta.descripcion}
+                  onChange={handleAltaChange}
+                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  placeholder="Contale al turista qué va a encontrar"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="categoria" className="mb-1 block text-sm font-medium text-brand-text">
+                  Categoría
+                </label>
+                <select
+                  id="categoria"
+                  name="categoria"
+                  value={formAlta.categoria}
+                  onChange={handleAltaChange}
+                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                >
+                  {Object.entries(CATEGORIAS).map(([clave, cat]) => (
+                    <option key={clave} value={clave}>
+                      {cat.emoji} {cat.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-brand-text">Ubicación</label>
+                <SelectorUbicacion
+                  posicion={formAlta.ubicacion}
+                  onSeleccionar={(ubicacion) => setFormAlta((prev) => ({ ...prev, ubicacion }))}
+                />
+              </div>
+
+              {errorAlta && (
+                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{errorAlta}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={creando}
+                className="rounded-lg bg-primary text-white font-semibold px-4 py-2.5 hover:opacity-90 transition-opacity disabled:opacity-60"
+              >
+                {creando ? "Enviando..." : "Registrar mi lugar"}
+              </button>
+            </form>
           </div>
         )}
 
@@ -158,6 +284,17 @@ export default function PanelNegocioPage() {
                 <h1 className="text-xl font-bold text-brand-text">{lugar.nombre}</h1>
                 <p className="text-xs text-brand-text/50">Editá el contenido de tu lugar en GeoKaia</p>
               </div>
+
+              {lugar.estado === "PENDIENTE" && (
+                <p className="rounded-lg bg-secondary/20 px-3 py-2 text-sm text-brand-text">
+                  🕒 Tu lugar está en revisión — todavía no se ve en el mapa público. Podés seguir editando mientras tanto.
+                </p>
+              )}
+              {lugar.estado === "RECHAZADO" && (
+                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                  Tu lugar no fue aprobado. Escribinos a geokaia404@gmail.com si tenés dudas.
+                </p>
+              )}
 
               {CAMPOS_TEXTO.map((campo) =>
                 campo.tipo === "textarea" ? (

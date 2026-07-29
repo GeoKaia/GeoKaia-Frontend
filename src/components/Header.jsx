@@ -27,6 +27,19 @@ export default function Header() {
       </Link>
 
       <div className="flex items-center gap-3">
+        {logueado && (
+          <Link
+            href="/admin"
+            aria-label="Panel de administración"
+            title="Panel de administración"
+            className="w-9 h-9 rounded-full border border-accent-dark text-accent-dark flex items-center justify-center hover:bg-accent-dark hover:text-white transition-colors"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 11l3 3L22 4" />
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+            </svg>
+          </Link>
+        )}
         <Link
           href={logueado ? "/panel-negocio" : "/negocio/login"}
           aria-label={logueado ? "Mi panel de negocio" : "Ingreso de negocios"}
