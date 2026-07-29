@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import { obtenerMiLugar, actualizarMiLugar, crearLugar, CATEGORIAS } from "@/lib/api";
 import { obtenerToken, borrarToken } from "@/lib/auth";
+import { normalizarUrlImagen } from "@/lib/imagenes";
 
 const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion"), {
   ssr: false,
@@ -20,7 +21,12 @@ const CAMPOS_TEXTO = [
   { name: "descripcion", label: "Descripción", tipo: "textarea" },
   { name: "subcategoria", label: "Subcategoría (ej. Catedrales, Reservas naturales)", tipo: "input" },
   { name: "horarios", label: "Horarios", tipo: "input" },
-  { name: "fotoUrl", label: "URL de la foto principal", tipo: "input" },
+  {
+    name: "fotoUrl",
+    label: "URL de la foto principal",
+    tipo: "input",
+    ayuda: "Pegá un link directo a la imagen (termina en .jpg, .png, etc.), no un link para compartir de Google Fotos. Los links de Drive o Dropbox se convierten automáticamente.",
+  },
   { name: "videoUrl", label: "URL del video", tipo: "input" },
   { name: "panoramaUrl", label: "URL del visor 360°", tipo: "input" },
   { name: "whatsapp", label: "WhatsApp (solo números, con código de país)", tipo: "input" },
@@ -153,12 +159,14 @@ export default function PanelNegocioPage() {
     for (const campo of Object.keys(CAMPO_VACIO)) {
       if (campo === "galeriaUrls") continue;
       const valor = form[campo].trim();
-      if (valor) cambios[campo] = valor;
+      if (!valor) continue;
+      cambios[campo] = campo === "fotoUrl" ? normalizarUrlImagen(valor) : valor;
     }
     const galeria = form.galeriaUrls
       .split("\n")
       .map((u) => u.trim())
-      .filter(Boolean);
+      .filter(Boolean)
+      .map(normalizarUrlImagen);
     if (galeria.length > 0) cambios.galeriaUrls = galeria;
 
     setGuardando(true);
@@ -324,6 +332,9 @@ export default function PanelNegocioPage() {
                       onChange={handleChange}
                       className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                     />
+                    {campo.ayuda && (
+                      <p className="mt-1 text-xs text-brand-text/50">{campo.ayuda}</p>
+                    )}
                   </div>
                 )
               )}

@@ -110,6 +110,14 @@ export function verificar2FA({ negocioId, token }) {
   });
 }
 
+export function eliminarCuenta(token, password) {
+  return apiFetch("/api/auth/cuenta", {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ password }),
+  });
+}
+
 // --- Leads (público) ---
 
 export function crearLead({ nombreNegocio, nombreContacto, whatsapp, mensaje }) {

@@ -1,8 +1,17 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { CATEGORIAS } from '@/lib/api';
+import { normalizarUrlImagen } from '@/lib/imagenes';
 
 export default function PlaceCard({ lugar }) {
   const cat = CATEGORIAS[lugar.categoria] || { label: lugar.categoria, emoji: '📍' };
   const esPremium = lugar.tier === 'PREMIUM';
+  const [fotoError, setFotoError] = useState(false);
+
+  useEffect(() => {
+    setFotoError(false);
+  }, [lugar.fotoUrl]);
 
   const urlWaze = `https://waze.com/ul?ll=${lugar.latitud},${lugar.longitud}&navigate=yes`;
   const urlGoogleMaps = `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
@@ -12,12 +21,19 @@ export default function PlaceCard({ lugar }) {
 
   return (
     <div className="w-56 text-brand-text">
-      {lugar.fotoUrl && (
+      {lugar.fotoUrl && !fotoError && (
         <img
-          src={lugar.fotoUrl}
+          src={normalizarUrlImagen(lugar.fotoUrl)}
           alt={lugar.nombre}
+          onError={() => setFotoError(true)}
           className="w-full h-28 object-cover rounded-md mb-2"
         />
+      )}
+      {lugar.fotoUrl && fotoError && (
+        <div className="w-full h-28 rounded-md mb-2 bg-secondary/20 flex flex-col items-center justify-center text-center px-2">
+          <span className="text-2xl">🖼️</span>
+          <span className="text-[11px] text-brand-text/50 mt-1">No se pudo cargar la imagen</span>
+        </div>
       )}
 
       <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1 text-white"
