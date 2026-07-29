@@ -73,10 +73,10 @@ export default function AdminPage() {
 
           {estado === "sin-token" && (
             <div>
-              <p className="text-brand-text/80 mb-4">Necesitás iniciar sesión.</p>
+              <p className="text-brand-text/80 mb-4">Necesitás iniciar sesión como administrador.</p>
               <button
-                onClick={() => router.push("/negocio/login")}
-                className="rounded-lg bg-primary text-white font-semibold px-4 py-2.5 hover:opacity-90 transition-opacity"
+                onClick={() => router.push("/admin/login")}
+                className="rounded-lg bg-accent-dark text-white font-semibold px-4 py-2.5 hover:opacity-90 transition-opacity"
               >
                 Iniciar sesión
               </button>

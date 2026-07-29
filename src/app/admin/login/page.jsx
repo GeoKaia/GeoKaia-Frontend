@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loginNegocio, verificar2FA } from "@/lib/api";
 import { guardarToken } from "@/lib/auth";
 import CampoContrasena from "@/components/CampoContrasena";
 
-export default function LoginNegocioPage() {
+// Mismo flujo que /negocio/login (misma cuenta, mismo backend), pero con otra
+// paleta a propósito para que se note de un vistazo que es el acceso de admin.
+export default function LoginAdminPage() {
   const router = useRouter();
-  const [step, setStep] = useState("credenciales"); // 'credenciales' | 'codigo' | 'listo'
+  const [step, setStep] = useState("credenciales"); // 'credenciales' | 'codigo'
   const [credenciales, setCredenciales] = useState({ email: "", password: "" });
   const [negocioId, setNegocioId] = useState(null);
   const [codigo, setCodigo] = useState("");
@@ -55,7 +56,7 @@ export default function LoginNegocioPage() {
     try {
       const data = await verificar2FA({ negocioId, token: codigo });
       guardarToken(data.token);
-      setStep("listo");
+      router.push("/admin");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -63,37 +64,16 @@ export default function LoginNegocioPage() {
     }
   }
 
-  if (step === "listo") {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-        <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 text-center shadow-lg">
-          <h1 className="mb-2 text-2xl font-bold text-accent-dark">
-            ¡Sesión iniciada!
-          </h1>
-          <p className="text-sm text-brand-text/70 mb-6">
-            Tu sesión es válida por 8 horas. Ya podés acceder al panel de tu negocio.
-          </p>
-          <button
-            onClick={() => router.push("/panel-negocio")}
-            className="rounded-lg bg-primary px-4 py-2.5 font-semibold text-white transition hover:bg-accent-dark"
-          >
-            Ir a mi panel
-          </button>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 shadow-lg">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-accent-dark px-4 py-12">
+      <div className="w-full max-w-md rounded-xl border border-accent bg-white p-8 shadow-lg">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent">🛡️ Acceso administrador</p>
+
         {step === "credenciales" ? (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-accent-dark">
-              Iniciá sesión
-            </h1>
+            <h1 className="mb-1 text-2xl font-bold text-accent-dark">Iniciá sesión</h1>
             <p className="mb-6 text-sm text-brand-text/70">
-              Accedé al panel de tu negocio en GeoKaia.
+              Solo para cuentas del equipo de GeoKaia.
             </p>
 
             <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
@@ -108,8 +88,8 @@ export default function LoginNegocioPage() {
                   autoComplete="email"
                   value={credenciales.email}
                   onChange={handleCredencialesChange}
-                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-                  placeholder="tunegocio@correo.com"
+                  className="w-full rounded-lg border border-accent/40 px-3 py-2 text-brand-text outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark"
+                  placeholder="tucuenta@geokaia.com"
                 />
               </div>
 
@@ -128,32 +108,21 @@ export default function LoginNegocioPage() {
               </div>
 
               {error && (
-                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-                  {error}
-                </p>
+                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
               )}
 
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 rounded-lg bg-primary px-4 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-2 rounded-lg bg-accent-dark px-4 py-2.5 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Verificando..." : "Continuar"}
               </button>
             </form>
-
-            <p className="mt-6 text-center text-sm text-brand-text/70">
-              ¿No tenés cuenta?{" "}
-              <Link href="/negocio/registro" className="font-semibold text-accent hover:underline">
-                Registrá tu negocio
-              </Link>
-            </p>
           </>
         ) : (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-accent-dark">
-              Verificación en dos pasos
-            </h1>
+            <h1 className="mb-1 text-2xl font-bold text-accent-dark">Verificación en dos pasos</h1>
             <p className="mb-6 text-sm text-brand-text/70">
               Ingresá el código de 6 dígitos de tu app Google Authenticator.
             </p>
@@ -172,21 +141,19 @@ export default function LoginNegocioPage() {
                   maxLength={6}
                   value={codigo}
                   onChange={(e) => setCodigo(e.target.value.replace(/\D/g, ""))}
-                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-center text-lg tracking-[0.5em] text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-lg border border-accent/40 px-3 py-2 text-center text-lg tracking-[0.5em] text-brand-text outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark"
                   placeholder="000000"
                 />
               </div>
 
               {error && (
-                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-                  {error}
-                </p>
+                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
               )}
 
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 rounded-lg bg-accent px-4 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-2 rounded-lg bg-accent-dark px-4 py-2.5 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Verificando..." : "Verificar y entrar"}
               </button>
@@ -197,8 +164,6 @@ export default function LoginNegocioPage() {
                   setStep("credenciales");
                   setError(null);
                   setCodigo("");
-                  // Limpiamos la contraseña para que un click fantasma no pueda
-                  // reenviar el login viejo en silencio y "rebotar" de vuelta acá.
                   setCredenciales((prev) => ({ ...prev, password: "" }));
                 }}
                 className="text-sm text-brand-text/60 hover:underline"
@@ -209,15 +174,6 @@ export default function LoginNegocioPage() {
           </>
         )}
       </div>
-
-      {step === "credenciales" && (
-        <Link
-          href="/admin/login"
-          className="mt-4 text-xs text-brand-text/30 hover:text-brand-text/60 hover:underline"
-        >
-          Acceso administrador
-        </Link>
-      )}
     </main>
   );
 }
