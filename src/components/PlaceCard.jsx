@@ -4,10 +4,34 @@ import { useEffect, useState } from 'react';
 import { CATEGORIAS } from '@/lib/api';
 import { normalizarUrlImagen } from '@/lib/imagenes';
 
+function Miniatura({ url, alt }) {
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return (
+      <div className="w-14 h-14 flex-none rounded bg-secondary/20 flex items-center justify-center text-sm snap-start">
+        🖼️
+      </div>
+    );
+  }
+
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" className="flex-none snap-start">
+      <img
+        src={normalizarUrlImagen(url)}
+        alt={alt}
+        onError={() => setError(true)}
+        className="w-14 h-14 rounded object-cover"
+      />
+    </a>
+  );
+}
+
 export default function PlaceCard({ lugar }) {
   const cat = CATEGORIAS[lugar.categoria] || { label: lugar.categoria, emoji: '📍' };
   const esPremium = lugar.tier === 'PREMIUM';
   const [fotoError, setFotoError] = useState(false);
+  const [descripcionExpandida, setDescripcionExpandida] = useState(false);
 
   useEffect(() => {
     setFotoError(false);
@@ -36,13 +60,32 @@ export default function PlaceCard({ lugar }) {
         </div>
       )}
 
+      {esPremium && lugar.galeriaUrls?.length > 0 && (
+        <div className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory mb-2 pb-0.5">
+          {lugar.galeriaUrls.map((url) => (
+            <Miniatura key={url} url={url} alt={lugar.nombre} />
+          ))}
+        </div>
+      )}
+
       <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1 text-white"
             style={{ backgroundColor: cat.color }}>
         {cat.emoji} {cat.label}
       </span>
 
       <h3 className="font-bold text-base leading-tight">{lugar.nombre}</h3>
-      <p className="text-sm text-gray-600 mt-1 line-clamp-3">{lugar.descripcion}</p>
+      <p className={`text-sm text-gray-600 mt-1 ${descripcionExpandida ? '' : 'line-clamp-3'}`}>
+        {lugar.descripcion}
+      </p>
+      {lugar.descripcion?.length > 100 && (
+        <button
+          type="button"
+          onClick={() => setDescripcionExpandida((v) => !v)}
+          className="text-xs text-accent-dark font-medium mt-0.5 hover:underline"
+        >
+          {descripcionExpandida ? 'Leer menos' : 'Leer más'}
+        </button>
+      )}
 
       {lugar.horarios && (
         <p className="text-xs text-gray-500 mt-1">🕒 {lugar.horarios}</p>
@@ -99,7 +142,23 @@ export default function PlaceCard({ lugar }) {
               Ver en 360°
             </a>
           )}
+          {lugar.videoUrl && (
+            <a
+              href={lugar.videoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs px-2 py-1 rounded border border-accent-dark !text-accent-dark hover:bg-accent-dark hover:!text-white"
+            >
+              Ver video
+            </a>
+          )}
         </div>
+      )}
+
+      {esPremium && lugar.audioUrl && (
+        <audio controls src={lugar.audioUrl} className="w-full mt-2 h-8">
+          Tu navegador no soporta audio.
+        </audio>
       )}
     </div>
   );

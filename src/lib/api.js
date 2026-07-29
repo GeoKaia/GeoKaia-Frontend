@@ -7,6 +7,7 @@ export const CATEGORIAS = {
   NATURALEZA: { label: "Naturaleza", color: "#10546F", emoji: "🌋" },
   HISTORIA: { label: "Historia", color: "#BCB1A1", emoji: "🏛️" },
   ARTESANIA: { label: "Artesanía", color: "#AC6727", emoji: "🧺" },
+  ALOJAMIENTO: { label: "Alojamiento", color: "#2989A3", emoji: "🏨" },
 };
 
 async function apiFetch(path, options = {}) {
@@ -67,6 +68,14 @@ export function crearLugar(token, datos) {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(datos),
+  });
+}
+
+export function eliminarMiLugar(token, password) {
+  return apiFetch("/api/lugares/mi-lugar", {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ password }),
   });
 }
 
