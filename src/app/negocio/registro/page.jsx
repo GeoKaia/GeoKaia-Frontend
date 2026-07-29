@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { registrarNegocio } from "@/lib/api";
+import CampoContrasena from "@/components/CampoContrasena";
 
 const initialForm = {
   email: "",
@@ -119,14 +120,12 @@ export default function RegistroNegocioPage() {
             <label htmlFor="password" className="mb-1 block text-sm font-medium text-brand-text">
               Contraseña
             </label>
-            <input
+            <CampoContrasena
               id="password"
               name="password"
-              type="password"
               autoComplete="new-password"
               value={form.password}
               onChange={handleChange}
-              className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               placeholder="Mínimo 6 caracteres"
             />
           </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loginNegocio, verificar2FA } from "@/lib/api";
 import { guardarToken } from "@/lib/auth";
+import CampoContrasena from "@/components/CampoContrasena";
 
 export default function LoginNegocioPage() {
   const router = useRouter();
@@ -116,14 +117,12 @@ export default function LoginNegocioPage() {
                 <label htmlFor="password" className="mb-1 block text-sm font-medium text-brand-text">
                   Contraseña
                 </label>
-                <input
+                <CampoContrasena
                   id="password"
                   name="password"
-                  type="password"
                   autoComplete="current-password"
                   value={credenciales.password}
                   onChange={handleCredencialesChange}
-                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                   placeholder="Tu contraseña"
                 />
               </div>
