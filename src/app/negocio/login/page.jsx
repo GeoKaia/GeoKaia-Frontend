@@ -198,6 +198,9 @@ export default function LoginNegocioPage() {
                   setStep("credenciales");
                   setError(null);
                   setCodigo("");
+                  // Limpiamos la contraseña para que un click fantasma no pueda
+                  // reenviar el login viejo en silencio y "rebotar" de vuelta acá.
+                  setCredenciales((prev) => ({ ...prev, password: "" }));
                 }}
                 className="text-sm text-brand-text/60 hover:underline"
               >
