@@ -53,7 +53,7 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-[1000] bg-white border-t border-secondary/30 flex items-stretch pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 inset-x-0 z-[1000] bg-white border-t border-secondary/30 flex items-stretch pb-[env(safe-area-inset-bottom)]">
       {items.map((item) => {
         const activo = item.href === "/" ? pathname === "/" : pathname?.startsWith(item.href);
         return (
