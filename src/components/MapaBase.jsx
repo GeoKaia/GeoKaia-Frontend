@@ -20,16 +20,16 @@ function crearIcono(lugar) {
     className: '',
     html: `<div class="${esPremium ? 'pin-premium' : ''}" style="
       background:${color};
-      width:32px;height:32px;border-radius:50% 50% 50% 0;
+      width:34px;height:34px;border-radius:50% 50% 50% 0;
       transform:rotate(-45deg);
       display:flex;align-items:center;justify-content:center;
-      box-shadow:0 2px 4px rgba(0,0,0,0.4);
-      border:2px solid white;">
-      <span style="transform:rotate(45deg);font-size:15px;">${cat.emoji}</span>
+      box-shadow:0 3px 6px rgba(0,0,0,0.35);
+      border:2.5px solid white;">
+      <span style="transform:rotate(45deg);font-size:16px;">${cat.emoji}</span>
     </div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32],
+    iconSize: [34, 34],
+    iconAnchor: [17, 34],
+    popupAnchor: [0, -34],
   });
 }
 

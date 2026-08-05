@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { loginNegocio, verificar2FA } from "@/lib/api";
 import { guardarToken } from "@/lib/auth";
 import CampoContrasena from "@/components/CampoContrasena";
+import AuthHero from "@/components/AuthHero";
 
 export default function LoginNegocioPage() {
   const router = useRouter();
@@ -65,11 +66,8 @@ export default function LoginNegocioPage() {
 
   if (step === "listo") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-        <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 text-center shadow-lg">
-          <h1 className="mb-2 text-2xl font-bold text-accent-dark">
-            ¡Sesión iniciada!
-          </h1>
+      <AuthHero eyebrow="Para negocios" title="¡Sesión iniciada!" tone="negocio">
+        <div className="text-center">
           <p className="text-sm text-brand-text/70 mb-6">
             Tu sesión es válida por 8 horas. Ya podés acceder al panel de tu negocio.
           </p>
@@ -80,22 +78,30 @@ export default function LoginNegocioPage() {
             Ir a mi panel
           </button>
         </div>
-      </main>
+      </AuthHero>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 shadow-lg">
+    <AuthHero
+      eyebrow="Para negocios"
+      title={step === "credenciales" ? "Iniciá sesión" : "Verificación en dos pasos"}
+      subtitle="Accedé al panel de tu negocio en GeoKaia."
+      tone="negocio"
+      footer={
+        step === "credenciales" && (
+          <Link
+            href="/admin/login"
+            className="mt-4 text-xs text-brand-text/30 hover:text-brand-text/60 hover:underline"
+          >
+            Acceso administrador
+          </Link>
+        )
+      }
+    >
+      <>
         {step === "credenciales" ? (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-accent-dark">
-              Iniciá sesión
-            </h1>
-            <p className="mb-6 text-sm text-brand-text/70">
-              Accedé al panel de tu negocio en GeoKaia.
-            </p>
-
             <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
               <div>
                 <label htmlFor="email" className="mb-1 block text-sm font-medium text-brand-text">
@@ -151,9 +157,6 @@ export default function LoginNegocioPage() {
           </>
         ) : (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-accent-dark">
-              Verificación en dos pasos
-            </h1>
             <p className="mb-6 text-sm text-brand-text/70">
               Ingresá el código de 6 dígitos de tu app Google Authenticator.
             </p>
@@ -208,16 +211,7 @@ export default function LoginNegocioPage() {
             </form>
           </>
         )}
-      </div>
-
-      {step === "credenciales" && (
-        <Link
-          href="/admin/login"
-          className="mt-4 text-xs text-brand-text/30 hover:text-brand-text/60 hover:underline"
-        >
-          Acceso administrador
-        </Link>
-      )}
-    </main>
+      </>
+    </AuthHero>
   );
 }

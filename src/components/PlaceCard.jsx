@@ -43,37 +43,51 @@ export default function PlaceCard({ lugar }) {
     ? `https://wa.me/${lugar.whatsapp.replace(/\D/g, '')}`
     : null;
 
+  const categoriaBadge = (
+    <span
+      className="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full text-white shadow-sm"
+      style={{ backgroundColor: cat.color }}
+    >
+      {cat.emoji} {cat.label}
+    </span>
+  );
+
   return (
-    <div className="w-56 text-brand-text">
-      {lugar.fotoUrl && !fotoError && (
-        <img
-          src={normalizarUrlImagen(lugar.fotoUrl)}
-          alt={lugar.nombre}
-          onError={() => setFotoError(true)}
-          className="w-full h-28 object-cover rounded-md mb-2"
-        />
-      )}
-      {lugar.fotoUrl && fotoError && (
-        <div className="w-full h-28 rounded-md mb-2 bg-secondary/20 flex flex-col items-center justify-center text-center px-2">
-          <span className="text-2xl">🖼️</span>
-          <span className="text-[11px] text-brand-text/50 mt-1">No se pudo cargar la imagen</span>
+    <div className="w-56 text-brand-text rounded-xl overflow-hidden bg-white shadow-sm">
+      {lugar.fotoUrl && (
+        <div className="relative">
+          {!fotoError ? (
+            <img
+              src={normalizarUrlImagen(lugar.fotoUrl)}
+              alt={lugar.nombre}
+              onError={() => setFotoError(true)}
+              className="w-full h-32 object-cover"
+            />
+          ) : (
+            <div className="w-full h-32 bg-secondary/20 flex flex-col items-center justify-center text-center px-2">
+              <span className="text-2xl">🖼️</span>
+              <span className="text-[11px] text-brand-text/50 mt-1">No se pudo cargar la imagen</span>
+            </div>
+          )}
+          {!fotoError && (
+            <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/40 to-transparent" />
+          )}
+          <div className="absolute left-2 bottom-2">{categoriaBadge}</div>
         </div>
       )}
 
-      {esPremium && lugar.galeriaUrls?.length > 0 && (
-        <div className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory mb-2 pb-0.5">
-          {lugar.galeriaUrls.map((url) => (
-            <Miniatura key={url} url={url} alt={lugar.nombre} />
-          ))}
-        </div>
-      )}
+      <div className="p-3">
+        {!lugar.fotoUrl && <div className="mb-1">{categoriaBadge}</div>}
 
-      <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1 text-white"
-            style={{ backgroundColor: cat.color }}>
-        {cat.emoji} {cat.label}
-      </span>
+        {esPremium && lugar.galeriaUrls?.length > 0 && (
+          <div className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory mb-2 pb-0.5">
+            {lugar.galeriaUrls.map((url) => (
+              <Miniatura key={url} url={url} alt={lugar.nombre} />
+            ))}
+          </div>
+        )}
 
-      <h3 className="font-bold text-base leading-tight">{lugar.nombre}</h3>
+        <h3 className="font-bold text-base leading-tight mt-1">{lugar.nombre}</h3>
       <p className={`text-sm text-gray-600 mt-1 ${descripcionExpandida ? '' : 'line-clamp-3'}`}>
         {lugar.descripcion}
       </p>
@@ -96,7 +110,7 @@ export default function PlaceCard({ lugar }) {
           href={urlGoogleMaps}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs px-2 py-1 rounded bg-accent !text-white hover:opacity-90"
+          className="text-xs px-3 py-1.5 rounded-full bg-accent !text-white hover:opacity-90"
         >
           Google Maps
         </a>
@@ -104,7 +118,7 @@ export default function PlaceCard({ lugar }) {
           href={urlWaze}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs px-2 py-1 rounded bg-accent-dark !text-white hover:opacity-90"
+          className="text-xs px-3 py-1.5 rounded-full bg-accent-dark !text-white hover:opacity-90"
         >
           Waze
         </a>
@@ -160,6 +174,7 @@ export default function PlaceCard({ lugar }) {
           Tu navegador no soporta audio.
         </audio>
       )}
+      </div>
     </div>
   );
 }

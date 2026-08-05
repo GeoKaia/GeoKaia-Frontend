@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { registrarNegocio } from "@/lib/api";
 import CampoContrasena from "@/components/CampoContrasena";
+import AuthHero from "@/components/AuthHero";
 
 const initialForm = {
   email: "",
@@ -57,11 +58,8 @@ export default function RegistroNegocioPage() {
 
   if (resultado) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-        <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 text-center shadow-lg">
-          <h1 className="mb-2 text-2xl font-bold text-accent-dark">
-            ¡Cuenta creada!
-          </h1>
+      <AuthHero eyebrow="Para negocios" title="¡Cuenta creada!" tone="negocio">
+        <div className="text-center">
           <p className="mb-6 text-sm text-brand-text">
             {resultado.mensaje || "Escaneá este código con Google Authenticator para activar la verificación en dos pasos."}
           </p>
@@ -85,20 +83,17 @@ export default function RegistroNegocioPage() {
             Ir a iniciar sesión
           </Link>
         </div>
-      </main>
+      </AuthHero>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 shadow-lg">
-        <h1 className="mb-1 text-2xl font-bold text-accent-dark">
-          Registrá tu negocio
-        </h1>
-        <p className="mb-6 text-sm text-brand-text/70">
-          Creá tu cuenta para aparecer en el mapa de GeoKaia.
-        </p>
-
+    <AuthHero
+      eyebrow="Para negocios"
+      title="Registrá tu negocio"
+      subtitle="Creá tu cuenta para aparecer en el mapa de GeoKaia."
+      tone="negocio"
+    >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label htmlFor="email" className="mb-1 block text-sm font-medium text-brand-text">
@@ -181,7 +176,6 @@ export default function RegistroNegocioPage() {
             Iniciar sesión
           </Link>
         </p>
-      </div>
-    </main>
+    </AuthHero>
   );
 }

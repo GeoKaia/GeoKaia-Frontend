@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { loginNegocio, verificar2FA } from "@/lib/api";
 import { guardarToken } from "@/lib/auth";
 import CampoContrasena from "@/components/CampoContrasena";
+import AuthHero from "@/components/AuthHero";
 
 // Mismo flujo que /negocio/login (misma cuenta, mismo backend), pero con otra
 // paleta a propósito para que se note de un vistazo que es el acceso de admin.
@@ -65,17 +66,14 @@ export default function LoginAdminPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-accent-dark px-4 py-12">
-      <div className="w-full max-w-md rounded-xl border border-accent bg-white p-8 shadow-lg">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent">🛡️ Acceso administrador</p>
-
+    <AuthHero
+      eyebrow="🛡️ Acceso administrador"
+      title={step === "credenciales" ? "Iniciá sesión" : "Verificación en dos pasos"}
+      subtitle={step === "credenciales" ? "Solo para cuentas del equipo de GeoKaia." : undefined}
+      tone="admin"
+    >
         {step === "credenciales" ? (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-accent-dark">Iniciá sesión</h1>
-            <p className="mb-6 text-sm text-brand-text/70">
-              Solo para cuentas del equipo de GeoKaia.
-            </p>
-
             <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
               <div>
                 <label htmlFor="email" className="mb-1 block text-sm font-medium text-brand-text">
@@ -122,7 +120,6 @@ export default function LoginAdminPage() {
           </>
         ) : (
           <>
-            <h1 className="mb-1 text-2xl font-bold text-accent-dark">Verificación en dos pasos</h1>
             <p className="mb-6 text-sm text-brand-text/70">
               Ingresá el código de 6 dígitos de tu app Google Authenticator.
             </p>
@@ -173,7 +170,6 @@ export default function LoginAdminPage() {
             </form>
           </>
         )}
-      </div>
-    </main>
+    </AuthHero>
   );
 }

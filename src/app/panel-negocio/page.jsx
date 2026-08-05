@@ -341,18 +341,21 @@ export default function PanelNegocioPage() {
 
         {estado === "sin-lugar" && pasoSinLugar === "elegir-plan" && (
           <div className="w-full max-w-2xl">
-            <h1 className="text-xl font-bold text-brand-text mb-1">Elegí tu plan</h1>
-            <p className="text-sm text-brand-text/60 mb-4">
+            <h1 className="text-xl font-bold text-brand-text mb-1 text-center">Elegí tu plan</h1>
+            <p className="text-sm text-brand-text/60 mb-6 text-center">
               Podés registrar tu lugar gratis o sumar más funciones con Premium.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-xl border border-secondary/40 bg-white p-5 flex flex-col">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-stretch">
+              <div className="rounded-2xl border border-secondary/40 bg-white p-6 flex flex-col">
                 <h2 className="font-bold text-brand-text mb-1">Gratuito</h2>
-                <p className="text-2xl font-bold text-brand-text mb-3">$0</p>
-                <ul className="text-sm text-brand-text/70 flex-1 flex flex-col gap-1.5 mb-4">
+                <p className="text-3xl font-bold text-brand-text mb-4">$0</p>
+                <ul className="text-sm text-brand-text/70 flex-1 flex flex-col gap-2 mb-5">
                   {BULLETS_GRATIS.map((b) => (
-                    <li key={b}>✓ {b}</li>
+                    <li key={b} className="flex items-start gap-2">
+                      <span className="mt-0.5 w-4 h-4 shrink-0 rounded-full bg-secondary/30 text-brand-text flex items-center justify-center text-[10px]">✓</span>
+                      {b}
+                    </li>
                   ))}
                 </ul>
                 <button
@@ -363,15 +366,21 @@ export default function PanelNegocioPage() {
                 </button>
               </div>
 
-              <div className="rounded-xl border-2 border-accent bg-white p-5 flex flex-col">
-                <h2 className="font-bold text-brand-text mb-1">⭐ Premium</h2>
-                <p className="text-2xl font-bold text-brand-text mb-3">
+              <div className="relative rounded-2xl border-2 border-accent bg-gradient-to-b from-accent/5 to-white p-6 flex flex-col shadow-md">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent text-white text-[11px] font-semibold px-3 py-1 shadow-sm">
+                  ⭐ Recomendado
+                </span>
+                <h2 className="font-bold text-brand-text mb-1">Premium</h2>
+                <p className="text-3xl font-bold text-brand-text mb-4">
                   ${PRECIO_PREMIUM}
                   <span className="text-sm font-normal text-brand-text/60">/mes</span>
                 </p>
-                <ul className="text-sm text-brand-text/70 flex-1 flex flex-col gap-1.5 mb-4">
+                <ul className="text-sm text-brand-text/70 flex-1 flex flex-col gap-2 mb-5">
                   {BULLETS_PREMIUM.map((b) => (
-                    <li key={b}>✓ {b}</li>
+                    <li key={b} className="flex items-start gap-2">
+                      <span className="mt-0.5 w-4 h-4 shrink-0 rounded-full bg-accent/20 text-accent-dark flex items-center justify-center text-[10px]">✓</span>
+                      {b}
+                    </li>
                   ))}
                 </ul>
                 <button
