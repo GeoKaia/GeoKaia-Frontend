@@ -26,7 +26,7 @@ export default function Header() {
         <span className="font-bold text-lg text-brand-text">GeoKaia</span>
       </Link>
 
-      <div className="flex items-center gap-3">
+      <div className="hidden md:flex items-center gap-3">
         <Link
           href={logueado ? "/panel-negocio" : "/negocio/login"}
           aria-label={logueado ? "Mi panel de negocio" : "Ingreso de negocios"}
