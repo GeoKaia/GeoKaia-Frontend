@@ -37,6 +37,31 @@ export function obtenerRutas() {
   return apiFetch("/api/rutas", { cache: "no-store" });
 }
 
+// --- Rutas [Admin] (requiere JWT de una cuenta con esAdmin) ---
+
+export function crearRuta(token, datos) {
+  return apiFetch("/api/rutas", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(datos),
+  });
+}
+
+export function actualizarRuta(token, id, datos) {
+  return apiFetch(`/api/rutas/${id}`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(datos),
+  });
+}
+
+export function eliminarRuta(token, id) {
+  return apiFetch(`/api/rutas/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
 // --- IA / chat de Kaia (público) ---
 
 export function recomendarRuta(consulta) {

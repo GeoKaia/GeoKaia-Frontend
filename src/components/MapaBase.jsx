@@ -1,6 +1,6 @@
 'use client'; // Le dice a Next.js que esto corre estrictamente en el cliente
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -44,7 +44,23 @@ function EncuadrarRuta({ posiciones }) {
   return null;
 }
 
-export default function MapaBase({ lugaresIniciales, rutaParadas, mostrarLeyenda = true }) {
+// Centra el mapa en un lugar puntual y abre su popup (se usa desde /rutas/[id] al
+// tocar una parada de la lista, para que "salte" al pin correspondiente).
+function EnfocarLugar({ lugarEnfocado, lugares, markersRef }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!lugarEnfocado) return;
+    const lugar = lugares.find((l) => l.id === lugarEnfocado);
+    const marker = markersRef.current.get(lugarEnfocado);
+    if (lugar && marker) {
+      map.panTo([lugar.latitud, lugar.longitud]);
+      marker.openPopup();
+    }
+  }, [lugarEnfocado, lugares, map, markersRef]);
+  return null;
+}
+
+export default function MapaBase({ lugaresIniciales, rutaParadas, mostrarLeyenda = true, lugarEnfocado }) {
   // Coordenadas base (ej. apuntando a Managua/Chiltepe)
   const posicionInicial = [12.1364, -86.2514];
 
@@ -57,6 +73,7 @@ export default function MapaBase({ lugaresIniciales, rutaParadas, mostrarLeyenda
   const [lugares, setLugares] = useState(lugaresIniciales ?? []);
   const [subcategoriaActiva, setSubcategoriaActiva] = useState(null);
   const [error, setError] = useState(null);
+  const markersRef = useRef(new Map());
 
   useEffect(() => {
     // Si nos pasan los lugares ya armados (ej. los de una ruta puntual), no pedimos todo el catálogo.
@@ -102,12 +119,19 @@ export default function MapaBase({ lugaresIniciales, rutaParadas, mostrarLeyenda
           <Polyline positions={posicionesRuta} pathOptions={{ color: '#10546F', weight: 3, dashArray: '6 8' }} />
         )}
         {posicionesRuta.length > 0 && <EncuadrarRuta posiciones={posicionesRuta} />}
+        {lugarEnfocado && (
+          <EnfocarLugar lugarEnfocado={lugarEnfocado} lugares={lugares} markersRef={markersRef} />
+        )}
 
         {lugaresVisibles.map((lugar) => (
           <Marker
             key={lugar.id}
             position={[lugar.latitud, lugar.longitud]}
             icon={crearIcono(lugar)}
+            ref={(m) => {
+              if (m) markersRef.current.set(lugar.id, m);
+              else markersRef.current.delete(lugar.id);
+            }}
           >
             <Popup>
               <PlaceCard lugar={lugar} />

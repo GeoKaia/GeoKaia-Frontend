@@ -1,6 +1,8 @@
 // Paleta extendida en armonía con la de marca oficial (terracota/teal/marrón), para darle
 // un color distinto a cada subcategoria sin quedar atados a los 4 colores de acento del logo.
-const PALETA_EXTENDIDA = [
+// Exportada porque también se usa como opciones del selector de color de una Ruta — estos
+// 10 tonos ya están pensados para contrastar bien con texto blanco.
+export const PALETA_EXTENDIDA = [
   '#AC6727', // terracota (primario)
   '#10546F', // teal oscuro (acento)
   '#2989A3', // teal claro

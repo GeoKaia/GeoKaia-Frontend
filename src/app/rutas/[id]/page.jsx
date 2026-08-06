@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import { obtenerRutas } from "@/lib/api";
+import { normalizarUrlImagen } from "@/lib/imagenes";
 
 const MapaBase = dynamic(() => import("@/components/MapaBase"), {
   ssr: false,
@@ -21,6 +22,8 @@ export default function RutaDetallePage() {
   const { id } = useParams();
   const [ruta, setRuta] = useState(undefined); // undefined = cargando, null = no encontrada
   const [error, setError] = useState(null);
+  const [fotoError, setFotoError] = useState(false);
+  const [lugarEnfocado, setLugarEnfocado] = useState(null);
 
   useEffect(() => {
     obtenerRutas()
@@ -50,8 +53,20 @@ export default function RutaDetallePage() {
 
         {ruta && (
           <div className="w-full max-w-3xl flex flex-col gap-6">
+            {ruta.fotoUrl && !fotoError && (
+              <img
+                src={normalizarUrlImagen(ruta.fotoUrl)}
+                alt={ruta.nombre}
+                onError={() => setFotoError(true)}
+                className="w-full h-56 object-cover rounded-xl"
+              />
+            )}
+
             <div>
-              <h1 className="text-2xl font-bold text-brand-text">{ruta.nombre}</h1>
+              <h1 className="text-2xl font-bold text-brand-text flex items-center gap-2">
+                <span>{ruta.emoji || "🗺️"}</span>
+                {ruta.nombre}
+              </h1>
               <p className="text-brand-text/80 mt-2">{ruta.descripcion}</p>
             </div>
 
@@ -60,24 +75,45 @@ export default function RutaDetallePage() {
                 lugaresIniciales={lugaresDeLaRuta}
                 rutaParadas={lugaresDeLaRuta}
                 mostrarLeyenda={false}
+                lugarEnfocado={lugarEnfocado}
               />
             </div>
 
             <div>
               <h2 className="text-sm font-semibold text-brand-text/70 mb-3">
-                Paradas de la ruta
+                Paradas de la ruta — tocá una para verla en el mapa
               </h2>
               <div className="flex flex-col gap-3">
                 {ruta.paradas.map((parada, i) => (
                   <div key={parada.id}>
-                    <div className="bg-white border border-secondary/40 rounded-xl p-3">
-                      <PlaceCard lugar={parada.lugar} />
+                    <div
+                      className={`bg-white border rounded-xl overflow-hidden transition-colors ${
+                        lugarEnfocado === parada.lugar.id
+                          ? "border-accent-dark ring-1 ring-accent-dark"
+                          : "border-secondary/40"
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setLugarEnfocado(parada.lugar.id)}
+                        className="w-full text-left px-3 pt-2 text-xs font-semibold text-accent-dark hover:underline"
+                      >
+                        📍 Ver "{parada.lugar.nombre}" en el mapa
+                      </button>
+                      <div className="p-3 pt-1">
+                        <PlaceCard lugar={parada.lugar} />
+                      </div>
                     </div>
-                    {i < ruta.paradas.length - 1 && parada.minutosAlSiguiente != null && (
-                      <p className="text-xs text-brand-text/50 text-center py-2">
-                        🕒 {parada.minutosAlSiguiente} min al siguiente lugar ↓
-                      </p>
-                    )}
+                    {i < ruta.paradas.length - 1 &&
+                      (parada.minutosAlSiguiente != null || parada.distanciaKm != null) && (
+                        <p className="text-xs text-brand-text/50 text-center py-2">
+                          ↓
+                          {parada.minutosAlSiguiente != null && ` 🕒 ${parada.minutosAlSiguiente} min`}
+                          {parada.minutosAlSiguiente != null && parada.distanciaKm != null && " ·"}
+                          {parada.distanciaKm != null && ` 📏 ${parada.distanciaKm} km`}
+                          {" al siguiente lugar"}
+                        </p>
+                      )}
                   </div>
                 ))}
               </div>

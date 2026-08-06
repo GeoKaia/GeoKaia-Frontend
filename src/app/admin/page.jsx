@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
@@ -62,7 +63,12 @@ export default function AdminPage() {
 
       <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-3xl">
-          <h1 className="text-xl font-bold text-brand-text mb-1">Cola de aprobación</h1>
+          <div className="flex items-center justify-between mb-1">
+            <h1 className="text-xl font-bold text-brand-text">Cola de aprobación</h1>
+            <Link href="/admin/rutas" className="text-sm text-accent-dark hover:underline">
+              Gestionar rutas →
+            </Link>
+          </div>
           <p className="text-sm text-brand-text/60 mb-6">
             Lugares registrados por negocios, esperando revisión antes de salir al mapa público.
           </p>
