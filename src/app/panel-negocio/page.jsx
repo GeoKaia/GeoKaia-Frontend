@@ -18,6 +18,15 @@ const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion")
 
 const PRECIO_PREMIUM = "9.99";
 
+// Tolerante al formato: acepta un link por línea, separados por coma o por punto y coma
+// (o cualquier mezcla) — no todos pegan las URLs de la misma forma.
+function parsearGaleriaUrls(texto) {
+  return texto
+    .split(/[\n,;]+/)
+    .map((u) => u.trim())
+    .filter(Boolean);
+}
+
 const BULLETS_GRATIS = [
   "Nombre del lugar",
   "Descripción",
@@ -258,10 +267,8 @@ export default function PanelNegocioPage() {
       if (!valor) continue;
       cambios[campo] = campo === "fotoUrl" ? normalizarUrlImagen(valor) : valor;
     }
-    const galeria = form.galeriaUrls
-      .split("\n")
-      .map((u) => u.trim())
-      .filter(Boolean)
+    const galeria = parsearGaleriaUrls(form.galeriaUrls)
+      .slice(0, 5)
       .map(normalizarUrlImagen);
     if (galeria.length > 0) cambios.galeriaUrls = galeria;
 
@@ -671,22 +678,30 @@ export default function PanelNegocioPage() {
                   )
                 )}
 
-                {esPremium && (
-                  <div>
-                    <label htmlFor="galeriaUrls" className="mb-1 block text-sm font-medium text-brand-text">
-                      Galería (hasta 5 URLs, una por línea)
-                    </label>
-                    <textarea
-                      id="galeriaUrls"
-                      name="galeriaUrls"
-                      rows={4}
-                      value={form.galeriaUrls}
-                      onChange={handleChange}
-                      className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-                      placeholder={"https://...\nhttps://..."}
-                    />
-                  </div>
-                )}
+                {esPremium && (() => {
+                  const urlsGaleria = parsearGaleriaUrls(form.galeriaUrls);
+                  const excedeLimite = urlsGaleria.length > 5;
+                  return (
+                    <div>
+                      <label htmlFor="galeriaUrls" className="mb-1 block text-sm font-medium text-brand-text">
+                        Galería (hasta 5 fotos)
+                      </label>
+                      <textarea
+                        id="galeriaUrls"
+                        name="galeriaUrls"
+                        rows={4}
+                        value={form.galeriaUrls}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                        placeholder={"Pegá los links de las fotos, uno por línea o separados por coma:\nhttps://...\nhttps://..."}
+                      />
+                      <p className={`mt-1 text-xs ${excedeLimite ? "text-red-600" : "text-brand-text/50"}`}>
+                        {Math.min(urlsGaleria.length, 5)}/5 fotos
+                        {excedeLimite && " — se van a guardar solo las primeras 5"}
+                      </p>
+                    </div>
+                  );
+                })()}
 
                 {error && (
                   <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
