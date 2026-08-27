@@ -1,12 +1,13 @@
 import Link from "next/link";
+import { MapPin, Images, Orbit, MessageCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const BENEFICIOS = [
-  { icono: "📍", texto: "Pin destacado y animado en el mapa de GeoKaia" },
-  { icono: "🖼️", texto: "Galería de fotos y video para mostrar tu negocio" },
-  { icono: "🌀", texto: "Visor 360° para que el turista se pasee antes de llegar" },
-  { icono: "💬", texto: "Botón directo a WhatsApp y a tu menú" },
+  { Icono: MapPin, texto: "Pin destacado y animado en el mapa de GeoKaia" },
+  { Icono: Images, texto: "Galería de fotos y video para mostrar tu negocio" },
+  { Icono: Orbit, texto: "Visor 360° para que el turista se pasee antes de llegar" },
+  { Icono: MessageCircle, texto: "Botón directo a WhatsApp y a tu menú" },
 ];
 
 export default function NegociosPage() {
@@ -27,7 +28,7 @@ export default function NegociosPage() {
           <ul className="flex flex-col gap-3">
             {BENEFICIOS.map((b) => (
               <li key={b.texto} className="flex items-center gap-3 bg-white border border-secondary/40 rounded-xl px-4 py-3">
-                <span className="text-xl">{b.icono}</span>
+                <b.Icono size={22} className="text-accent-dark shrink-0" />
                 <span className="text-sm text-brand-text">{b.texto}</span>
               </li>
             ))}

@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { Route, Star, BookOpen, Store } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ChatKaia from "@/components/ChatKaia";
@@ -16,14 +17,14 @@ const MapaBase = dynamic(() => import("@/components/MapaBase"), {
   ),
 });
 
-function BotonNav({ href, color, textColor = "#ffffff", icono, children }) {
+function BotonNav({ href, color, textColor = "#ffffff", Icono, children }) {
   return (
     <Link
       href={href}
       className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
       style={{ backgroundColor: color, color: textColor }}
     >
-      <span>{icono}</span>
+      <Icono size={18} />
       {children}
     </Link>
   );
@@ -38,10 +39,10 @@ export default function Home() {
         <ChatKaia />
 
         <div className="w-full max-w-2xl flex gap-3 px-4">
-          <BotonNav href="/rutas" color="var(--color-primary)" icono="📍">
+          <BotonNav href="/rutas" color="var(--color-primary)" Icono={Route}>
             Lista de recorridos
           </BotonNav>
-          <BotonNav href="/destacados" color="var(--color-accent-dark)" icono="⭐">
+          <BotonNav href="/destacados" color="var(--color-accent-dark)" Icono={Star}>
             Lugares Destacados
           </BotonNav>
         </div>
@@ -56,10 +57,10 @@ export default function Home() {
         </section>
 
         <div className="w-full max-w-2xl flex gap-3 px-4">
-          <BotonNav href="/sobre" color="var(--color-secondary)" textColor="var(--color-brand-text)" icono="📖">
+          <BotonNav href="/sobre" color="var(--color-secondary)" textColor="var(--color-brand-text)" Icono={BookOpen}>
             Sobre GeoKaia
           </BotonNav>
-          <BotonNav href="/negocios" color="var(--color-accent)" icono="🏪">
+          <BotonNav href="/negocios" color="var(--color-accent)" Icono={Store}>
             Para Negocios
           </BotonNav>
         </div>

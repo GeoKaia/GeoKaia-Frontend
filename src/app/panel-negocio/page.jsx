@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { Star, CreditCard, Clock, Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
@@ -360,7 +361,9 @@ export default function PanelNegocioPage() {
                 <ul className="text-sm text-brand-text/70 flex-1 flex flex-col gap-2 mb-5">
                   {BULLETS_GRATIS.map((b) => (
                     <li key={b} className="flex items-start gap-2">
-                      <span className="mt-0.5 w-4 h-4 shrink-0 rounded-full bg-secondary/30 text-brand-text flex items-center justify-center text-[10px]">✓</span>
+                      <span className="mt-0.5 w-4 h-4 shrink-0 rounded-full bg-secondary/30 text-brand-text flex items-center justify-center">
+                        <Check size={10} />
+                      </span>
                       {b}
                     </li>
                   ))}
@@ -374,8 +377,8 @@ export default function PanelNegocioPage() {
               </div>
 
               <div className="relative rounded-2xl border-2 border-accent bg-gradient-to-b from-accent/5 to-white p-6 flex flex-col shadow-md">
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent text-white text-[11px] font-semibold px-3 py-1 shadow-sm">
-                  ⭐ Recomendado
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 rounded-full bg-accent text-white text-[11px] font-semibold px-3 py-1 shadow-sm">
+                  <Star size={11} /> Recomendado
                 </span>
                 <h2 className="font-bold text-brand-text mb-1">Premium</h2>
                 <p className="text-3xl font-bold text-brand-text mb-4">
@@ -385,7 +388,9 @@ export default function PanelNegocioPage() {
                 <ul className="text-sm text-brand-text/70 flex-1 flex flex-col gap-2 mb-5">
                   {BULLETS_PREMIUM.map((b) => (
                     <li key={b} className="flex items-start gap-2">
-                      <span className="mt-0.5 w-4 h-4 shrink-0 rounded-full bg-accent/20 text-accent-dark flex items-center justify-center text-[10px]">✓</span>
+                      <span className="mt-0.5 w-4 h-4 shrink-0 rounded-full bg-accent/20 text-accent-dark flex items-center justify-center">
+                        <Check size={10} />
+                      </span>
                       {b}
                     </li>
                   ))}
@@ -463,8 +468,9 @@ export default function PanelNegocioPage() {
                 </button>
               ) : (
                 <>
-                  <p className="rounded-lg bg-secondary/20 px-3 py-2 text-sm text-brand-text">
-                    💳 Los pagos en línea todavía son una función próxima — mientras tanto activamos tu plan
+                  <p className="flex items-start gap-2 rounded-lg bg-secondary/20 px-3 py-2 text-sm text-brand-text">
+                    <CreditCard size={16} className="shrink-0 mt-0.5" />
+                    Los pagos en línea todavía son una función próxima — mientras tanto activamos tu plan
                     Premium sin cargo para que puedas probarlo.
                   </p>
                   <button
@@ -545,7 +551,7 @@ export default function PanelNegocioPage() {
                 >
                   {Object.entries(CATEGORIAS).map(([clave, cat]) => (
                     <option key={clave} value={clave}>
-                      {cat.emoji} {cat.label}
+                      {cat.label}
                     </option>
                   ))}
                 </select>
@@ -582,15 +588,17 @@ export default function PanelNegocioPage() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div>
                   <h1 className="text-xl font-bold text-brand-text">{lugar.nombre}</h1>
-                  <p className="text-xs font-semibold text-accent-dark mt-0.5">
-                    {esPremium ? `⭐ Plan Premium · $${PRECIO_PREMIUM}/mes` : "Plan Gratuito"}
+                  <p className="flex items-center gap-1 text-xs font-semibold text-accent-dark mt-0.5">
+                    {esPremium && <Star size={12} />}
+                    {esPremium ? `Plan Premium · $${PRECIO_PREMIUM}/mes` : "Plan Gratuito"}
                   </p>
                   <p className="text-xs text-brand-text/50 mt-1">Editá el contenido de tu lugar en GeoKaia</p>
                 </div>
 
                 {lugar.estado === "PENDIENTE" && (
-                  <p className="rounded-lg bg-secondary/20 px-3 py-2 text-sm text-brand-text">
-                    🕒 Tu lugar está en revisión — todavía no se ve en el mapa público. Podés seguir editando mientras tanto.
+                  <p className="flex items-start gap-2 rounded-lg bg-secondary/20 px-3 py-2 text-sm text-brand-text">
+                    <Clock size={16} className="shrink-0 mt-0.5" />
+                    Tu lugar está en revisión — todavía no se ve en el mapa público. Podés seguir editando mientras tanto.
                   </p>
                 )}
                 {lugar.estado === "RECHAZADO" && (
@@ -626,7 +634,7 @@ export default function PanelNegocioPage() {
                   >
                     {Object.entries(CATEGORIAS).map(([clave, cat]) => (
                       <option key={clave} value={clave}>
-                        {cat.emoji} {cat.label}
+                        {cat.label}
                       </option>
                     ))}
                   </select>

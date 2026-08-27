@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Route } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RouteCard from "@/components/RouteCard";
@@ -22,7 +23,7 @@ export default function RutasPage() {
 
       <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-4xl">
-          <span className="text-3xl">📍</span>
+          <Route size={32} className="text-primary" />
           <h1 className="text-xl font-bold text-brand-text mb-1">Lista de recorridos</h1>
           <p className="text-sm text-brand-text/60 mb-6">
             Rutas temáticas curadas de GeoKaia — elegí una y mirá el detalle.

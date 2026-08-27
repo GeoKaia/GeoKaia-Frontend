@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ArrowUp, ArrowDown, X, ChevronDown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -381,7 +382,7 @@ export default function AdminRutasPage() {
                             aria-label="Subir"
                             className="text-brand-text/50 hover:text-brand-text disabled:opacity-30"
                           >
-                            ↑
+                            <ArrowUp size={14} />
                           </button>
                           <button
                             type="button"
@@ -390,21 +391,21 @@ export default function AdminRutasPage() {
                             aria-label="Bajar"
                             className="text-brand-text/50 hover:text-brand-text disabled:opacity-30"
                           >
-                            ↓
+                            <ArrowDown size={14} />
                           </button>
                           <button
                             type="button"
                             onClick={() => quitarParada(i)}
                             aria-label="Quitar"
-                            className="text-red-500 hover:text-red-700 text-sm"
+                            className="text-red-500 hover:text-red-700"
                           >
-                            ✕
+                            <X size={14} />
                           </button>
                         </div>
 
                         {i < paradas.length - 1 && (
                           <div className="flex items-center gap-2 pl-7 text-xs text-brand-text/60">
-                            <span>↓ hasta el siguiente:</span>
+                            <span className="inline-flex items-center gap-1"><ChevronDown size={12} /> hasta el siguiente:</span>
                             <input
                               type="number"
                               min="0"

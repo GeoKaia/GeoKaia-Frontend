@@ -1,7 +1,9 @@
 'use client'; // Le dice a Next.js que esto corre estrictamente en el cliente
 
 import { useEffect, useState, useMemo, useRef } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapPin } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { obtenerLugares, CATEGORIAS } from '@/lib/api';
@@ -9,13 +11,16 @@ import { colorSubcategoria } from '@/lib/colores';
 import PlaceCard from './PlaceCard';
 import LeyendaMapa from './LeyendaMapa';
 
-// Pin como DivIcon (círculo de color + emoji) en vez de imagen, para no pedir assets extra al mapa.
-// El emoji viene de la categoria (grupo amplio); el color viene de la subcategoria cuando existe
+// Pin como DivIcon (círculo de color + ícono) en vez de imagen, para no pedir assets extra al mapa.
+// El ícono viene de la categoria (grupo amplio); el color viene de la subcategoria cuando existe
 // (identifica el tipo puntual: volcán, reserva, mercado, etc.), si no cae al color de la categoria.
+// Leaflet pide el pin como string de HTML (no JSX), así que el ícono de lucide se convierte a
+// markup de SVG con renderToStaticMarkup antes de inyectarlo en el template.
 function crearIcono(lugar) {
-  const cat = CATEGORIAS[lugar.categoria] || { color: '#1B5A6B', emoji: '📍' };
+  const cat = CATEGORIAS[lugar.categoria] || { color: '#1B5A6B', Icono: MapPin };
   const color = colorSubcategoria(lugar.subcategoria) || cat.color;
   const esPremium = lugar.tier === 'PREMIUM';
+  const iconoSvg = renderToStaticMarkup(<cat.Icono color="white" size={16} strokeWidth={2.5} />);
   return L.divIcon({
     className: '',
     html: `<div class="${esPremium ? 'pin-premium' : ''}" style="
@@ -25,7 +30,7 @@ function crearIcono(lugar) {
       display:flex;align-items:center;justify-content:center;
       box-shadow:0 3px 6px rgba(0,0,0,0.35);
       border:2.5px solid white;">
-      <span style="transform:rotate(45deg);font-size:16px;">${cat.emoji}</span>
+      <div style="transform:rotate(45deg);display:flex;">${iconoSvg}</div>
     </div>`,
     iconSize: [34, 34],
     iconAnchor: [17, 34],

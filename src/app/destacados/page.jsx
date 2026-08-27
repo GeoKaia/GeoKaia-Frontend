@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Star } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
@@ -22,7 +23,7 @@ export default function DestacadosPage() {
 
       <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-4xl">
-          <span className="text-3xl">⭐</span>
+          <Star size={32} className="text-accent-dark" />
           <h1 className="text-xl font-bold text-brand-text mb-1">Lugares Destacados</h1>
           <p className="text-sm text-brand-text/60 mb-6">
             Los negocios premium de GeoKaia — con galería, video y visor 360°.

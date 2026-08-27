@@ -1,13 +1,16 @@
+import { Utensils, Drama, Mountain, Landmark, Palette, BedDouble } from "lucide-react";
+
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://geokaia-backend.onrender.com";
 
 // La paleta oficial (con logo) solo trae 4 colores de acento para 5 categorías -> ARTESANIA reutiliza GASTRONOMIA.
+// "Icono" es el componente de lucide-react, no un string: se renderiza como <cat.Icono />.
 export const CATEGORIAS = {
-  GASTRONOMIA: { label: "Gastronomía", color: "#AC6727", emoji: "🍽️" },
-  CULTURA: { label: "Cultura", color: "#2989A3", emoji: "🎭" },
-  NATURALEZA: { label: "Naturaleza", color: "#10546F", emoji: "🌋" },
-  HISTORIA: { label: "Historia", color: "#BCB1A1", emoji: "🏛️" },
-  ARTESANIA: { label: "Artesanía", color: "#AC6727", emoji: "🧺" },
-  ALOJAMIENTO: { label: "Alojamiento", color: "#2989A3", emoji: "🏨" },
+  GASTRONOMIA: { label: "Gastronomía", color: "#AC6727", Icono: Utensils },
+  CULTURA: { label: "Cultura", color: "#2989A3", Icono: Drama },
+  NATURALEZA: { label: "Naturaleza", color: "#10546F", Icono: Mountain },
+  HISTORIA: { label: "Historia", color: "#BCB1A1", Icono: Landmark },
+  ARTESANIA: { label: "Artesanía", color: "#AC6727", Icono: Palette },
+  ALOJAMIENTO: { label: "Alojamiento", color: "#2989A3", Icono: BedDouble },
 };
 
 async function apiFetch(path, options = {}) {

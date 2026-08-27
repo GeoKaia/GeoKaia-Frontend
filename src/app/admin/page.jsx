@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { CheckCircle2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
@@ -96,7 +97,9 @@ export default function AdminPage() {
           {estado === "error" && <p className="text-red-600 text-sm">{error}</p>}
 
           {estado === "listo" && pendientes.length === 0 && (
-            <p className="text-brand-text/60">No hay lugares pendientes por ahora. 🎉</p>
+            <p className="flex items-center gap-2 text-brand-text/60">
+              <CheckCircle2 size={18} className="text-accent" /> No hay lugares pendientes por ahora.
+            </p>
           )}
 
           {estado === "listo" && pendientes.length > 0 && (

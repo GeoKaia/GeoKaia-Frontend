@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { MoonStar, Type, LogOut, Trash2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { obtenerToken, borrarToken } from "@/lib/auth";
 import { eliminarCuenta } from "@/lib/api";
 
 const PROXIMAMENTE = [
-  { icono: "🌗", texto: "Modo oscuro" },
-  { icono: "🔤", texto: "Tamaño de letra" },
+  { Icono: MoonStar, texto: "Modo oscuro" },
+  { Icono: Type, texto: "Tamaño de letra" },
 ];
 
 export default function AjustesPage() {
@@ -81,7 +82,7 @@ export default function AjustesPage() {
               className="flex items-center justify-between bg-white border border-red-200 rounded-xl px-4 py-3 text-left hover:bg-red-50 transition-colors"
             >
               <span className="flex items-center gap-3 text-sm font-medium text-red-700">
-                <span className="text-lg">🚪</span>
+                <LogOut size={20} />
                 Cerrar sesión
               </span>
             </button>
@@ -94,7 +95,7 @@ export default function AjustesPage() {
                 className="flex items-center justify-between bg-white border border-secondary/40 rounded-xl px-4 py-3"
               >
                 <span className="flex items-center gap-3 text-sm text-brand-text">
-                  <span className="text-lg">{item.icono}</span>
+                  <item.Icono size={20} />
                   {item.texto}
                 </span>
                 <span className="text-xs text-brand-text/40">Próximamente</span>
@@ -108,7 +109,7 @@ export default function AjustesPage() {
               className="flex items-center justify-between bg-white border border-red-200 rounded-xl px-4 py-3 text-left hover:bg-red-50 transition-colors"
             >
               <span className="flex items-center gap-3 text-sm font-medium text-red-700">
-                <span className="text-lg">🗑️</span>
+                <Trash2 size={20} />
                 Borrar cuenta
               </span>
             </button>
