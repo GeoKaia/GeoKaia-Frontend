@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 import { normalizarUrlImagen } from "@/lib/imagenes";
 
 export default function RouteCard({ ruta }) {
@@ -34,8 +35,8 @@ export default function RouteCard({ ruta }) {
         <h3 className="font-bold text-base text-brand-text leading-tight">{ruta.nombre}</h3>
         <p className="text-sm text-brand-text/70 mt-1 line-clamp-3">{ruta.descripcion}</p>
 
-        <p className="text-xs text-brand-text/50 mt-2">
-          📍 {ruta.paradas.length} {ruta.paradas.length === 1 ? "parada" : "paradas"}
+        <p className="flex items-center gap-1 text-xs text-brand-text/50 mt-2">
+          <MapPin size={12} /> {ruta.paradas.length} {ruta.paradas.length === 1 ? "parada" : "paradas"}
         </p>
       </div>
     </Link>

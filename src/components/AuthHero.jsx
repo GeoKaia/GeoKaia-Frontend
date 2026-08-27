@@ -15,7 +15,7 @@ const DEGRADES = {
   admin: "linear-gradient(135deg, var(--color-accent-dark), var(--color-brand-text) 70%)",
 };
 
-export default function AuthHero({ eyebrow, title, subtitle, tone = "negocio", children, footer }) {
+export default function AuthHero({ eyebrow, iconoEyebrow: IconoEyebrow, title, subtitle, tone = "negocio", children, footer }) {
   return (
     <main className="min-h-screen flex flex-col bg-brand-bg">
       <div
@@ -25,7 +25,9 @@ export default function AuthHero({ eyebrow, title, subtitle, tone = "negocio", c
         }}
       >
         {eyebrow && (
-          <p className="text-xs font-semibold uppercase tracking-wide text-white/80 mb-1">{eyebrow}</p>
+          <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-white/80 mb-1">
+            {IconoEyebrow && <IconoEyebrow size={14} />} {eyebrow}
+          </p>
         )}
         <h1 className="text-2xl font-bold text-white drop-shadow-sm">{title}</h1>
         {subtitle && <p className="text-sm text-white/85 max-w-xs mt-1">{subtitle}</p>}

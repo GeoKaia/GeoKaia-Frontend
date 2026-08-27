@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ImageOff, Clock, MapPin } from 'lucide-react';
 import { CATEGORIAS } from '@/lib/api';
 import { normalizarUrlImagen } from '@/lib/imagenes';
 
@@ -9,8 +10,8 @@ function Miniatura({ url, alt }) {
 
   if (error) {
     return (
-      <div className="w-14 h-14 flex-none rounded bg-secondary/20 flex items-center justify-center text-sm snap-start">
-        🖼️
+      <div className="w-14 h-14 flex-none rounded bg-secondary/20 flex items-center justify-center snap-start">
+        <ImageOff size={16} className="text-brand-text/40" />
       </div>
     );
   }
@@ -28,7 +29,7 @@ function Miniatura({ url, alt }) {
 }
 
 export default function PlaceCard({ lugar }) {
-  const cat = CATEGORIAS[lugar.categoria] || { label: lugar.categoria, emoji: '📍' };
+  const cat = CATEGORIAS[lugar.categoria] || { label: lugar.categoria, Icono: MapPin };
   const esPremium = lugar.tier === 'PREMIUM';
   const [fotoError, setFotoError] = useState(false);
   const [descripcionExpandida, setDescripcionExpandida] = useState(false);
@@ -45,10 +46,10 @@ export default function PlaceCard({ lugar }) {
 
   const categoriaBadge = (
     <span
-      className="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full text-white shadow-sm"
+      className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full text-white shadow-sm"
       style={{ backgroundColor: cat.color }}
     >
-      {cat.emoji} {cat.label}
+      <cat.Icono size={12} /> {cat.label}
     </span>
   );
 
@@ -65,7 +66,7 @@ export default function PlaceCard({ lugar }) {
             />
           ) : (
             <div className="w-full h-32 bg-secondary/20 flex flex-col items-center justify-center text-center px-2">
-              <span className="text-2xl">🖼️</span>
+              <ImageOff size={28} className="text-brand-text/40" />
               <span className="text-[11px] text-brand-text/50 mt-1">No se pudo cargar la imagen</span>
             </div>
           )}
@@ -102,7 +103,9 @@ export default function PlaceCard({ lugar }) {
       )}
 
       {lugar.horarios && (
-        <p className="text-xs text-gray-500 mt-1">🕒 {lugar.horarios}</p>
+        <p className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+          <Clock size={12} /> {lugar.horarios}
+        </p>
       )}
 
       <div className="flex flex-wrap gap-2 mt-3">

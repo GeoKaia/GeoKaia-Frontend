@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ShieldCheck } from "lucide-react";
 import { loginNegocio, verificar2FA } from "@/lib/api";
 import { guardarToken } from "@/lib/auth";
 import CampoContrasena from "@/components/CampoContrasena";
@@ -67,7 +68,8 @@ export default function LoginAdminPage() {
 
   return (
     <AuthHero
-      eyebrow="🛡️ Acceso administrador"
+      eyebrow="Acceso administrador"
+      iconoEyebrow={ShieldCheck}
       title={step === "credenciales" ? "Iniciá sesión" : "Verificación en dos pasos"}
       subtitle={step === "credenciales" ? "Solo para cuentas del equipo de GeoKaia." : undefined}
       tone="admin"

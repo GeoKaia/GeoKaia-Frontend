@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import { MapPin, Clock, Ruler, ChevronDown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
@@ -96,9 +97,9 @@ export default function RutaDetallePage() {
                       <button
                         type="button"
                         onClick={() => setLugarEnfocado(parada.lugar.id)}
-                        className="w-full text-left px-3 pt-2 text-xs font-semibold text-accent-dark hover:underline"
+                        className="flex items-center gap-1 w-full text-left px-3 pt-2 text-xs font-semibold text-accent-dark hover:underline"
                       >
-                        📍 Ver "{parada.lugar.nombre}" en el mapa
+                        <MapPin size={12} /> Ver "{parada.lugar.nombre}" en el mapa
                       </button>
                       <div className="p-3 pt-1">
                         <PlaceCard lugar={parada.lugar} />
@@ -106,11 +107,19 @@ export default function RutaDetallePage() {
                     </div>
                     {i < ruta.paradas.length - 1 &&
                       (parada.minutosAlSiguiente != null || parada.distanciaKm != null) && (
-                        <p className="text-xs text-brand-text/50 text-center py-2">
-                          ↓
-                          {parada.minutosAlSiguiente != null && ` 🕒 ${parada.minutosAlSiguiente} min`}
+                        <p className="flex items-center justify-center gap-1 text-xs text-brand-text/50 text-center py-2">
+                          <ChevronDown size={12} />
+                          {parada.minutosAlSiguiente != null && (
+                            <span className="inline-flex items-center gap-0.5">
+                              <Clock size={12} /> {parada.minutosAlSiguiente} min
+                            </span>
+                          )}
                           {parada.minutosAlSiguiente != null && parada.distanciaKm != null && " ·"}
-                          {parada.distanciaKm != null && ` 📏 ${parada.distanciaKm} km`}
+                          {parada.distanciaKm != null && (
+                            <span className="inline-flex items-center gap-0.5">
+                              <Ruler size={12} /> {parada.distanciaKm} km
+                            </span>
+                          )}
                           {" al siguiente lugar"}
                         </p>
                       )}
