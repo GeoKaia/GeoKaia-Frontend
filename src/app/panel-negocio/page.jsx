@@ -35,7 +35,7 @@ const BULLETS_GRATIS = [
   "Horarios de atención",
   "Foto principal (URL)",
   "WhatsApp de contacto",
-  "Tu pin en el mapa (Waze y Google Maps se generan solos)",
+  "Tu pin en el mapa, con enlaces a Waze y Google Maps (se generan solos o los podés editar)",
 ];
 
 const BULLETS_PREMIUM = [
@@ -62,6 +62,20 @@ const CAMPOS_TEXTO = [
     tier: "AMBOS",
     ayuda: "Pegá un link directo a la imagen (termina en .jpg, .png, etc.), no un link para compartir de Google Fotos. Los links de Drive o Dropbox se convierten automáticamente.",
   },
+  {
+    name: "mapsUrl",
+    label: "URL de Google Maps (opcional)",
+    tipo: "input",
+    tier: "AMBOS",
+    ayuda: "Si no la ponés, se genera sola desde tu pin. Pegá tu ficha real de Google Maps si preferís usar esa.",
+  },
+  {
+    name: "wazeUrl",
+    label: "URL de Waze (opcional)",
+    tipo: "input",
+    tier: "AMBOS",
+    ayuda: "Igual que Maps: si la dejás vacía, se genera sola desde tu pin.",
+  },
   { name: "whatsapp", label: "WhatsApp (solo números, con código de país)", tipo: "input", tier: "AMBOS" },
   { name: "videoUrl", label: "URL del video (YouTube o TikTok)", tipo: "input", tier: "PREMIUM" },
   { name: "panoramaUrl", label: "URL del visor 360°", tipo: "input", tier: "PREMIUM" },
@@ -73,6 +87,8 @@ const CAMPO_VACIO = {
   descripcion: "",
   subcategoria: "",
   horarios: "",
+  mapsUrl: "",
+  wazeUrl: "",
   fotoUrl: "",
   videoUrl: "",
   panoramaUrl: "",
@@ -126,6 +142,8 @@ export default function PanelNegocioPage() {
           descripcion: data.descripcion || "",
           subcategoria: data.subcategoria || "",
           horarios: data.horarios || "",
+          mapsUrl: data.mapsUrl || "",
+          wazeUrl: data.wazeUrl || "",
           fotoUrl: data.fotoUrl || "",
           videoUrl: data.videoUrl || "",
           panoramaUrl: data.panoramaUrl || "",

@@ -38,8 +38,10 @@ export default function PlaceCard({ lugar }) {
     setFotoError(false);
   }, [lugar.fotoUrl]);
 
-  const urlWaze = `https://waze.com/ul?ll=${lugar.latitud},${lugar.longitud}&navigate=yes`;
-  const urlGoogleMaps = `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
+  // El negocio puede pisar el link automático (basado en el pin) con uno propio
+  // — por ejemplo su ficha real de Google Maps, más precisa que el pin.
+  const urlWaze = lugar.wazeUrl || `https://waze.com/ul?ll=${lugar.latitud},${lugar.longitud}&navigate=yes`;
+  const urlGoogleMaps = lugar.mapsUrl || `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
   const urlWhatsapp = lugar.whatsapp
     ? `https://wa.me/${lugar.whatsapp.replace(/\D/g, '')}`
     : null;
@@ -125,20 +127,20 @@ export default function PlaceCard({ lugar }) {
         >
           Waze
         </a>
+        {urlWhatsapp && (
+          <a
+            href={urlWhatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs px-3 py-1.5 rounded-full bg-primary !text-white hover:opacity-90"
+          >
+            WhatsApp
+          </a>
+        )}
       </div>
 
       {esPremium && (
         <div className="flex flex-wrap gap-2 mt-2 border-t border-gray-100 pt-2">
-          {urlWhatsapp && (
-            <a
-              href={urlWhatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs px-2 py-1 rounded bg-primary !text-white hover:opacity-90"
-            >
-              WhatsApp
-            </a>
-          )}
           {lugar.menuUrl && (
             <a
               href={lugar.menuUrl}
