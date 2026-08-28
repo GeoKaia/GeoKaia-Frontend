@@ -10,10 +10,29 @@
 }
 
 @keyframes pin-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  0%, 100% { transform: rotate(-45deg) scale(1); }
+  50% { transform: rotate(-45deg) scale(1.15); }
+}
+
+/* Anillo de luz: un eco del mismo color del pin que se expande y se desvanece
+   detrás de él. ::before hereda `background` del pin (fijado inline por marker),
+   así que el anillo siempre matchea el color real de esa categoría/subcategoría. */
+@keyframes pin-glow-ring {
+  0% { transform: scale(0.9); opacity: 0.55; }
+  100% { transform: scale(2.1); opacity: 0; }
 }
 
 .pin-premium {
+  position: relative;
   animation: pin-pulse 1.6s ease-in-out infinite;
+}
+
+.pin-premium::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  z-index: -1;
+  animation: pin-glow-ring 1.8s ease-out infinite;
 }
