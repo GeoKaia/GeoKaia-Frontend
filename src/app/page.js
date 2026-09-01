@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Route, Star, BookOpen, Store } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import HeroLogo from "@/components/HeroLogo";
 import ChatKaia from "@/components/ChatKaia";
 
 // Importación dinámica apagando el SSR para evitar el error 'window is undefined' de Leaflet
@@ -34,6 +35,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
       <Header animarEntrada />
+      <HeroLogo />
 
       <main className="flex-1 flex flex-col items-center gap-6 py-6">
         <ChatKaia />
