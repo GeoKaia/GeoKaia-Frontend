@@ -33,7 +33,7 @@ function BotonNav({ href, color, textColor = "#ffffff", Icono, children }) {
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
+      <Header animarEntrada />
 
       <main className="flex-1 flex flex-col items-center gap-6 py-6">
         <ChatKaia />
