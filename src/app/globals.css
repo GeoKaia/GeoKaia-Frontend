@@ -36,3 +36,21 @@
   z-index: -1;
   animation: pin-glow-ring 1.8s ease-out infinite;
 }
+
+/* Ola del HeroLogo: dos copias idénticas del mismo path lado a lado (ver HeroLogo.jsx)
+   dentro de un contenedor del doble de ancho. Al desplazar exactamente 50% de ese
+   contenedor (= el ancho de una sola copia), la segunda copia queda donde estaba la
+   primera y el loop no se nota. */
+@keyframes wave-scroll {
+  to { transform: translateX(-50%); }
+}
+
+.animate-wave {
+  animation: wave-scroll 12s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wave {
+    animation: none;
+  }
+}
