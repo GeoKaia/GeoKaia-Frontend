@@ -22,7 +22,14 @@ async function apiFetch(path, options = {}) {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    throw new Error(data.error || "Ocurrió un error inesperado. Intentá de nuevo.");
+    // El middleware de validación del backend manda el motivo real por campo en
+    // "detalles" (ej. "La URL no parece ser una foto real...") — sin esto, cualquier
+    // error de validación se veía como el genérico "Error de validación" y el negocio
+    // no tenía forma de saber qué corregir.
+    const mensaje = data.detalles?.length
+      ? data.detalles.map((d) => d.mensaje).join(" ")
+      : data.error || "Ocurrió un error inesperado. Intentá de nuevo.";
+    throw new Error(mensaje);
   }
 
   return data;
@@ -121,6 +128,30 @@ export function actualizarEstadoLugar(token, id, estado) {
     method: "PATCH",
     headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify({ estado }),
+  });
+}
+
+// Acceso amplio de admin a TODOS los lugares (cualquier negocio, cualquier estado) —
+// pedido puntual para acelerar la carga de contenido antes de la entrega final.
+export function obtenerTodosLosLugares(token) {
+  return apiFetch("/api/lugares/admin/todos", {
+    cache: "no-store",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function actualizarLugarAdmin(token, id, cambios) {
+  return apiFetch(`/api/lugares/admin/${id}`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(cambios),
+  });
+}
+
+export function eliminarLugarAdmin(token, id) {
+  return apiFetch(`/api/lugares/admin/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
   });
 }
 

@@ -208,9 +208,14 @@ export default function AdminRutasPage() {
         <div className="w-full max-w-3xl">
           <div className="flex items-center justify-between mb-1">
             <h1 className="text-xl font-bold text-brand-text">Rutas</h1>
-            <Link href="/admin" className="text-sm text-accent-dark hover:underline">
-              ← Cola de aprobación
-            </Link>
+            <div className="flex gap-4">
+              <Link href="/admin/lugares" className="text-sm text-accent-dark hover:underline">
+                Todos los lugares →
+              </Link>
+              <Link href="/admin" className="text-sm text-accent-dark hover:underline">
+                ← Cola de aprobación
+              </Link>
+            </div>
           </div>
           <p className="text-sm text-brand-text/60 mb-6">
             Armá rutas temáticas eligiendo entre los lugares ya aprobados.

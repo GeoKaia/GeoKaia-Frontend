@@ -66,9 +66,14 @@ export default function AdminPage() {
         <div className="w-full max-w-3xl">
           <div className="flex items-center justify-between mb-1">
             <h1 className="text-xl font-bold text-brand-text">Cola de aprobación</h1>
-            <Link href="/admin/rutas" className="text-sm text-accent-dark hover:underline">
-              Gestionar rutas →
-            </Link>
+            <div className="flex gap-4">
+              <Link href="/admin/lugares" className="text-sm text-accent-dark hover:underline">
+                Todos los lugares →
+              </Link>
+              <Link href="/admin/rutas" className="text-sm text-accent-dark hover:underline">
+                Gestionar rutas →
+              </Link>
+            </div>
           </div>
           <p className="text-sm text-brand-text/60 mb-6">
             Lugares registrados por negocios, esperando revisión antes de salir al mapa público.
