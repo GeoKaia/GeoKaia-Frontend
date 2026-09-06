@@ -22,7 +22,14 @@ async function apiFetch(path, options = {}) {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    throw new Error(data.error || "Ocurrió un error inesperado. Intentá de nuevo.");
+    // El middleware de validación del backend manda el motivo real por campo en
+    // "detalles" (ej. "La URL no parece ser una foto real...") — sin esto, cualquier
+    // error de validación se veía como el genérico "Error de validación" y el negocio
+    // no tenía forma de saber qué corregir.
+    const mensaje = data.detalles?.length
+      ? data.detalles.map((d) => d.mensaje).join(" ")
+      : data.error || "Ocurrió un error inesperado. Intentá de nuevo.";
+    throw new Error(mensaje);
   }
 
   return data;
