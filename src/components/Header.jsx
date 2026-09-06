@@ -25,16 +25,15 @@ export default function Header({ animarEntrada = false }) {
 
   return (
     <header className="w-full flex items-center px-4 py-3 bg-white border-b border-secondary/30">
-      <Link ref={logoRef} href="/" className="flex items-center gap-2">
+      <Link ref={logoRef} href="/" className="flex items-center">
         <Image
-          src="/icons/geokaia-logo.png"
-          alt="GeoKaia"
-          width={36}
-          height={36}
-          className="rounded-full"
+          src="/icons/geokaia-logo-largo.png"
+          alt="GeoKaia — Turismo digital de Nicaragua"
+          width={1848}
+          height={701}
+          className="h-9 sm:h-10 w-auto"
           priority
         />
-        <span className="font-bold text-lg text-brand-text">GeoKaia</span>
       </Link>
     </header>
   );
