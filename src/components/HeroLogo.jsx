@@ -33,9 +33,10 @@ export default function HeroLogo() {
 
   return (
     <section className="w-full flex flex-col items-center">
-      {/* Banda sólida + ola. La ola va en accent-dark (mas oscuro que la banda) para
-          que la curva se note como un borde real, no un degradé del mismo color
-          sobre si mismo — misma idea que las capas de profundidad del agua. */}
+      {/* Banda sólida + ola. El degradé de abajo arranca en el mismo "accent" de esta
+          banda (no en accent-dark) para que no haya ningún salto de color en el borde
+          — la ola es una sombra translúcida (no un segundo color plano) apoyada sobre
+          ese mismo fondo, así se ve como una ondulación de agua y no como un bloque. */}
       <div className="relative w-full h-16 sm:h-20 bg-accent">
         <div className="absolute inset-x-0 -bottom-px h-6 sm:h-8 overflow-hidden leading-none">
           <div className="flex w-[200%] animate-wave">
@@ -50,7 +51,7 @@ export default function HeroLogo() {
               >
                 <path
                   d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z"
-                  fill="var(--color-accent-dark)"
+                  fill="rgba(0,0,0,0.12)"
                 />
               </svg>
             ))}
@@ -58,9 +59,9 @@ export default function HeroLogo() {
         </div>
       </div>
 
-      {/* Tramo de fusión: continúa desde el mismo tono de la ola (accent-dark) y se
-          difumina a blanco, para que no haya un salto de color en el borde de arriba. */}
-      <div className="w-full h-10 sm:h-14 bg-gradient-to-b from-accent-dark to-brand-bg" />
+      {/* Tramo de fusión: arranca en el mismo accent de la banda de arriba (sin salto)
+          y recién ahí se difumina a blanco. */}
+      <div className="w-full h-10 sm:h-14 bg-gradient-to-b from-accent to-brand-bg" />
 
       {/* Logo, ya sobre fondo casi blanco. Poco padding arriba: pegado a la fusión,
           no queremos un vacío blanco entre el degradé y el logo. */}
