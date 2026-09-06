@@ -33,10 +33,11 @@ export default function HeroLogo() {
 
   return (
     <section className="w-full flex flex-col items-center">
-      {/* Banda sólida + ola. El degradé de abajo arranca en el mismo "accent" de esta
-          banda (no en accent-dark) para que no haya ningún salto de color en el borde
-          — la ola es una sombra translúcida (no un segundo color plano) apoyada sobre
-          ese mismo fondo, así se ve como una ondulación de agua y no como un bloque. */}
+      {/* Banda sólida + ola en accent-dark (mismo color que antes). Para que no se
+          note el salto en el borde, el tramo de abajo no empieza a difuminar de
+          inmediato: se queda plano en accent-dark (mismo tono, opacidad completa) un
+          tramo y recién después baja hacia blanco — por eso el gradiente lleva un
+          stop de "espera" a mitad de camino en vez de ir directo de un color al otro. */}
       <div className="relative w-full h-16 sm:h-20 bg-accent">
         <div className="absolute inset-x-0 -bottom-px h-6 sm:h-8 overflow-hidden leading-none">
           <div className="flex w-[200%] animate-wave">
@@ -51,7 +52,7 @@ export default function HeroLogo() {
               >
                 <path
                   d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z"
-                  fill="rgba(0,0,0,0.12)"
+                  fill="var(--color-accent-dark)"
                 />
               </svg>
             ))}
@@ -59,9 +60,9 @@ export default function HeroLogo() {
         </div>
       </div>
 
-      {/* Tramo de fusión: arranca en el mismo accent de la banda de arriba (sin salto)
-          y recién ahí se difumina a blanco. */}
-      <div className="w-full h-10 sm:h-14 bg-gradient-to-b from-accent to-brand-bg" />
+      {/* Tramo de fusión: plano en accent-dark (igual que la ola, opacidad completa)
+          hasta la mitad, y recién ahí empieza a difuminarse a blanco. */}
+      <div className="w-full h-10 sm:h-14 bg-[linear-gradient(to_bottom,var(--color-accent-dark)_0%,var(--color-accent-dark)_45%,var(--color-brand-bg)_100%)]" />
 
       {/* Logo, ya sobre fondo casi blanco. Poco padding arriba: pegado a la fusión,
           no queremos un vacío blanco entre el degradé y el logo. */}
