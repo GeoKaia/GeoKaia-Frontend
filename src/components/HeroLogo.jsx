@@ -8,9 +8,9 @@ import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 // Franja al principio de la home, antes del chat de Kaia. Tres tramos, de arriba a
 // abajo: (1) banda sólida de accent con una ola SVG animada en su borde inferior,
 // (2) un tramo corto de degradé del mismo accent al blanco (fusiona la banda sólida
-// con el fondo sin cortar en seco), (3) el isologo a color con transparencia real,
-// ya sobre fondo prácticamente blanco para que tenga contraste real — next/image lo
-// sirve optimizado/redimensionado (el archivo original pesa ~600KB a 2000x1414).
+// con el fondo sin cortar en seco), (3) el logo largo (isologo + wordmark + tagline)
+// con transparencia real, ya sobre fondo prácticamente blanco para que tenga
+// contraste real — next/image lo sirve optimizado/redimensionado.
 // drop-shadow (no box-shadow) porque sigue el alfa real, no un rectángulo.
 export default function HeroLogo() {
   const logoRef = useRef(null);
@@ -69,12 +69,12 @@ export default function HeroLogo() {
       <div className="w-full pt-2 pb-6 sm:pt-3 sm:pb-8 flex items-center justify-center">
         <Image
           ref={logoRef}
-          src="/icons/kaia-emblema.png"
-          alt="GeoKaia"
-          width={226}
-          height={160}
+          src="/icons/geokaia-logo-largo.png"
+          alt="GeoKaia — Turismo digital de Nicaragua"
+          width={1848}
+          height={701}
           priority
-          className="w-64 sm:w-80 h-auto drop-shadow-lg"
+          className="w-72 sm:w-96 h-auto drop-shadow-lg"
         />
       </div>
     </section>
