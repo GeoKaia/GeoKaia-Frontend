@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { MoonStar, Type, LogOut, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { MoonStar, Type, LogOut, Trash2, Sparkles, ChevronRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { obtenerToken, borrarToken } from "@/lib/auth";
@@ -87,6 +88,17 @@ export default function AjustesPage() {
               </span>
             </button>
           )}
+
+          <Link
+            href="/bienvenida?repetir=1"
+            className="flex items-center justify-between bg-white border border-secondary/40 rounded-xl px-4 py-3 hover:bg-brand-bg transition-colors"
+          >
+            <span className="flex items-center gap-3 text-sm text-brand-text">
+              <Sparkles size={20} />
+              Ver la bienvenida otra vez
+            </span>
+            <ChevronRight size={18} className="text-brand-text/40" />
+          </Link>
 
           <div className="flex flex-col gap-2">
             {PROXIMAMENTE.map((item) => (

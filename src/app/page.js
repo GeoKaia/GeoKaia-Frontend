@@ -1,12 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Route, Star, BookOpen, Store } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import HeroLogo from "@/components/HeroLogo";
 import ChatKaia from "@/components/ChatKaia";
+import { onboardingVisto } from "@/lib/onboarding";
 
 // Importación dinámica apagando el SSR para evitar el error 'window is undefined' de Leaflet
 const MapaBase = dynamic(() => import("@/components/MapaBase"), {
@@ -32,10 +34,21 @@ function BotonNav({ href, color, textColor = "#ffffff", Icono, children }) {
 }
 
 export default function Home() {
+  const router = useRouter();
+  const [listo, setListo] = useState(false);
+
+  // Primera visita: mandar al onboarding (/bienvenida). Hasta saber si hay que redirigir no se
+  // pinta la home, así no se ve un flash de la home antes del redirect.
+  useEffect(() => {
+    if (onboardingVisto()) setListo(true);
+    else router.replace("/bienvenida");
+  }, [router]);
+
+  if (!listo) return <div className="min-h-screen bg-brand-bg" aria-hidden="true" />;
+
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
       <Header animarEntrada />
-      <HeroLogo />
 
       <main className="flex-1 flex flex-col items-center gap-6 py-6">
         <ChatKaia />
