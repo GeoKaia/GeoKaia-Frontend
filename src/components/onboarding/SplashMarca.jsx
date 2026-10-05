@@ -73,7 +73,6 @@ export default function SplashMarca({ onContinuar }) {
       tl.kill();
       auto.kill();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -20,6 +20,10 @@ const MapaBase = dynamic(() => import("@/components/MapaBase"), {
   ),
 });
 
+// La marca del onboarding vive en localStorage y no cambia mientras la home está abierta:
+// no hace falta suscribirse a nada.
+const sinSuscripcion = () => () => {};
+
 function BotonNav({ href, color, textColor = "#ffffff", Icono, children }) {
   return (
     <Link
@@ -35,16 +39,19 @@ function BotonNav({ href, color, textColor = "#ffffff", Icono, children }) {
 
 export default function Home() {
   const router = useRouter();
-  const [listo, setListo] = useState(false);
 
-  // Primera visita: mandar al onboarding (/bienvenida). Hasta saber si hay que redirigir no se
-  // pinta la home, así no se ve un flash de la home antes del redirect.
+  // Primera visita: mandar al onboarding (/bienvenida). En el servidor y durante la hidratación
+  // el snapshot es `false`, así que no se pinta la home hasta saber si hay que redirigir
+  // (sin flash de la home antes del redirect).
+  const visto = useSyncExternalStore(sinSuscripcion, onboardingVisto, () => false);
+
+  // Se relee la marca directamente (no se usa `visto`): en el primer commit tras hidratar `visto` todavía
+  // vale el snapshot del servidor (false) y mandaría al onboarding incluso a quien ya lo vio.
   useEffect(() => {
-    if (onboardingVisto()) setListo(true);
-    else router.replace("/bienvenida");
+    if (!onboardingVisto()) router.replace("/bienvenida");
   }, [router]);
 
-  if (!listo) return <div className="min-h-screen bg-brand-bg" aria-hidden="true" />;
+  if (!visto) return <div className="min-h-screen bg-brand-bg" aria-hidden="true" />;
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">

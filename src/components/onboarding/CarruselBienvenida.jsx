@@ -50,7 +50,6 @@ export default function CarruselBienvenida({ slideInicial = 0, onEmpezar, onSalt
   useIsomorphicLayoutEffect(() => {
     if (idx > 0) irA(idx, false);
     // solo al montar
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Mantener el slide actual alineado si cambia el ancho (por ejemplo al pasar de marco a pantalla completa).

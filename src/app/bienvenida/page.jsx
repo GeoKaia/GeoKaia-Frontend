@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Nunito } from "next/font/google";
@@ -8,6 +8,7 @@ import { Map, Route, Sparkles, Store, RotateCcw, ArrowRight } from "lucide-react
 import SplashMarca from "@/components/onboarding/SplashMarca";
 import CarruselBienvenida from "@/components/onboarding/CarruselBienvenida";
 import { marcarOnboardingVisto } from "@/lib/onboarding";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import "./bienvenida.css";
 
 // Nunito es la tipografía del mockup de Figma. Se carga solo para esta página.
@@ -29,6 +30,21 @@ function Bienvenida() {
 
   const [paso, setPaso] = useState(saltarSplash ? "carrusel" : "splash");
   const [vuelta, setVuelta] = useState(0); // al reiniciar la demo se remonta todo
+
+  // En escritorio el celular mide 390x844 y se escala (zoom) para entrar en la altura de la ventana.
+  // En móvil (<= 860px) el CSS lo deja a pantalla completa y el zoom se ignora.
+  const celularRef = useRef(null);
+  useIsomorphicLayoutEffect(() => {
+    function ajustarEscala() {
+      const celular = celularRef.current;
+      if (!celular) return;
+      const escala = Math.min(1, Math.max(0.45, (window.innerHeight - 48) / 844));
+      celular.style.zoom = String(escala);
+    }
+    ajustarEscala();
+    window.addEventListener("resize", ajustarEscala);
+    return () => window.removeEventListener("resize", ajustarEscala);
+  }, []);
 
   // Mientras el onboarding está abierto, la página de atrás (home) no debe poder scrollear.
   useEffect(() => {
@@ -55,7 +71,7 @@ function Bienvenida() {
       <span className="ob-circulo ob-circulo-b" aria-hidden="true" />
 
       <div className="ob-escenario">
-        <div className="ob-celular">
+        <div ref={celularRef} className="ob-celular">
           <div className="ob-pantalla">
             <span className="ob-isla" aria-hidden="true" />
             <div className="ob-estado" aria-hidden="true">
