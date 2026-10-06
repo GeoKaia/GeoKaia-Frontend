@@ -13,7 +13,7 @@ import { normalizarUrlImagen } from "@/lib/imagenes";
 const MapaBase = dynamic(() => import("@/components/MapaBase"), {
   ssr: false,
   loading: () => (
-    <p className="p-4 text-center text-brand-text/60 animate-pulse">
+    <p className="p-4 text-center text-brand-text/70 animate-pulse">
       Cargando mapa de la ruta...
     </p>
   ),
@@ -41,11 +41,11 @@ export default function RutaDetallePage() {
     <div className="flex min-h-screen flex-col bg-brand-bg">
       <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
+      <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
         {ruta === undefined && !error && (
-          <p className="text-brand-text/60 animate-pulse">Cargando ruta...</p>
+          <p className="text-brand-text/70 animate-pulse">Cargando ruta...</p>
         )}
 
         {ruta === null && (
@@ -71,7 +71,7 @@ export default function RutaDetallePage() {
               <p className="text-brand-text/80 mt-2">{ruta.descripcion}</p>
             </div>
 
-            <div className="bg-white p-2 rounded-xl shadow-md border border-secondary/30">
+            <div className="bg-surface p-2 rounded-xl shadow-md border border-secondary/30">
               <MapaBase
                 lugaresIniciales={lugaresDeLaRuta}
                 rutaParadas={lugaresDeLaRuta}
@@ -88,7 +88,7 @@ export default function RutaDetallePage() {
                 {ruta.paradas.map((parada, i) => (
                   <div key={parada.id}>
                     <div
-                      className={`bg-white border rounded-xl overflow-hidden transition-colors ${
+                      className={`bg-surface border rounded-xl overflow-hidden transition-colors ${
                         lugarEnfocado === parada.lugar.id
                           ? "border-accent-dark ring-1 ring-accent-dark"
                           : "border-secondary/40"
@@ -97,7 +97,7 @@ export default function RutaDetallePage() {
                       <button
                         type="button"
                         onClick={() => setLugarEnfocado(parada.lugar.id)}
-                        className="flex items-center gap-1 w-full text-left px-3 pt-2 text-xs font-semibold text-accent-dark hover:underline"
+                        className="flex items-center gap-1 w-full text-left px-3 pt-2 text-xs font-semibold text-accent-fg hover:underline"
                       >
                         <MapPin size={12} /> Ver "{parada.lugar.nombre}" en el mapa
                       </button>
@@ -107,7 +107,7 @@ export default function RutaDetallePage() {
                     </div>
                     {i < ruta.paradas.length - 1 &&
                       (parada.minutosAlSiguiente != null || parada.distanciaKm != null) && (
-                        <p className="flex items-center justify-center gap-1 text-xs text-brand-text/50 text-center py-2">
+                        <p className="flex items-center justify-center gap-1 text-xs text-brand-text/70 text-center py-2">
                           <ChevronDown size={12} />
                           {parada.minutosAlSiguiente != null && (
                             <span className="inline-flex items-center gap-0.5">

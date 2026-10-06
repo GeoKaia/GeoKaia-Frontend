@@ -14,7 +14,7 @@ import { onboardingVisto } from "@/lib/onboarding";
 const MapaBase = dynamic(() => import("@/components/MapaBase"), {
   ssr: false,
   loading: () => (
-    <p className="p-4 text-center text-brand-text/60 animate-pulse">
+    <p className="p-4 text-center text-brand-text/70 animate-pulse">
       Cargando mapa interactivo...
     </p>
   ),
@@ -57,7 +57,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-brand-bg">
       <Header animarEntrada />
 
-      <main className="flex-1 flex flex-col items-center gap-6 py-6">
+      <main id="contenido" className="flex-1 flex flex-col items-center gap-6 py-6">
         <ChatKaia />
 
         <div className="w-full max-w-2xl flex gap-3 px-4">
@@ -73,7 +73,7 @@ export default function Home() {
           <h2 className="text-center text-sm font-semibold text-brand-text/70 mb-2">
             Explorá Nicaragua — Mapa de lugares
           </h2>
-          <div className="bg-white p-2 rounded-xl shadow-md border border-secondary/30">
+          <div className="bg-surface p-2 rounded-xl shadow-md border border-secondary/30">
             <MapaBase />
           </div>
         </section>

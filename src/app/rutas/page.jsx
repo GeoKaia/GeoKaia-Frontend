@@ -21,22 +21,22 @@ export default function RutasPage() {
     <div className="flex min-h-screen flex-col bg-brand-bg">
       <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
+      <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-4xl">
           <Route size={32} className="text-primary" />
           <h1 className="text-xl font-bold text-brand-text mb-1">Lista de recorridos</h1>
-          <p className="text-sm text-brand-text/60 mb-6">
+          <p className="text-sm text-brand-text/70 mb-6">
             Rutas temáticas curadas de GeoKaia — elegí una y mirá el detalle.
           </p>
 
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
           {rutas === null && !error && (
-            <p className="text-brand-text/60 animate-pulse">Cargando rutas...</p>
+            <p className="text-brand-text/70 animate-pulse">Cargando rutas...</p>
           )}
 
           {rutas?.length === 0 && (
-            <p className="text-brand-text/60">Todavía no hay rutas cargadas.</p>
+            <p className="text-brand-text/70">Todavía no hay rutas cargadas.</p>
           )}
 
           {rutas && rutas.length > 0 && (

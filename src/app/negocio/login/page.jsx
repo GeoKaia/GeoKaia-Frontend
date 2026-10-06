@@ -92,7 +92,7 @@ export default function LoginNegocioPage() {
         step === "credenciales" && (
           <Link
             href="/admin/login"
-            className="mt-4 text-xs text-brand-text/30 hover:text-brand-text/60 hover:underline"
+            className="mt-4 text-xs text-brand-text/70 hover:text-brand-text/70 hover:underline"
           >
             Acceso administrador
           </Link>
@@ -150,7 +150,7 @@ export default function LoginNegocioPage() {
 
             <p className="mt-6 text-center text-sm text-brand-text/70">
               ¿No tenés cuenta?{" "}
-              <Link href="/negocio/registro" className="font-semibold text-accent hover:underline">
+              <Link href="/negocio/registro" className="font-semibold text-accent-fg hover:underline">
                 Registrá tu negocio
               </Link>
             </p>
@@ -204,7 +204,7 @@ export default function LoginNegocioPage() {
                   // reenviar el login viejo en silencio y "rebotar" de vuelta acá.
                   setCredenciales((prev) => ({ ...prev, password: "" }));
                 }}
-                className="text-sm text-brand-text/60 hover:underline"
+                className="text-sm text-brand-text/70 hover:underline"
               >
                 Volver
               </button>

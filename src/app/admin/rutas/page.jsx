@@ -204,25 +204,25 @@ export default function AdminRutasPage() {
     <div className="flex min-h-screen flex-col bg-brand-bg">
       <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
+      <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-3xl">
           <div className="flex items-center justify-between mb-1">
             <h1 className="text-xl font-bold text-brand-text">Rutas</h1>
             <div className="flex gap-4">
-              <Link href="/admin/lugares" className="text-sm text-accent-dark hover:underline">
+              <Link href="/admin/lugares" className="text-sm text-accent-fg hover:underline">
                 Todos los lugares →
               </Link>
-              <Link href="/admin" className="text-sm text-accent-dark hover:underline">
+              <Link href="/admin" className="text-sm text-accent-fg hover:underline">
                 ← Cola de aprobación
               </Link>
             </div>
           </div>
-          <p className="text-sm text-brand-text/60 mb-6">
+          <p className="text-sm text-brand-text/70 mb-6">
             Armá rutas temáticas eligiendo entre los lugares ya aprobados.
           </p>
 
           {estado === "cargando" && (
-            <p className="text-brand-text/60 animate-pulse">Cargando...</p>
+            <p className="text-brand-text/70 animate-pulse">Cargando...</p>
           )}
 
           {estado === "sin-token" && (
@@ -245,7 +245,7 @@ export default function AdminRutasPage() {
 
           {estado === "listo" && (
             <div className="flex flex-col gap-8">
-              <form onSubmit={handleSubmit} className="bg-white border border-secondary/40 rounded-xl p-5 flex flex-col gap-4">
+              <form onSubmit={handleSubmit} className="bg-surface border border-secondary/40 rounded-xl p-5 flex flex-col gap-4">
                 <h2 className="font-bold text-brand-text">
                   {editandoId ? "Editar ruta" : "Nueva ruta"}
                 </h2>
@@ -371,21 +371,21 @@ export default function AdminRutasPage() {
                   </div>
 
                   {paradas.length === 0 && (
-                    <p className="text-sm text-brand-text/50">Todavía no agregaste ningún lugar.</p>
+                    <p className="text-sm text-brand-text/70">Todavía no agregaste ningún lugar.</p>
                   )}
 
                   <div className="flex flex-col gap-2">
                     {paradas.map((p, i) => (
                       <div key={p.lugarId} className="flex flex-col gap-2">
                         <div className="flex items-center gap-2 bg-brand-bg border border-secondary/30 rounded-lg px-3 py-2">
-                          <span className="text-xs font-semibold text-brand-text/50 w-5">{i + 1}.</span>
+                          <span className="text-xs font-semibold text-brand-text/70 w-5">{i + 1}.</span>
                           <span className="flex-1 text-sm text-brand-text">{nombreLugar(p.lugarId)}</span>
                           <button
                             type="button"
                             onClick={() => moverParada(i, -1)}
                             disabled={i === 0}
                             aria-label="Subir"
-                            className="text-brand-text/50 hover:text-brand-text disabled:opacity-30"
+                            className="text-brand-text/70 hover:text-brand-text disabled:opacity-30"
                           >
                             <ArrowUp size={14} />
                           </button>
@@ -394,7 +394,7 @@ export default function AdminRutasPage() {
                             onClick={() => moverParada(i, 1)}
                             disabled={i === paradas.length - 1}
                             aria-label="Bajar"
-                            className="text-brand-text/50 hover:text-brand-text disabled:opacity-30"
+                            className="text-brand-text/70 hover:text-brand-text disabled:opacity-30"
                           >
                             <ArrowDown size={14} />
                           </button>
@@ -409,7 +409,7 @@ export default function AdminRutasPage() {
                         </div>
 
                         {i < paradas.length - 1 && (
-                          <div className="flex items-center gap-2 pl-7 text-xs text-brand-text/60">
+                          <div className="flex items-center gap-2 pl-7 text-xs text-brand-text/70">
                             <span className="inline-flex items-center gap-1"><ChevronDown size={12} /> hasta el siguiente:</span>
                             <input
                               type="number"
@@ -464,13 +464,13 @@ export default function AdminRutasPage() {
               <div>
                 <h2 className="font-bold text-brand-text mb-3">Rutas existentes</h2>
                 {rutas.length === 0 && (
-                  <p className="text-sm text-brand-text/50">Todavía no hay ninguna ruta creada.</p>
+                  <p className="text-sm text-brand-text/70">Todavía no hay ninguna ruta creada.</p>
                 )}
                 <div className="flex flex-col gap-2">
                   {rutas.map((r) => (
                     <div
                       key={r.id}
-                      className="flex items-center gap-3 bg-white border border-secondary/40 rounded-xl px-4 py-3"
+                      className="flex items-center gap-3 bg-surface border border-secondary/40 rounded-xl px-4 py-3"
                     >
                       <span
                         className="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0"
@@ -480,13 +480,13 @@ export default function AdminRutasPage() {
                       </span>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-brand-text truncate">{r.nombre}</p>
-                        <p className="text-xs text-brand-text/50">
+                        <p className="text-xs text-brand-text/70">
                           {r.paradas.length} {r.paradas.length === 1 ? "parada" : "paradas"}
                         </p>
                       </div>
                       <button
                         onClick={() => empezarEdicion(r)}
-                        className="text-xs font-semibold text-accent-dark hover:underline shrink-0"
+                        className="text-xs font-semibold text-accent-fg hover:underline shrink-0"
                       >
                         Editar
                       </button>

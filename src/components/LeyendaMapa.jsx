@@ -16,7 +16,7 @@ export default function LeyendaMapa({ lugares, seleccionada, onSeleccionar }) {
   if (subcategorias.length === 0) return null;
 
   return (
-    <div className="absolute z-[1000] bottom-3 left-3 bg-white rounded-lg shadow-md max-w-[220px] overflow-hidden">
+    <div className="absolute z-[1000] bottom-3 left-3 bg-surface rounded-lg shadow-md max-w-[220px] overflow-hidden">
       <button
         onClick={() => setAbierta((v) => !v)}
         className="w-full flex items-center justify-between gap-2 text-xs font-semibold text-brand-text px-3 py-2"
