@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { MoonStar, Type, LogOut, Trash2, Sparkles, ChevronRight, ShieldCheck, FileText } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { obtenerToken, borrarToken } from "@/lib/auth";
 import { eliminarCuenta } from "@/lib/api";
@@ -81,7 +80,6 @@ export default function AjustesPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-md flex flex-col gap-4">

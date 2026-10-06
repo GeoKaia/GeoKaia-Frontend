@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Route } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RouteCard from "@/components/RouteCard";
 import { obtenerRutas } from "@/lib/api";
@@ -19,7 +18,6 @@ export default function RutasPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-4xl">

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Pencil, Trash2, ArrowLeft } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import {
@@ -221,7 +220,6 @@ export default function AdminLugaresPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-3xl">

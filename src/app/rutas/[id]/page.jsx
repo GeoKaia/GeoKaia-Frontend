@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { MapPin, Clock, Ruler, ChevronDown } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import { obtenerRutas } from "@/lib/api";
@@ -39,7 +38,6 @@ export default function RutaDetallePage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         {error && <p className="text-red-600 text-sm">{error}</p>}

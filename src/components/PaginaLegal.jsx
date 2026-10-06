@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { FECHA_ACTUALIZACION, TERMINOS_VERSION } from "@/lib/legal";
 
@@ -23,7 +22,6 @@ export function Lista({ items }) {
 export default function PaginaLegal({ titulo, introduccion, secciones, otroDocumento }) {
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-10">
         <article className="w-full max-w-2xl flex flex-col gap-6">

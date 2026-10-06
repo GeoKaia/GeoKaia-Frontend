@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MapPin, Images, Orbit, MessageCircle } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const BENEFICIOS = [
@@ -13,7 +12,6 @@ const BENEFICIOS = [
 export default function NegociosPage() {
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-2xl flex flex-col gap-6">

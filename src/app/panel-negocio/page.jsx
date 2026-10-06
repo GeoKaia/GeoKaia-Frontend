@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Star, CreditCard, Clock, Check } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import CampoContrasena from "@/components/CampoContrasena";
@@ -346,7 +345,6 @@ export default function PanelNegocioPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         {estado === "cargando" && (

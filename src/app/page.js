@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Route, Star, BookOpen, Store } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ChatKaia from "@/components/ChatKaia";
 import { onboardingVisto } from "@/lib/onboarding";
@@ -55,7 +54,6 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header animarEntrada />
 
       <main id="contenido" className="flex-1 flex flex-col items-center gap-6 py-6">
         <ChatKaia />
