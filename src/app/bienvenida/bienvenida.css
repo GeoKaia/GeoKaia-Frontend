@@ -5,6 +5,15 @@
    ========================================================================== */
 
 .ob-raiz {
+  /* El onboarding es siempre claro (el logo tiene texto azul oscuro): se fijan los colores base de la
+     marca para que el modo oscuro de la app no los cambie dentro de esta pantalla. */
+  color-scheme: light;
+  --color-secondary: #bcb1a1;
+  --color-brand-bg: #ffffff;
+  --color-brand-text: #3a2b1d;
+  --color-surface: #ffffff;
+  --color-accent-fg: #10546f;
+
   --ob-teal: var(--color-accent);
   --ob-teal-d: var(--color-accent-dark);
   --ob-terra: var(--color-primary);

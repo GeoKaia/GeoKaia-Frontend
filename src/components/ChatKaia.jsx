@@ -78,7 +78,7 @@ export default function ChatKaia() {
         />
 
         <div className="mt-4 w-full flex flex-col gap-2">
-          <div ref={burbujaRef} className="bg-white border border-secondary/40 rounded-2xl px-4 py-3 shadow-sm text-center">
+          <div ref={burbujaRef} className="bg-surface border border-secondary/40 rounded-2xl px-4 py-3 shadow-sm text-center">
             <p className="text-sm text-brand-text">
               {cargando ? "Dejame pensar un momento..." : mensajeKaia}
             </p>
@@ -92,7 +92,7 @@ export default function ChatKaia() {
                   href={`/rutas/${rec.rutaId}`}
                   className="block bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-xl px-4 py-3 transition-colors"
                 >
-                  <p className="text-sm font-semibold text-accent-dark">{rec.nombre}</p>
+                  <p className="text-sm font-semibold text-accent-fg">{rec.nombre}</p>
                   <p className="text-xs text-brand-text/70 mt-0.5">{rec.razon}</p>
                 </Link>
               ))}
@@ -106,7 +106,7 @@ export default function ChatKaia() {
               onChange={(e) => setConsulta(e.target.value)}
               disabled={cargando}
               placeholder="Escribe acá..."
-              className="w-full rounded-full border border-secondary/50 px-4 py-2.5 text-sm text-brand-text placeholder:text-brand-text/40 bg-white outline-none focus:border-accent focus:ring-1 focus:ring-accent disabled:opacity-60"
+              className="w-full rounded-full border border-secondary/50 px-4 py-2.5 text-sm text-brand-text placeholder:text-brand-text/60 bg-surface outline-none focus:border-accent focus:ring-1 focus:ring-accent disabled:opacity-60"
             />
           </form>
         </div>

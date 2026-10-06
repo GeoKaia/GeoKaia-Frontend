@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Star, CreditCard, Clock, Check } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import CampoContrasena from "@/components/CampoContrasena";
@@ -14,7 +13,7 @@ import { normalizarUrlImagen } from "@/lib/imagenes";
 
 const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion"), {
   ssr: false,
-  loading: () => <p className="text-sm text-brand-text/50 animate-pulse">Cargando mapa...</p>,
+  loading: () => <p className="text-sm text-brand-text/70 animate-pulse">Cargando mapa...</p>,
 });
 
 const PRECIO_PREMIUM = "15";
@@ -346,11 +345,10 @@ export default function PanelNegocioPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
+      <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         {estado === "cargando" && (
-          <p className="text-brand-text/60 animate-pulse">Cargando tu panel...</p>
+          <p className="text-brand-text/70 animate-pulse">Cargando tu panel...</p>
         )}
 
         {estado === "sin-token" && (
@@ -368,12 +366,12 @@ export default function PanelNegocioPage() {
         {estado === "sin-lugar" && pasoSinLugar === "elegir-plan" && (
           <div className="w-full max-w-2xl">
             <h1 className="text-xl font-bold text-brand-text mb-1 text-center">Elegí tu plan</h1>
-            <p className="text-sm text-brand-text/60 mb-6 text-center">
+            <p className="text-sm text-brand-text/70 mb-6 text-center">
               Podés registrar tu lugar gratis o sumar más funciones con Premium.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-stretch">
-              <div className="rounded-2xl border border-secondary/40 bg-white p-6 flex flex-col">
+              <div className="rounded-2xl border border-secondary/40 bg-surface p-6 flex flex-col">
                 <h2 className="font-bold text-brand-text mb-1">Gratuito</h2>
                 <p className="text-3xl font-bold text-brand-text mb-4">$0</p>
                 <ul className="text-sm text-brand-text/70 flex-1 flex flex-col gap-2 mb-5">
@@ -394,19 +392,19 @@ export default function PanelNegocioPage() {
                 </button>
               </div>
 
-              <div className="relative rounded-2xl border-2 border-accent bg-gradient-to-b from-accent/5 to-white p-6 flex flex-col shadow-md">
+              <div className="relative rounded-2xl border-2 border-accent bg-gradient-to-b from-accent/5 to-surface p-6 flex flex-col shadow-md">
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 rounded-full bg-accent text-white text-[11px] font-semibold px-3 py-1 shadow-sm">
                   <Star size={11} /> Recomendado
                 </span>
                 <h2 className="font-bold text-brand-text mb-1">Premium</h2>
                 <p className="text-3xl font-bold text-brand-text mb-4">
                   ${PRECIO_PREMIUM}
-                  <span className="text-sm font-normal text-brand-text/60">/mes</span>
+                  <span className="text-sm font-normal text-brand-text/70">/mes</span>
                 </p>
                 <ul className="text-sm text-brand-text/70 flex-1 flex flex-col gap-2 mb-5">
                   {BULLETS_PREMIUM.map((b) => (
                     <li key={b} className="flex items-start gap-2">
-                      <span className="mt-0.5 w-4 h-4 shrink-0 rounded-full bg-accent/20 text-accent-dark flex items-center justify-center">
+                      <span className="mt-0.5 w-4 h-4 shrink-0 rounded-full bg-accent/20 text-accent-fg flex items-center justify-center">
                         <Check size={10} />
                       </span>
                       {b}
@@ -427,9 +425,9 @@ export default function PanelNegocioPage() {
         {estado === "sin-lugar" && pasoSinLugar === "pago-mock" && (
           <div className="w-full max-w-sm">
             <h1 className="text-xl font-bold text-brand-text mb-1">Suscripción Premium</h1>
-            <p className="text-sm text-brand-text/60 mb-4">${PRECIO_PREMIUM}/mes</p>
+            <p className="text-sm text-brand-text/70 mb-4">${PRECIO_PREMIUM}/mes</p>
 
-            <div className="rounded-xl border border-secondary/40 bg-white p-5 flex flex-col gap-3">
+            <div className="rounded-xl border border-secondary/40 bg-surface p-5 flex flex-col gap-3">
               <div>
                 <label className="mb-1 block text-sm font-medium text-brand-text">Número de tarjeta</label>
                 <input
@@ -503,7 +501,7 @@ export default function PanelNegocioPage() {
               <button
                 type="button"
                 onClick={volverAElegirPlan}
-                className="text-sm text-brand-text/60 underline self-start"
+                className="text-sm text-brand-text/70 underline self-start"
               >
                 Volver
               </button>
@@ -514,10 +512,10 @@ export default function PanelNegocioPage() {
         {estado === "sin-lugar" && pasoSinLugar === "alta" && (
           <div className="w-full max-w-md">
             <h1 className="text-xl font-bold text-brand-text mb-1">Registrá tu lugar</h1>
-            <p className="text-sm text-brand-text/60 mb-1">
+            <p className="text-sm text-brand-text/70 mb-1">
               Tu lugar queda pendiente de revisión — el equipo de GeoKaia lo aprueba antes de que se vea en el mapa público.
             </p>
-            <p className="text-sm text-brand-text/60 mb-4">
+            <p className="text-sm text-brand-text/70 mb-4">
               Plan elegido: <strong>{tierElegido === "PREMIUM" ? `Premium · $${PRECIO_PREMIUM}/mes` : "Gratuito"}</strong>
               {" — "}
               <button type="button" onClick={cambiarPlan} className="underline">
@@ -606,11 +604,11 @@ export default function PanelNegocioPage() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div>
                   <h1 className="text-xl font-bold text-brand-text">{lugar.nombre}</h1>
-                  <p className="flex items-center gap-1 text-xs font-semibold text-accent-dark mt-0.5">
+                  <p className="flex items-center gap-1 text-xs font-semibold text-accent-fg mt-0.5">
                     {esPremium && <Star size={12} />}
                     {esPremium ? `Plan Premium · $${PRECIO_PREMIUM}/mes` : "Plan Gratuito"}
                   </p>
-                  <p className="text-xs text-brand-text/50 mt-1">Editá el contenido de tu lugar en GeoKaia</p>
+                  <p className="text-xs text-brand-text/70 mt-1">Editá el contenido de tu lugar en GeoKaia</p>
                 </div>
 
                 {lugar.estado === "PENDIENTE" && (
@@ -698,7 +696,7 @@ export default function PanelNegocioPage() {
                         className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                       />
                       {campo.ayuda && (
-                        <p className="mt-1 text-xs text-brand-text/50">{campo.ayuda}</p>
+                        <p className="mt-1 text-xs text-brand-text/70">{campo.ayuda}</p>
                       )}
                     </div>
                   )
@@ -721,7 +719,7 @@ export default function PanelNegocioPage() {
                         className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                         placeholder={"Pegá los links de las fotos, uno por línea o separados por coma:\nhttps://...\nhttps://..."}
                       />
-                      <p className={`mt-1 text-xs ${excedeLimite ? "text-red-600" : "text-brand-text/50"}`}>
+                      <p className={`mt-1 text-xs ${excedeLimite ? "text-red-600" : "text-brand-text/70"}`}>
                         {Math.min(urlsGaleria.length, 5)}/5 fotos
                         {excedeLimite && " — se van a guardar solo las primeras 5"}
                       </p>
@@ -748,16 +746,16 @@ export default function PanelNegocioPage() {
               </form>
 
               <div>
-                <p className="text-xs font-semibold text-brand-text/50 mb-2">Así se ve tu tarjeta en el mapa:</p>
-                <div className="bg-white border border-secondary/40 rounded-xl p-3 sticky top-4">
+                <p className="text-xs font-semibold text-brand-text/70 mb-2">Así se ve tu tarjeta en el mapa:</p>
+                <div className="bg-surface border border-secondary/40 rounded-xl p-3 sticky top-4">
                   <PlaceCard lugar={lugar} />
                 </div>
               </div>
             </div>
 
-            <div className="w-full max-w-3xl rounded-xl border border-red-200 bg-white p-4">
+            <div className="w-full max-w-3xl rounded-xl border border-red-200 bg-surface p-4">
               <p className="text-sm font-semibold text-red-700 mb-1">Zona de peligro</p>
-              <p className="text-sm text-brand-text/60 mb-3">
+              <p className="text-sm text-brand-text/70 mb-3">
                 Esto borra tu lugar del mapa de GeoKaia. Tu cuenta sigue activa y podés registrar un lugar nuevo después.
               </p>
               <button
@@ -773,7 +771,7 @@ export default function PanelNegocioPage() {
 
       {mostrarModalBorrar && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-sm rounded-xl bg-white p-5">
+          <div className="w-full max-w-sm rounded-xl bg-surface p-5">
             <h2 className="text-lg font-bold text-brand-text mb-1">Borrar tu negocio</h2>
             <p className="text-sm text-brand-text/70 mb-4">
               Esta acción es permanente: tu lugar desaparece del mapa de GeoKaia. Tu cuenta de acceso sigue

@@ -52,7 +52,7 @@ export default function SelectorUbicacion({ posicion, onSeleccionar }) {
       </MapContainer>
 
       {!posicion && (
-        <p className="absolute z-[1000] top-2 left-1/2 -translate-x-1/2 bg-white text-xs text-brand-text px-3 py-1 rounded shadow">
+        <p className="absolute z-[1000] top-2 left-1/2 -translate-x-1/2 bg-surface text-xs text-brand-text px-3 py-1 rounded shadow">
           Tocá el mapa donde está tu negocio
         </p>
       )}

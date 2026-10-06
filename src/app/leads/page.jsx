@@ -57,9 +57,9 @@ export default function LeadsPage() {
 
   if (enviado) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-        <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 text-center shadow-lg">
-          <h1 className="mb-2 text-2xl font-bold text-accent-dark">
+      <main id="contenido" className="flex min-h-screen flex-col items-center justify-center bg-surface px-4 py-12">
+        <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-surface p-8 text-center shadow-lg">
+          <h1 className="mb-2 text-2xl font-bold text-accent-fg">
             ¡Gracias por tu interés!
           </h1>
           <p className="text-sm text-brand-text/70">
@@ -72,9 +72,9 @@ export default function LeadsPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
-      <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-white p-8 shadow-lg">
-        <h1 className="mb-1 text-2xl font-bold text-accent-dark">
+    <main id="contenido" className="flex min-h-screen flex-col items-center justify-center bg-surface px-4 py-12">
+      <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-surface p-8 shadow-lg">
+        <h1 className="mb-1 text-2xl font-bold text-accent-fg">
           Quiero saber más
         </h1>
         <p className="mb-6 text-sm text-brand-text/70">
@@ -129,7 +129,7 @@ export default function LeadsPage() {
 
           <div>
             <label htmlFor="mensaje" className="mb-1 block text-sm font-medium text-brand-text">
-              Mensaje <span className="text-brand-text/50">(opcional)</span>
+              Mensaje <span className="text-brand-text/70">(opcional)</span>
             </label>
             <textarea
               id="mensaje"

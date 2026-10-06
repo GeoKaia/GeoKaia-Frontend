@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MapPin, Images, Orbit, MessageCircle } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const BENEFICIOS = [
@@ -13,9 +12,8 @@ const BENEFICIOS = [
 export default function NegociosPage() {
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 py-10">
+      <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-2xl flex flex-col gap-6">
           <div>
             <h1 className="text-2xl font-bold text-brand-text">Para Negocios</h1>
@@ -27,8 +25,8 @@ export default function NegociosPage() {
 
           <ul className="flex flex-col gap-3">
             {BENEFICIOS.map((b) => (
-              <li key={b.texto} className="flex items-center gap-3 bg-white border border-secondary/40 rounded-xl px-4 py-3">
-                <b.Icono size={22} className="text-accent-dark shrink-0" />
+              <li key={b.texto} className="flex items-center gap-3 bg-surface border border-secondary/40 rounded-xl px-4 py-3">
+                <b.Icono size={22} className="text-accent-fg shrink-0" />
                 <span className="text-sm text-brand-text">{b.texto}</span>
               </li>
             ))}
@@ -43,7 +41,7 @@ export default function NegociosPage() {
             </Link>
             <Link
               href="/negocio/login"
-              className="flex-1 text-center rounded-lg border border-accent-dark text-accent-dark font-semibold px-4 py-3 hover:bg-accent-dark hover:text-white transition-colors"
+              className="flex-1 text-center rounded-lg border border-accent-dark text-accent-fg font-semibold px-4 py-3 hover:bg-accent-dark hover:text-white transition-colors"
             >
               Ya soy cliente, iniciar sesión
             </Link>

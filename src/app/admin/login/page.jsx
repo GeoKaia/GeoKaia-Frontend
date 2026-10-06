@@ -165,7 +165,7 @@ export default function LoginAdminPage() {
                   setCodigo("");
                   setCredenciales((prev) => ({ ...prev, password: "" }));
                 }}
-                className="text-sm text-brand-text/60 hover:underline"
+                className="text-sm text-brand-text/70 hover:underline"
               >
                 Volver
               </button>

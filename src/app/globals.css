@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Modo oscuro por clase: la clase `dark` va en <html> (ver SCRIPT_PREFERENCIAS en src/lib/preferencias.js
+   y los controles de /ajustes). Habilita el prefijo `dark:` por si algún componente lo necesita. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #AC6727;
   --color-secondary: #BCB1A1;
@@ -7,7 +11,60 @@
   --color-accent-dark: #10546F;
   --color-brand-bg: #ffffff;
   --color-brand-text: #3A2B1D;
+  /* Superficie de tarjetas, barras y paneles (antes `bg-white`). Es un token aparte y no se redefine
+     `--color-white` porque `text-white` (texto sobre botones de color) usa esa misma variable. */
+  --color-surface: #ffffff;
+  /* Color de TEXTO de acento sobre el fondo de la página (antes `text-accent-dark`). Es el mismo azul
+     profundo en claro y se aclara en oscuro; `accent-dark` queda como color de FONDO de botones. */
+  --color-accent-fg: #10546F;
 }
+
+/* Paleta oscura. Se sobreescriben las variables con un selector normal (no dentro de @theme, que es
+   de tiempo de compilación). `primary`, `accent` y `accent-dark` NO cambian: se usan como fondo de
+   botones con texto blanco y ya pasan contraste. */
+:root.dark {
+  color-scheme: dark;
+  --color-brand-bg: #171310;
+  --color-brand-text: #ede6de;
+  --color-secondary: #6b6254;
+  --color-surface: #241e18;
+  --color-accent-fg: #7fcbe3;
+
+  /* Colores "crudos" de Tailwind que usa la app en avisos y errores. 600 no se toca: es el fondo del
+     botón rojo de borrar (texto blanco). */
+  --color-red-50: #3a1f1f;
+  --color-red-200: #6b3535;
+  --color-red-300: #8a4444;
+  --color-red-700: #ff9a9a;
+  --color-green-50: #17301f;
+  --color-green-700: #86d99b;
+  --color-amber-50: #3a2d12;
+  --color-amber-700: #f0c36d;
+  --color-gray-100: #2f2820;
+  --color-gray-400: #9b9184;
+  --color-gray-500: #b3a99c;
+  --color-gray-600: #c5bcb0;
+}
+
+/* Tamaño de letra (Ajustes): los textos de Tailwind están en rem, así que escalar el tamaño base de
+   <html> agranda todo de forma proporcional. "normal" no necesita regla. */
+html[data-font-scale="grande"] { font-size: 112.5%; }
+html[data-font-scale="muy-grande"] { font-size: 125%; }
+
+/* El mapa (Leaflet) trae sus controles y popups en blanco: en modo oscuro se alinean con la superficie.
+   Los mosaicos del mapa quedan claros a propósito (legibilidad de calles y nombres). */
+:root.dark .leaflet-popup-content-wrapper,
+:root.dark .leaflet-popup-tip {
+  background: var(--color-surface);
+  color: var(--color-brand-text);
+}
+:root.dark .leaflet-bar a,
+:root.dark .leaflet-bar a:hover {
+  background-color: var(--color-surface);
+  color: var(--color-brand-text);
+  border-color: var(--color-secondary);
+}
+:root.dark .leaflet-container a.leaflet-popup-close-button { color: var(--color-brand-text); }
 
 @keyframes pin-pulse {
   0%, 100% { transform: rotate(-45deg) scale(1); }
@@ -35,4 +92,11 @@
   background: inherit;
   z-index: -1;
   animation: pin-glow-ring 1.8s ease-out infinite;
+}
+/* Quien pide menos movimiento en su sistema no ve la pulsación de los pines premium del mapa. */
+@media (prefers-reduced-motion: reduce) {
+  .pin-premium,
+  .pin-premium::before {
+    animation: none;
+  }
 }

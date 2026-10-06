@@ -11,7 +11,7 @@ function Miniatura({ url, alt }) {
   if (error) {
     return (
       <div className="w-14 h-14 flex-none rounded bg-secondary/20 flex items-center justify-center snap-start">
-        <ImageOff size={16} className="text-brand-text/40" />
+        <ImageOff size={16} className="text-brand-text/70" />
       </div>
     );
   }
@@ -56,7 +56,7 @@ export default function PlaceCard({ lugar }) {
   );
 
   return (
-    <div className="w-56 text-brand-text rounded-xl overflow-hidden bg-white shadow-sm">
+    <div className="w-56 text-brand-text rounded-xl overflow-hidden bg-surface shadow-sm">
       {lugar.fotoUrl && (
         <div className="relative">
           {!fotoError ? (
@@ -68,8 +68,8 @@ export default function PlaceCard({ lugar }) {
             />
           ) : (
             <div className="w-full h-32 bg-secondary/20 flex flex-col items-center justify-center text-center px-2">
-              <ImageOff size={28} className="text-brand-text/40" />
-              <span className="text-[11px] text-brand-text/50 mt-1">No se pudo cargar la imagen</span>
+              <ImageOff size={28} className="text-brand-text/70" />
+              <span className="text-[11px] text-brand-text/70 mt-1">No se pudo cargar la imagen</span>
             </div>
           )}
           {!fotoError && (
@@ -98,7 +98,7 @@ export default function PlaceCard({ lugar }) {
         <button
           type="button"
           onClick={() => setDescripcionExpandida((v) => !v)}
-          className="text-xs text-accent-dark font-medium mt-0.5 hover:underline"
+          className="text-xs text-accent-fg font-medium mt-0.5 hover:underline"
         >
           {descripcionExpandida ? 'Leer menos' : 'Leer más'}
         </button>
@@ -156,7 +156,7 @@ export default function PlaceCard({ lugar }) {
               href={lugar.panoramaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs px-2 py-1 rounded border border-accent !text-accent hover:bg-accent hover:!text-white"
+              className="text-xs px-2 py-1 rounded border border-accent !text-accent-fg hover:bg-accent hover:!text-white"
             >
               Ver en 360°
             </a>
@@ -166,7 +166,7 @@ export default function PlaceCard({ lugar }) {
               href={lugar.videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs px-2 py-1 rounded border border-accent-dark !text-accent-dark hover:bg-accent-dark hover:!text-white"
+              className="text-xs px-2 py-1 rounded border border-accent-dark !text-accent-fg hover:bg-accent-dark hover:!text-white"
             >
               Ver video
             </a>

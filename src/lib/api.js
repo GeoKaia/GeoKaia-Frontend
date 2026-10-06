@@ -157,10 +157,10 @@ export function eliminarLugarAdmin(token, id) {
 
 // --- Auth de negocio (público) ---
 
-export function registrarNegocio({ email, password, nombreContacto, whatsapp }) {
+export function registrarNegocio({ email, password, nombreContacto, whatsapp, aceptaTerminos }) {
   return apiFetch("/api/auth/registrar", {
     method: "POST",
-    body: JSON.stringify({ email, password, nombreContacto, whatsapp }),
+    body: JSON.stringify({ email, password, nombreContacto, whatsapp, aceptaTerminos }),
   });
 }
 

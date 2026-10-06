@@ -11,6 +11,7 @@ const initialForm = {
   password: "",
   nombreContacto: "",
   whatsapp: "",
+  aceptaTerminos: false,
 };
 
 function validar(form) {
@@ -21,6 +22,8 @@ function validar(form) {
     return "El nombre de contacto debe tener al menos 3 caracteres.";
   if (!form.whatsapp.trim() || form.whatsapp.trim().length < 8)
     return "El número de WhatsApp debe tener al menos 8 caracteres.";
+  if (!form.aceptaTerminos)
+    return "Tenés que aceptar los Términos y la Política de Privacidad para crear tu cuenta.";
   return null;
 }
 
@@ -31,8 +34,8 @@ export default function RegistroNegocioPage() {
   const [resultado, setResultado] = useState(null); // { qr, negocioId, mensaje }
 
   function handleChange(e) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   }
 
   async function handleSubmit(e) {
@@ -155,8 +158,30 @@ export default function RegistroNegocioPage() {
             />
           </div>
 
+          <div className="flex items-start gap-3">
+            <input
+              id="aceptaTerminos"
+              name="aceptaTerminos"
+              type="checkbox"
+              checked={form.aceptaTerminos}
+              onChange={handleChange}
+              className="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-[var(--color-accent-dark)]"
+            />
+            <label htmlFor="aceptaTerminos" className="text-sm leading-snug text-brand-text">
+              Leí y acepto los{" "}
+              <Link href="/terminos" target="_blank" className="font-semibold text-accent-fg underline underline-offset-2">
+                Términos y Condiciones
+              </Link>{" "}
+              y la{" "}
+              <Link href="/privacidad" target="_blank" className="font-semibold text-accent-fg underline underline-offset-2">
+                Política de Privacidad
+              </Link>
+              .
+            </label>
+          </div>
+
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
               {error}
             </p>
           )}
@@ -172,7 +197,7 @@ export default function RegistroNegocioPage() {
 
         <p className="mt-6 text-center text-sm text-brand-text/70">
           ¿Ya tenés cuenta?{" "}
-          <Link href="/negocio/login" className="font-semibold text-accent hover:underline">
+          <Link href="/negocio/login" className="font-semibold text-accent-fg hover:underline">
             Iniciar sesión
           </Link>
         </p>
