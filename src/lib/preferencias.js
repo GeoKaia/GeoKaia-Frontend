@@ -6,12 +6,12 @@ export const CLAVE_TAMANO = "geokaia-font-scale"; // "normal" | "grande" | "muy-
 export const TAMANOS = ["normal", "grande", "muy-grande"];
 
 // Script que corre ANTES del primer pintado (va en el <head> del layout) para aplicar las preferencias
-// sin que se vea un destello del tema equivocado. Si la persona nunca eligió tema, se sigue el del
-// sistema operativo (prefers-color-scheme); apenas toca el interruptor en Ajustes, queda su elección.
+// sin que se vea un destello del tema equivocado. El tema por defecto es el claro (no se sigue el del
+// sistema operativo): el oscuro solo se activa con el interruptor de Ajustes y esa elección se recuerda.
 export const SCRIPT_PREFERENCIAS = `(function(){try{
 var d=document.documentElement;
 var t=localStorage.getItem(${JSON.stringify(CLAVE_TEMA)});
-var oscuro=t?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;
+var oscuro=t==="dark";
 if(oscuro)d.classList.add("dark");
 var s=localStorage.getItem(${JSON.stringify(CLAVE_TAMANO)});
 if(s==="grande"||s==="muy-grande")d.dataset.fontScale=s;

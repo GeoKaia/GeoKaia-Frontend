@@ -20,10 +20,9 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#171310" },
-  ],
+  // El tema por defecto es el claro sin importar el del sistema, así que el color de la barra del
+  // navegador también es fijo.
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }) {
