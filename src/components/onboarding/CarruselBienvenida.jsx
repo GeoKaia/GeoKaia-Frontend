@@ -23,7 +23,7 @@ const SLIDES = [
   {
     id: "kaia",
     titulo: "Kaia, tu guía con IA.",
-    texto: "Contale qué te gusta y te arma una ruta con lugares reales de GeoKaia.",
+    texto: "Contale qué te gusta y te recomienda rutas con lugares reales de GeoKaia.",
     Arte: ArteKaia,
   },
   {
