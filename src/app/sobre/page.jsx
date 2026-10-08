@@ -1,12 +1,10 @@
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export default function SobrePage() {
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 py-10">
+      <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-2xl flex flex-col gap-4">
           <h1 className="text-2xl font-bold text-brand-text">Sobre GeoKaia</h1>
 

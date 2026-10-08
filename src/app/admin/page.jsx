@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import { obtenerLugaresPendientes, actualizarEstadoLugar } from "@/lib/api";
@@ -30,7 +29,7 @@ export default function AdminPage() {
         setEstado("listo");
       })
       .catch((err) => {
-        if (err.message.includes("administrador")) {
+        if (err.tipo === "sesion" || err.message.includes("administrador")) {
           setEstado("sin-permiso");
         } else {
           setError(err.message);
@@ -60,27 +59,26 @@ export default function AdminPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
+      <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-3xl">
           <div className="flex items-center justify-between mb-1">
             <h1 className="text-xl font-bold text-brand-text">Cola de aprobación</h1>
             <div className="flex gap-4">
-              <Link href="/admin/lugares" className="text-sm text-accent-dark hover:underline">
+              <Link href="/admin/lugares" className="text-sm text-accent-fg hover:underline">
                 Todos los lugares →
               </Link>
-              <Link href="/admin/rutas" className="text-sm text-accent-dark hover:underline">
+              <Link href="/admin/rutas" className="text-sm text-accent-fg hover:underline">
                 Gestionar rutas →
               </Link>
             </div>
           </div>
-          <p className="text-sm text-brand-text/60 mb-6">
+          <p className="text-sm text-brand-text/70 mb-6">
             Lugares registrados por negocios, esperando revisión antes de salir al mapa público.
           </p>
 
           {estado === "cargando" && (
-            <p className="text-brand-text/60 animate-pulse">Cargando...</p>
+            <p className="text-brand-text/70 animate-pulse">Cargando...</p>
           )}
 
           {estado === "sin-token" && (
@@ -102,7 +100,7 @@ export default function AdminPage() {
           {estado === "error" && <p className="text-red-600 text-sm">{error}</p>}
 
           {estado === "listo" && pendientes.length === 0 && (
-            <p className="flex items-center gap-2 text-brand-text/60">
+            <p className="flex items-center gap-2 text-brand-text/70">
               <CheckCircle2 size={18} className="text-accent" /> No hay lugares pendientes por ahora.
             </p>
           )}
@@ -110,10 +108,10 @@ export default function AdminPage() {
           {estado === "listo" && pendientes.length > 0 && (
             <div className="flex flex-col gap-4">
               {pendientes.map((lugar) => (
-                <div key={lugar.id} className="bg-white border border-secondary/40 rounded-xl p-4 flex flex-col sm:flex-row gap-4">
+                <div key={lugar.id} className="bg-surface border border-secondary/40 rounded-xl p-4 flex flex-col sm:flex-row gap-4">
                   <div className="flex-1">
                     <PlaceCard lugar={lugar} />
-                    <p className="text-xs text-brand-text/50 mt-2">
+                    <p className="text-xs text-brand-text/70 mt-2">
                       Negocio: {lugar.negocio?.nombreContacto} · {lugar.negocio?.email} · {lugar.negocio?.whatsapp}
                     </p>
                   </div>

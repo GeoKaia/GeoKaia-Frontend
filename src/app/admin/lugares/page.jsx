@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Pencil, Trash2, ArrowLeft } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import {
@@ -16,10 +15,11 @@ import {
 } from "@/lib/api";
 import { obtenerToken } from "@/lib/auth";
 import { normalizarUrlImagen } from "@/lib/imagenes";
+import { normalizarUrlPanorama } from "@/lib/panorama";
 
 const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion"), {
   ssr: false,
-  loading: () => <p className="text-sm text-brand-text/50 animate-pulse">Cargando mapa...</p>,
+  loading: () => <p className="text-sm text-brand-text/70 animate-pulse">Cargando mapa...</p>,
 });
 
 // Mismo criterio tolerante que panel-negocio: un link por línea, separados por coma o
@@ -43,7 +43,7 @@ const CAMPOS_TEXTO = [
   { name: "wazeUrl", label: "URL de Waze (opcional)", tipo: "input" },
   { name: "whatsapp", label: "WhatsApp (solo números, con código de país)", tipo: "input" },
   { name: "videoUrl", label: "URL del video (YouTube o TikTok)", tipo: "input" },
-  { name: "panoramaUrl", label: "URL del visor 360°", tipo: "input" },
+  { name: "panoramaUrl", label: "URL del visor 360° (recorrido virtual, video 360 de YouTube o foto 360)", tipo: "input" },
   { name: "menuUrl", label: "URL del menú digital o PDF", tipo: "input" },
   { name: "audioUrl", label: "URL de audio descriptivo (accesibilidad)", tipo: "input" },
 ];
@@ -112,7 +112,7 @@ export default function AdminLugaresPage() {
         setEstado("listo");
       })
       .catch((err) => {
-        if (err.message.includes("administrador")) {
+        if (err.tipo === "sesion" || err.message.includes("administrador")) {
           setEstado("sin-permiso");
         } else {
           setError(err.message);
@@ -179,7 +179,8 @@ export default function AdminLugaresPage() {
       if (campo === "galeriaUrls") continue;
       const valor = form[campo].trim();
       if (!valor) continue;
-      cambios[campo] = campo === "fotoUrl" ? normalizarUrlImagen(valor) : valor;
+      cambios[campo] =
+        campo === "fotoUrl" ? normalizarUrlImagen(valor) : campo === "panoramaUrl" ? normalizarUrlPanorama(valor) : valor;
     }
     const galeria = parsearGaleriaUrls(form.galeriaUrls).slice(0, 5).map(normalizarUrlImagen);
     if (galeria.length > 0) cambios.galeriaUrls = galeria;
@@ -221,19 +222,18 @@ export default function AdminLugaresPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg">
-      <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
+      <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         <div className="w-full max-w-3xl">
           {!lugarEditando && (
             <>
               <div className="flex items-center justify-between mb-1">
                 <h1 className="text-xl font-bold text-brand-text">Todos los lugares</h1>
-                <Link href="/admin" className="text-sm text-accent-dark hover:underline">
+                <Link href="/admin" className="text-sm text-accent-fg hover:underline">
                   ← Cola de aprobación
                 </Link>
               </div>
-              <p className="text-sm text-brand-text/60 mb-1">
+              <p className="text-sm text-brand-text/70 mb-1">
                 Ver, editar y borrar cualquier lugar sin pasar por la cuenta del negocio dueño — útil para corregir
                 pines o cargar contenido rápido antes de la entrega.
               </p>
@@ -244,7 +244,7 @@ export default function AdminLugaresPage() {
             </>
           )}
 
-          {estado === "cargando" && <p className="text-brand-text/60 animate-pulse">Cargando...</p>}
+          {estado === "cargando" && <p className="text-brand-text/70 animate-pulse">Cargando...</p>}
 
           {estado === "sin-token" && (
             <div>
@@ -267,13 +267,13 @@ export default function AdminLugaresPage() {
           {estado === "listo" && !lugarEditando && (
             <div className="flex flex-col gap-4">
               {lugares.length === 0 && (
-                <p className="text-brand-text/60">Todavía no hay lugares cargados.</p>
+                <p className="text-brand-text/70">Todavía no hay lugares cargados.</p>
               )}
               {lugares.map((lugar) => (
-                <div key={lugar.id} className="bg-white border border-secondary/40 rounded-xl p-4 flex flex-col sm:flex-row gap-4">
+                <div key={lugar.id} className="bg-surface border border-secondary/40 rounded-xl p-4 flex flex-col sm:flex-row gap-4">
                   <div className="flex-1">
                     <PlaceCard lugar={lugar} />
-                    <p className="text-xs text-brand-text/50 mt-2">
+                    <p className="text-xs text-brand-text/70 mt-2">
                       Estado: <strong>{lugar.estado}</strong>
                       {lugar.negocio && (
                         <> · Negocio: {lugar.negocio.nombreContacto} · {lugar.negocio.email} · {lugar.negocio.whatsapp}</>
@@ -305,7 +305,7 @@ export default function AdminLugaresPage() {
               <button
                 type="button"
                 onClick={cerrarEdicion}
-                className="flex items-center gap-1.5 text-sm text-brand-text/60 hover:text-brand-text mb-4"
+                className="flex items-center gap-1.5 text-sm text-brand-text/70 hover:text-brand-text mb-4"
               >
                 <ArrowLeft size={16} /> Volver al listado
               </button>
@@ -425,7 +425,7 @@ export default function AdminLugaresPage() {
                           className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                           placeholder={"Pegá los links de las fotos, uno por línea o separados por coma:\nhttps://...\nhttps://..."}
                         />
-                        <p className={`mt-1 text-xs ${excedeLimite ? "text-red-600" : "text-brand-text/50"}`}>
+                        <p className={`mt-1 text-xs ${excedeLimite ? "text-red-600" : "text-brand-text/70"}`}>
                           {Math.min(urlsGaleria.length, 5)}/5 fotos
                           {excedeLimite && " — se van a guardar solo las primeras 5"}
                         </p>
@@ -450,8 +450,8 @@ export default function AdminLugaresPage() {
                 </form>
 
                 <div>
-                  <p className="text-xs font-semibold text-brand-text/50 mb-2">Así se ve la tarjeta en el mapa:</p>
-                  <div className="bg-white border border-secondary/40 rounded-xl p-3 sticky top-4">
+                  <p className="text-xs font-semibold text-brand-text/70 mb-2">Así se ve la tarjeta en el mapa:</p>
+                  <div className="bg-surface border border-secondary/40 rounded-xl p-3 sticky top-4">
                     <PlaceCard lugar={lugarEditando} />
                   </div>
                 </div>
@@ -463,7 +463,7 @@ export default function AdminLugaresPage() {
 
       {borrandoId !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-sm rounded-xl bg-white p-5">
+          <div className="w-full max-w-sm rounded-xl bg-surface p-5">
             <h2 className="text-lg font-bold text-brand-text mb-1">Borrar este lugar</h2>
             <p className="text-sm text-brand-text/70 mb-4">
               Esta acción es permanente: el lugar desaparece del mapa y de cualquier ruta que lo incluya como parada.

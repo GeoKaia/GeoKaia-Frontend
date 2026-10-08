@@ -1,9 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ImageOff, Clock, MapPin } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { ImageOff, Clock, MapPin, Orbit } from 'lucide-react';
 import { CATEGORIAS } from '@/lib/api';
 import { normalizarUrlImagen } from '@/lib/imagenes';
+import { tipoPanorama } from '@/lib/panorama';
+import { urlHttpSegura } from '@/lib/urls';
+import Visor360 from './Visor360';
 
 function Miniatura({ url, alt }) {
   const [error, setError] = useState(false);
@@ -11,7 +14,7 @@ function Miniatura({ url, alt }) {
   if (error) {
     return (
       <div className="w-14 h-14 flex-none rounded bg-secondary/20 flex items-center justify-center snap-start">
-        <ImageOff size={16} className="text-brand-text/40" />
+        <ImageOff size={16} className="text-brand-text/70" />
       </div>
     );
   }
@@ -33,6 +36,8 @@ export default function PlaceCard({ lugar }) {
   const esPremium = lugar.tier === 'PREMIUM';
   const [fotoError, setFotoError] = useState(false);
   const [descripcionExpandida, setDescripcionExpandida] = useState(false);
+  const [ver360, setVer360] = useState(false);
+  const cerrar360 = useCallback(() => setVer360(false), []);
 
   useEffect(() => {
     setFotoError(false);
@@ -40,8 +45,11 @@ export default function PlaceCard({ lugar }) {
 
   // El negocio puede pisar el link automático (basado en el pin) con uno propio
   // — por ejemplo su ficha real de Google Maps, más precisa que el pin.
-  const urlWaze = lugar.wazeUrl || `https://waze.com/ul?ll=${lugar.latitud},${lugar.longitud}&navigate=yes`;
-  const urlGoogleMaps = lugar.mapsUrl || `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
+  const urlWaze = urlHttpSegura(lugar.wazeUrl) || `https://waze.com/ul?ll=${lugar.latitud},${lugar.longitud}&navigate=yes`;
+  const urlGoogleMaps = urlHttpSegura(lugar.mapsUrl) || `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
+  const urlMenu = urlHttpSegura(lugar.menuUrl);
+  const urlVideo = urlHttpSegura(lugar.videoUrl);
+  const galeria = (lugar.galeriaUrls || []).map(urlHttpSegura).filter(Boolean);
   const urlWhatsapp = lugar.whatsapp
     ? `https://wa.me/${lugar.whatsapp.replace(/\D/g, '')}`
     : null;
@@ -56,7 +64,7 @@ export default function PlaceCard({ lugar }) {
   );
 
   return (
-    <div className="w-56 text-brand-text rounded-xl overflow-hidden bg-white shadow-sm">
+    <div className="w-56 text-brand-text rounded-xl overflow-hidden bg-surface shadow-sm">
       {lugar.fotoUrl && (
         <div className="relative">
           {!fotoError ? (
@@ -68,8 +76,8 @@ export default function PlaceCard({ lugar }) {
             />
           ) : (
             <div className="w-full h-32 bg-secondary/20 flex flex-col items-center justify-center text-center px-2">
-              <ImageOff size={28} className="text-brand-text/40" />
-              <span className="text-[11px] text-brand-text/50 mt-1">No se pudo cargar la imagen</span>
+              <ImageOff size={28} className="text-brand-text/70" />
+              <span className="text-[11px] text-brand-text/70 mt-1">No se pudo cargar la imagen</span>
             </div>
           )}
           {!fotoError && (
@@ -82,9 +90,9 @@ export default function PlaceCard({ lugar }) {
       <div className="p-3">
         {!lugar.fotoUrl && <div className="mb-1">{categoriaBadge}</div>}
 
-        {esPremium && lugar.galeriaUrls?.length > 0 && (
+        {esPremium && galeria.length > 0 && (
           <div className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory mb-2 pb-0.5">
-            {lugar.galeriaUrls.map((url) => (
+            {galeria.map((url) => (
               <Miniatura key={url} url={url} alt={lugar.nombre} />
             ))}
           </div>
@@ -98,7 +106,7 @@ export default function PlaceCard({ lugar }) {
         <button
           type="button"
           onClick={() => setDescripcionExpandida((v) => !v)}
-          className="text-xs text-accent-dark font-medium mt-0.5 hover:underline"
+          className="text-xs text-accent-fg font-medium mt-0.5 hover:underline"
         >
           {descripcionExpandida ? 'Leer menos' : 'Leer más'}
         </button>
@@ -141,9 +149,9 @@ export default function PlaceCard({ lugar }) {
 
       {esPremium && (
         <div className="flex flex-wrap gap-2 mt-2 border-t border-gray-100 pt-2">
-          {lugar.menuUrl && (
+          {urlMenu && (
             <a
-              href={lugar.menuUrl}
+              href={urlMenu}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs px-2 py-1 rounded bg-secondary !text-brand-text hover:opacity-90"
@@ -151,28 +159,29 @@ export default function PlaceCard({ lugar }) {
               Ver menú
             </a>
           )}
-          {lugar.panoramaUrl && (
-            <a
-              href={lugar.panoramaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs px-2 py-1 rounded border border-accent !text-accent hover:bg-accent hover:!text-white"
+          {tipoPanorama(lugar.panoramaUrl) && (
+            <button
+              type="button"
+              onClick={() => setVer360(true)}
+              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded border border-accent text-accent-fg hover:bg-accent hover:!text-white"
             >
-              Ver en 360°
-            </a>
+              <Orbit size={12} /> Ver en 360°
+            </button>
           )}
-          {lugar.videoUrl && (
+          {urlVideo && (
             <a
-              href={lugar.videoUrl}
+              href={urlVideo}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs px-2 py-1 rounded border border-accent-dark !text-accent-dark hover:bg-accent-dark hover:!text-white"
+              className="text-xs px-2 py-1 rounded border border-accent-dark !text-accent-fg hover:bg-accent-dark hover:!text-white"
             >
               Ver video
             </a>
           )}
         </div>
       )}
+
+      {ver360 && <Visor360 url={lugar.panoramaUrl} titulo={lugar.nombre} onCerrar={cerrar360} />}
 
       {esPremium && lugar.audioUrl && (
         <audio controls src={lugar.audioUrl} className="w-full mt-2 h-8">
