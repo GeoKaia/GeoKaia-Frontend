@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ImageOff, Clock, MapPin } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { ImageOff, Clock, MapPin, Orbit } from 'lucide-react';
 import { CATEGORIAS } from '@/lib/api';
 import { normalizarUrlImagen } from '@/lib/imagenes';
+import { tipoPanorama } from '@/lib/panorama';
+import Visor360 from './Visor360';
 
 function Miniatura({ url, alt }) {
   const [error, setError] = useState(false);
@@ -33,6 +35,8 @@ export default function PlaceCard({ lugar }) {
   const esPremium = lugar.tier === 'PREMIUM';
   const [fotoError, setFotoError] = useState(false);
   const [descripcionExpandida, setDescripcionExpandida] = useState(false);
+  const [ver360, setVer360] = useState(false);
+  const cerrar360 = useCallback(() => setVer360(false), []);
 
   useEffect(() => {
     setFotoError(false);
@@ -151,15 +155,14 @@ export default function PlaceCard({ lugar }) {
               Ver menú
             </a>
           )}
-          {lugar.panoramaUrl && (
-            <a
-              href={lugar.panoramaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs px-2 py-1 rounded border border-accent !text-accent-fg hover:bg-accent hover:!text-white"
+          {tipoPanorama(lugar.panoramaUrl) && (
+            <button
+              type="button"
+              onClick={() => setVer360(true)}
+              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded border border-accent text-accent-fg hover:bg-accent hover:!text-white"
             >
-              Ver en 360°
-            </a>
+              <Orbit size={12} /> Ver en 360°
+            </button>
           )}
           {lugar.videoUrl && (
             <a
@@ -173,6 +176,8 @@ export default function PlaceCard({ lugar }) {
           )}
         </div>
       )}
+
+      {ver360 && <Visor360 url={lugar.panoramaUrl} titulo={lugar.nombre} onCerrar={cerrar360} />}
 
       {esPremium && lugar.audioUrl && (
         <audio controls src={lugar.audioUrl} className="w-full mt-2 h-8">

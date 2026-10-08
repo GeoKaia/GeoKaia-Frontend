@@ -10,6 +10,7 @@ import CampoContrasena from "@/components/CampoContrasena";
 import { obtenerMiLugar, actualizarMiLugar, crearLugar, eliminarMiLugar, CATEGORIAS } from "@/lib/api";
 import { obtenerToken, borrarToken } from "@/lib/auth";
 import { normalizarUrlImagen } from "@/lib/imagenes";
+import { normalizarUrlPanorama } from "@/lib/panorama";
 
 const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion"), {
   ssr: false,
@@ -77,7 +78,7 @@ const CAMPOS_TEXTO = [
   },
   { name: "whatsapp", label: "WhatsApp (solo números, con código de país)", tipo: "input", tier: "AMBOS" },
   { name: "videoUrl", label: "URL del video (YouTube o TikTok)", tipo: "input", tier: "PREMIUM" },
-  { name: "panoramaUrl", label: "URL del visor 360°", tipo: "input", tier: "PREMIUM" },
+  { name: "panoramaUrl", label: "URL del visor 360° (recorrido virtual, video 360 de YouTube o foto 360)", tipo: "input", tier: "PREMIUM" },
   { name: "menuUrl", label: "URL del menú digital o PDF", tipo: "input", tier: "PREMIUM" },
   { name: "audioUrl", label: "URL de audio descriptivo (accesibilidad)", tipo: "input", tier: "PREMIUM" },
 ];
@@ -283,7 +284,8 @@ export default function PanelNegocioPage() {
       if (campo === "galeriaUrls") continue;
       const valor = form[campo].trim();
       if (!valor) continue;
-      cambios[campo] = campo === "fotoUrl" ? normalizarUrlImagen(valor) : valor;
+      cambios[campo] =
+        campo === "fotoUrl" ? normalizarUrlImagen(valor) : campo === "panoramaUrl" ? normalizarUrlPanorama(valor) : valor;
     }
     const galeria = parsearGaleriaUrls(form.galeriaUrls)
       .slice(0, 5)
