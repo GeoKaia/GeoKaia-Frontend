@@ -10,7 +10,10 @@ const HOSTS_IMAGEN = ["drive.google.com", "dropbox.com", "dl.dropboxusercontent.
 
 function hostDe(url) {
   try {
-    return new URL(url).hostname.replace(/^www\./, "").toLowerCase();
+    const u = new URL(url);
+    // Solo http(s): cualquier otro esquema (javascript:, data:) no es un recorrido 360° válido.
+    if (u.protocol !== "https:" && u.protocol !== "http:") return null;
+    return u.hostname.replace(/^www\./, "").toLowerCase();
   } catch {
     return null;
   }

@@ -7,6 +7,26 @@ Deployada en: https://geo-kaia-frontend.vercel.app
 
 ---
 
+<h3 align="center">Stack</h3>
+
+<p align="center">
+  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16-10546F?style=for-the-badge&logo=nextdotjs&logoColor=white&labelColor=3A2B1D" alt="Next.js 16" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-10546F?style=for-the-badge&logo=react&logoColor=white&labelColor=3A2B1D" alt="React 19" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind%20CSS-4-2989A3?style=for-the-badge&logo=tailwindcss&logoColor=white&labelColor=3A2B1D" alt="Tailwind CSS 4" /></a>
+  <a href="https://gsap.com"><img src="https://img.shields.io/badge/GSAP-3-2989A3?style=for-the-badge&logo=greensock&logoColor=white&labelColor=3A2B1D" alt="GSAP 3" /></a>
+  <a href="https://lucide.dev"><img src="https://img.shields.io/badge/Lucide-iconos-2989A3?style=for-the-badge&logo=lucide&logoColor=white&labelColor=3A2B1D" alt="Lucide" /></a>
+</p>
+
+<p align="center">
+  <a href="https://leafletjs.com"><img src="https://img.shields.io/badge/Leaflet-1.9-AC6727?style=for-the-badge&logo=leaflet&logoColor=white&labelColor=3A2B1D" alt="Leaflet 1.9" /></a>
+  <a href="https://www.maptiler.com"><img src="https://img.shields.io/badge/MapTiler-mapa%20vectorial-AC6727?style=for-the-badge&logo=maptiler&logoColor=white&labelColor=3A2B1D" alt="MapTiler" /></a>
+  <a href="https://pannellum.org"><img src="https://img.shields.io/badge/Pannellum-visor%20360%C2%B0-AC6727?style=for-the-badge&labelColor=3A2B1D" alt="Pannellum" /></a>
+  <a href="https://turfjs.org"><img src="https://img.shields.io/badge/Turf.js-7-AC6727?style=for-the-badge&labelColor=3A2B1D" alt="Turf.js 7" /></a>
+  <a href="https://vercel.com"><img src="https://img.shields.io/badge/Vercel-deploy-3A2B1D?style=for-the-badge&logo=vercel&logoColor=white&labelColor=3A2B1D" alt="Desplegado en Vercel" /></a>
+</p>
+
+---
+
 ## Tabla de contenidos
 
 - [Descripción general](#descripción-general)
@@ -43,7 +63,9 @@ El sistema atiende a dos tipos de usuarios:
 | Tailwind CSS | 4.x | Estilos utilitarios, tokens de la paleta oficial en `globals.css` |
 | Leaflet + react-leaflet | 1.9 / 5.x | Mapa interactivo y capas vectoriales |
 | MapTiler | N/A | Proveedor de tiles base (mapa vectorial, menor consumo de ancho de banda que raster) |
-| Pannellum | N/A | Visor inmersivo de panorámicas 360° para lugares Premium |
+| Pannellum | 2.5 | Visor de fotos 360° para lugares Premium (videos 360 de YouTube y recorridos como Travvir se incrustan en el mismo visor) |
+| GSAP | 3.x | Animaciones de la bienvenida, el chat de Kaia y los pines |
+| lucide-react | 1.x | Íconos vectoriales de la interfaz y del mapa |
 | Turf.js | 7.x | Cálculos geoespaciales sobre el GeoJSON de departamentos |
 
 ---
@@ -123,6 +145,9 @@ En producción, la app está deployada en [Vercel](https://vercel.com), con depl
 | `next`, `react`, `react-dom` | Framework y librería de UI |
 | `leaflet`, `react-leaflet` | Mapa interactivo |
 | `@turf/boolean-point-in-polygon`, `@turf/helpers`, `@turf/simplify` | Geometría sobre el GeoJSON de departamentos de Nicaragua |
+| `gsap` | Animaciones (splash de bienvenida, chat de Kaia) |
+| `lucide-react` | Íconos |
+| `pannellum` | Visor de fotos 360° (`Visor360`) |
 | `tailwindcss`, `@tailwindcss/postcss` *(dev)* | Estilos |
 | `eslint`, `eslint-config-next` *(dev)* | Lint |
 
@@ -144,18 +169,24 @@ Copiá `.env.example` a `.env.local` si necesitás cambiar el valor por default:
 src/
 ├── app/                          # Rutas (App Router de Next.js), una carpeta por página
 │   ├── page.js                   # Home: chat de Kaia + mapa
+│   ├── bienvenida/               # Onboarding: splash animado + carrusel (marco de celular en escritorio)
+│   ├── privacidad/, terminos/    # Política de Privacidad y Términos y Condiciones (Ley 787 / Ley 842)
 │   ├── rutas/                    # Listado y detalle de rutas
 │   ├── destacados/                # Lugares con tier Premium
 │   ├── negocio/login|registro/    # Auth de negocios (login + 2FA, registro)
 │   ├── panel-negocio/             # Elegir plan, alta y edición del lugar propio
 │   ├── admin/                     # Cola de aprobación de lugares + CRUD de rutas
-│   └── ajustes/                   # Cerrar sesión, borrar cuenta
-├── components/                   # Header, BottomNav, MapaBase, PlaceCard, RouteCard, AuthHero...
+│   └── ajustes/                   # Modo oscuro, tamaño de letra, información legal; cerrar sesión y borrar cuenta
+├── components/                   # BottomNav, MapaBase, PlaceCard, Visor360, RouteCard, PaginaLegal, AuthHero...
 └── lib/
     ├── api.js                    # Un fetch tipado por endpoint del backend + paleta de categorías
     ├── auth.js                   # Guardar/leer/borrar el JWT en localStorage
     ├── colores.js                # Paleta de colores para subcategorías y rutas
-    └── imagenes.js                # Normalización de URLs de imagen (Drive/Dropbox)
+    ├── imagenes.js               # Normalización de URLs de imagen (Drive/Dropbox)
+    ├── panorama.js               # Tipo de link 360° (foto, YouTube, recorrido web) y su URL de incrustación
+    ├── urls.js                   # Solo enlaza URLs http(s): barrera contra javascript: en href
+    ├── preferencias.js, usePreferencias.js   # Modo oscuro y tamaño de letra (localStorage)
+    └── legal.js                  # Versión y fecha de los documentos legales
 ```
 
 ---
@@ -164,13 +195,15 @@ src/
 
 | Ruta | Acceso | Descripción |
 |---|---|---|
+| `/bienvenida` | Público | Onboarding de primera visita (splash + carrusel); se puede reabrir desde Ajustes |
 | `/` | Público | Chat de Kaia + mapa interactivo con todos los lugares aprobados |
 | `/rutas`, `/rutas/[id]` | Público | Listado y detalle de rutas curadas (mapa + paradas con distancia/tiempo) |
-| `/destacados` | Público | Lugares con tier Premium |
+| `/destacados` | Público | Lugares con tier Premium (galería, video y visor 360°) |
 | `/negocios`, `/sobre`, `/leads` | Público | Información institucional y formulario de contacto |
 | `/negocio/registro`, `/negocio/login` | Público | Alta de cuenta de negocio (2FA) e inicio de sesión |
 | `/panel-negocio` | Negocio | Elegir plan, registrar y editar el lugar propio |
-| `/ajustes` | Negocio | Cerrar sesión, borrar cuenta |
+| `/ajustes` | Público / Negocio | Modo oscuro, tamaño de letra y enlaces legales (todos); cerrar sesión y borrar cuenta (negocio) |
+| `/privacidad`, `/terminos` | Público | Política de Privacidad y Términos y Condiciones |
 | `/admin/login`, `/admin` | Admin | Cola de aprobación de lugares registrados por negocios |
 | `/admin/rutas` | Admin | Crear, editar y borrar rutas a partir de lugares ya aprobados |
 
@@ -180,6 +213,9 @@ src/
 
 - **Formularios validados**: cada formulario valida en el cliente antes de enviar (longitudes mínimas, campos requeridos) y además confía en la validación del backend (Zod) como última barrera.
 - **Rutas protegidas por rol**: las páginas de negocio (`/panel-negocio`, `/ajustes`) chequean que exista un JWT válido; las de admin (`/admin`, `/admin/rutas`) además verifican contra el backend que la cuenta tenga `esAdmin: true` antes de mostrar contenido.
+- **Enlaces seguros**: los links que carga un negocio (video, menú, mapas, galería, 360°) solo se muestran si empiezan con `http://` o `https://` (`src/lib/urls.js`, `src/lib/panorama.js`); un texto como `javascript:...` nunca llega a un `href` ni a un `iframe`. El backend lo rechaza además al guardar.
+- **Sin HTML inyectado**: no se usa `dangerouslySetInnerHTML` con datos de usuarios; React escapa el texto que llega de la API.
+- **Consentimiento**: el registro de un negocio exige marcar la aceptación de los Términos y la Política de Privacidad, y el backend guarda la fecha y la versión aceptadas.
 - **2FA**: el login de negocio no entrega acceso hasta verificar el código TOTP de Google Authenticator.
 - **Expiración de sesión**: el JWT vence a las 8 horas; al expirar, la app redirige a login en vez de mostrar un error genérico.
 
