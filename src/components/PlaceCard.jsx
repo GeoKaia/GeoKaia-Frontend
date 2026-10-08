@@ -5,6 +5,7 @@ import { ImageOff, Clock, MapPin, Orbit } from 'lucide-react';
 import { CATEGORIAS } from '@/lib/api';
 import { normalizarUrlImagen } from '@/lib/imagenes';
 import { tipoPanorama } from '@/lib/panorama';
+import { urlHttpSegura } from '@/lib/urls';
 import Visor360 from './Visor360';
 
 function Miniatura({ url, alt }) {
@@ -44,8 +45,11 @@ export default function PlaceCard({ lugar }) {
 
   // El negocio puede pisar el link automático (basado en el pin) con uno propio
   // — por ejemplo su ficha real de Google Maps, más precisa que el pin.
-  const urlWaze = lugar.wazeUrl || `https://waze.com/ul?ll=${lugar.latitud},${lugar.longitud}&navigate=yes`;
-  const urlGoogleMaps = lugar.mapsUrl || `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
+  const urlWaze = urlHttpSegura(lugar.wazeUrl) || `https://waze.com/ul?ll=${lugar.latitud},${lugar.longitud}&navigate=yes`;
+  const urlGoogleMaps = urlHttpSegura(lugar.mapsUrl) || `https://www.google.com/maps/dir/?api=1&destination=${lugar.latitud},${lugar.longitud}`;
+  const urlMenu = urlHttpSegura(lugar.menuUrl);
+  const urlVideo = urlHttpSegura(lugar.videoUrl);
+  const galeria = (lugar.galeriaUrls || []).map(urlHttpSegura).filter(Boolean);
   const urlWhatsapp = lugar.whatsapp
     ? `https://wa.me/${lugar.whatsapp.replace(/\D/g, '')}`
     : null;
@@ -86,9 +90,9 @@ export default function PlaceCard({ lugar }) {
       <div className="p-3">
         {!lugar.fotoUrl && <div className="mb-1">{categoriaBadge}</div>}
 
-        {esPremium && lugar.galeriaUrls?.length > 0 && (
+        {esPremium && galeria.length > 0 && (
           <div className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory mb-2 pb-0.5">
-            {lugar.galeriaUrls.map((url) => (
+            {galeria.map((url) => (
               <Miniatura key={url} url={url} alt={lugar.nombre} />
             ))}
           </div>
@@ -145,9 +149,9 @@ export default function PlaceCard({ lugar }) {
 
       {esPremium && (
         <div className="flex flex-wrap gap-2 mt-2 border-t border-gray-100 pt-2">
-          {lugar.menuUrl && (
+          {urlMenu && (
             <a
-              href={lugar.menuUrl}
+              href={urlMenu}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs px-2 py-1 rounded bg-secondary !text-brand-text hover:opacity-90"
@@ -164,9 +168,9 @@ export default function PlaceCard({ lugar }) {
               <Orbit size={12} /> Ver en 360°
             </button>
           )}
-          {lugar.videoUrl && (
+          {urlVideo && (
             <a
-              href={lugar.videoUrl}
+              href={urlVideo}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs px-2 py-1 rounded border border-accent-dark !text-accent-fg hover:bg-accent-dark hover:!text-white"
