@@ -1,0 +1,107 @@
+[
+  {
+    "id": "cocibolca",
+    "categoria": "naturaleza",
+    "texto": "El Lago Cocibolca, también llamado Lago de Nicaragua, es el lago más grande de Centroamérica."
+  },
+  {
+    "id": "ometepe",
+    "categoria": "naturaleza",
+    "texto": "La isla de Ometepe, en pleno Cocibolca, nació de dos volcanes: el Concepción y el Maderas."
+  },
+  {
+    "id": "tiburon-toro",
+    "categoria": "naturaleza",
+    "texto": "En el Cocibolca viven tiburones toro, que llegan desde el Caribe remontando el río San Juan."
+  },
+  {
+    "id": "pais-extenso",
+    "categoria": "geografia",
+    "texto": "Nicaragua es el país más extenso de Centroamérica."
+  },
+  {
+    "id": "maribios",
+    "categoria": "naturaleza",
+    "texto": "La cordillera de los Maribios, en el occidente, es una cadena de volcanes alineados que incluye al Momotombo y al Cerro Negro."
+  },
+  {
+    "id": "cerro-negro",
+    "categoria": "aventura",
+    "texto": "En el Cerro Negro, cerca de León, se practica el volcano boarding: deslizarse por una ladera de ceniza sobre una tabla."
+  },
+  {
+    "id": "masaya-parque",
+    "categoria": "naturaleza",
+    "texto": "El Parque Nacional Volcán Masaya fue el primer parque nacional del país, creado en 1979."
+  },
+  {
+    "id": "masaya-ciudad",
+    "categoria": "cultura",
+    "texto": "Masaya es conocida como la cuna del folclore nicaragüense y la ciudad de las flores."
+  },
+  {
+    "id": "mombacho",
+    "categoria": "naturaleza",
+    "texto": "El volcán Mombacho, junto a Granada, tiene un bosque nuboso en su cima."
+  },
+  {
+    "id": "xiloa",
+    "categoria": "naturaleza",
+    "texto": "La laguna de Xiloá, a pocos kilómetros de Managua, ocupa el cráter de un volcán."
+  },
+  {
+    "id": "apoyo",
+    "categoria": "naturaleza",
+    "texto": "La laguna de Apoyo, entre Masaya y Granada, ocupa la caldera de un antiguo volcán."
+  },
+  {
+    "id": "granada",
+    "categoria": "historia",
+    "texto": "Granada fue fundada en 1524 por Francisco Hernández de Córdoba, cuyo apellido da nombre al córdoba, nuestra moneda."
+  },
+  {
+    "id": "unesco-leon",
+    "categoria": "historia",
+    "texto": "León Viejo y la Catedral de León son Patrimonio Mundial de la UNESCO."
+  },
+  {
+    "id": "dario",
+    "categoria": "cultura",
+    "texto": "Rubén Darío, nacido en Metapa (hoy Ciudad Darío) en 1867, es el padre del modernismo y una de las grandes voces de la lengua española."
+  },
+  {
+    "id": "guegüense",
+    "categoria": "cultura",
+    "texto": "El Güegüense, obra de teatro y danza de la época colonial, es Patrimonio Cultural Inmaterial de la Humanidad según la UNESCO."
+  },
+  {
+    "id": "guardabarranco",
+    "categoria": "naturaleza",
+    "texto": "El guardabarranco, con su cola en forma de raqueta, es el ave nacional de Nicaragua."
+  },
+  {
+    "id": "nacatamal",
+    "categoria": "gastronomia",
+    "texto": "El nacatamal, masa de maíz rellena de cerdo y especias, envuelta en hoja de plátano, es el platillo estrella de los fines de semana."
+  },
+  {
+    "id": "bosawas",
+    "categoria": "naturaleza",
+    "texto": "Bosawás es una de las mayores reservas de bosque tropical de Centroamérica."
+  },
+  {
+    "id": "solentiname",
+    "categoria": "cultura",
+    "texto": "El archipiélago de Solentiname, en el Cocibolca, es famoso por su pintura primitivista."
+  },
+  {
+    "id": "castillo-inmaculada",
+    "categoria": "historia",
+    "texto": "La Fortaleza de la Inmaculada Concepción, sobre el río San Juan, se construyó en el siglo XVII para defenderse de los piratas."
+  },
+  {
+    "id": "idiomas-caribe",
+    "categoria": "cultura",
+    "texto": "En la Costa Caribe, además del español, se hablan el inglés criollo, el miskito, el mayangna, el garífuna y el rama."
+  }
+]
