@@ -157,7 +157,7 @@ export default function PanelNegocioPage() {
       .catch((err) => {
         if (err.message.includes("todavía no tiene un lugar")) {
           setEstado("sin-lugar");
-        } else if (err.message.includes("Token") || err.message.includes("autorizado")) {
+        } else if (err.tipo === "sesion" || err.message.includes("Token") || err.message.includes("autorizado")) {
           borrarToken();
           setEstado("sin-token");
         } else {
@@ -202,6 +202,17 @@ export default function PanelNegocioPage() {
     setPasoSinLugar("elegir-plan");
   }
 
+  function aplicarLugarCreado(lugarCreado) {
+    setLugar(lugarCreado);
+    setFormUbicacion({
+      nombre: lugarCreado.nombre || "",
+      categoria: lugarCreado.categoria || "GASTRONOMIA",
+      ubicacion: { latitud: lugarCreado.latitud, longitud: lugarCreado.longitud },
+    });
+    setForm({ ...CAMPO_VACIO, descripcion: lugarCreado.descripcion || "" });
+    setEstado("listo");
+  }
+
   async function handleAltaSubmit(e) {
     e.preventDefault();
     setErrorAlta(null);
@@ -235,15 +246,18 @@ export default function PanelNegocioPage() {
         longitud: formAlta.ubicacion.longitud,
         tier: tierElegido || "GRATIS",
       });
-      setLugar(data.lugar);
-      setFormUbicacion({
-        nombre: data.lugar.nombre || "",
-        categoria: data.lugar.categoria || "GASTRONOMIA",
-        ubicacion: { latitud: data.lugar.latitud, longitud: data.lugar.longitud },
-      });
-      setForm({ ...CAMPO_VACIO, descripcion: data.lugar.descripcion || "" });
-      setEstado("listo");
+      aplicarLugarCreado(data.lugar);
     } catch (err) {
+      // Si se cortó la conexión, no sabemos si el lugar llegó a crearse. Antes de pedirle a la persona que
+      // lo repita (y arriesgar que ya exista), se consulta el servidor: si el lugar está, se sigue normal.
+      if (err.resultadoIncierto) {
+        try {
+          aplicarLugarCreado(await obtenerMiLugar(token));
+          return;
+        } catch {
+          // Sin lugar (o sin conexión todavía): se muestra el mensaje original.
+        }
+      }
       setErrorAlta(err.message);
     } finally {
       setCreando(false);
