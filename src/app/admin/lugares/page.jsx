@@ -15,6 +15,7 @@ import {
 } from "@/lib/api";
 import { obtenerToken } from "@/lib/auth";
 import { normalizarUrlImagen } from "@/lib/imagenes";
+import { normalizarUrlPanorama } from "@/lib/panorama";
 
 const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion"), {
   ssr: false,
@@ -42,7 +43,7 @@ const CAMPOS_TEXTO = [
   { name: "wazeUrl", label: "URL de Waze (opcional)", tipo: "input" },
   { name: "whatsapp", label: "WhatsApp (solo números, con código de país)", tipo: "input" },
   { name: "videoUrl", label: "URL del video (YouTube o TikTok)", tipo: "input" },
-  { name: "panoramaUrl", label: "URL del visor 360°", tipo: "input" },
+  { name: "panoramaUrl", label: "URL del visor 360° (recorrido virtual, video 360 de YouTube o foto 360)", tipo: "input" },
   { name: "menuUrl", label: "URL del menú digital o PDF", tipo: "input" },
   { name: "audioUrl", label: "URL de audio descriptivo (accesibilidad)", tipo: "input" },
 ];
@@ -178,7 +179,8 @@ export default function AdminLugaresPage() {
       if (campo === "galeriaUrls") continue;
       const valor = form[campo].trim();
       if (!valor) continue;
-      cambios[campo] = campo === "fotoUrl" ? normalizarUrlImagen(valor) : valor;
+      cambios[campo] =
+        campo === "fotoUrl" ? normalizarUrlImagen(valor) : campo === "panoramaUrl" ? normalizarUrlPanorama(valor) : valor;
     }
     const galeria = parsearGaleriaUrls(form.galeriaUrls).slice(0, 5).map(normalizarUrlImagen);
     if (galeria.length > 0) cambios.galeriaUrls = galeria;
