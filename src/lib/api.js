@@ -1,5 +1,7 @@
 import { Utensils, Drama, Mountain, Landmark, Palette, BedDouble } from "lucide-react";
 
+import { conLoader } from "./conLoader";
+
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://geokaia-backend.onrender.com";
 
 // La paleta oficial (con logo) solo trae 4 colores de acento para 5 categorías -> ARTESANIA reutiliza GASTRONOMIA.
@@ -30,7 +32,8 @@ export class ErrorApi extends Error {
 
 // Render (plan gratuito) tarda hasta ~30-60 s en despertar tras un rato sin uso.
 const TIMEOUT_MS = 50000;
-const PAUSAS_REINTENTO_MS = [1500, 3500];
+const PAUSAS_REINTENTO_MS = [1500, 3500, 6000, 10000, 15000]; // ~36 s: lo que tarda Render en despertar
+const REINTENTOS_SIN_RED = 2;
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const MENSAJE_SIN_RED = "No pudimos conectarnos. Revisá tu conexión a internet e intentá de nuevo.";
@@ -86,7 +89,7 @@ async function apiFetch(path, options = {}) {
         { tipo: agotado ? "timeout" : "red", resultadoIncierto: inciertaSiSeCorta }
       );
       // Un timeout ya esperó casi un minuto: no se repite solo. Un corte de red sí.
-      if (agotado) break;
+      if (agotado || i >= REINTENTOS_SIN_RED) break;
       continue;
     } finally {
       clearTimeout(temporizador);
@@ -148,15 +151,21 @@ function errorDeRespuesta(status, data, headers = {}) {
 
 // --- Mapa / lugares (público) ---
 
-export function obtenerLugares() {
+// Las lecturas que llenan una pantalla (mapa, listas, paneles) muestran el lago si tardan, y pasan al volcán
+// ("Despertando el servidor") si pasan de ~4 s. Las escrituras no: cada formulario ya muestra su propio estado.
+const CON_LOADER = { variante: "lago", escalarA: "volcan", escalarTras: 4000 };
+
+function obtenerLugaresBase() {
   return apiFetch("/api/lugares", { cache: "no-store" });
 }
+export const obtenerLugares = conLoader(obtenerLugaresBase, CON_LOADER);
 
 // --- Rutas (público) ---
 
-export function obtenerRutas() {
+function obtenerRutasBase() {
   return apiFetch("/api/rutas", { cache: "no-store" });
 }
+export const obtenerRutas = conLoader(obtenerRutasBase, CON_LOADER);
 
 // --- Rutas [Admin] (requiere JWT de una cuenta con esAdmin) ---
 
@@ -195,12 +204,13 @@ export function recomendarRuta(consulta) {
 
 // --- Panel de negocio (requiere JWT) ---
 
-export function obtenerMiLugar(token) {
+function obtenerMiLugarBase(token) {
   return apiFetch("/api/lugares/mi-lugar", {
     cache: "no-store",
     headers: { Authorization: `Bearer ${token}` },
   });
 }
+export const obtenerMiLugar = conLoader(obtenerMiLugarBase, CON_LOADER);
 
 export function actualizarMiLugar(token, cambios) {
   return apiFetch("/api/lugares/mi-lugar", {
@@ -228,12 +238,13 @@ export function eliminarMiLugar(token, password) {
 
 // --- Admin (requiere JWT de una cuenta con esAdmin) ---
 
-export function obtenerLugaresPendientes(token) {
+function obtenerLugaresPendientesBase(token) {
   return apiFetch("/api/lugares/admin/pendientes", {
     cache: "no-store",
     headers: { Authorization: `Bearer ${token}` },
   });
 }
+export const obtenerLugaresPendientes = conLoader(obtenerLugaresPendientesBase, CON_LOADER);
 
 export function actualizarEstadoLugar(token, id, estado) {
   return apiFetch(`/api/lugares/admin/${id}/estado`, {
@@ -245,12 +256,13 @@ export function actualizarEstadoLugar(token, id, estado) {
 
 // Acceso amplio de admin a TODOS los lugares (cualquier negocio, cualquier estado) —
 // pedido puntual para acelerar la carga de contenido antes de la entrega final.
-export function obtenerTodosLosLugares(token) {
+function obtenerTodosLosLugaresBase(token) {
   return apiFetch("/api/lugares/admin/todos", {
     cache: "no-store",
     headers: { Authorization: `Bearer ${token}` },
   });
 }
+export const obtenerTodosLosLugares = conLoader(obtenerTodosLosLugaresBase, CON_LOADER);
 
 export function actualizarLugarAdmin(token, id, cambios) {
   return apiFetch(`/api/lugares/admin/${id}`, {

@@ -4,6 +4,8 @@ const OPCIONES_BASE = {
   variante: "aleatorio", // "aleatorio" (sortea) | "lago" | "volcan"
   retraso: 200, // ms que debe tardar la carga antes de mostrar el loader (evita parpadeos)
   minimo: 400, // ms mínimos que se queda visible una vez que apareció
+  escalarA: null, // variante a la que se cambia si la espera se alarga (ej. "volcan")
+  escalarTras: 0, // ms de espera total tras los cuales se escala; 0 = nunca
 };
 
 async function ejecutar(funcion, contexto, argumentos, opciones) {
@@ -12,23 +14,38 @@ async function ejecutar(funcion, contexto, argumentos, opciones) {
     return funcion.apply(contexto, argumentos);
   }
 
-  const { variante, retraso, minimo } = opciones;
+  const { variante, retraso, minimo, escalarA, escalarTras } = opciones;
   let mostradoEn = 0;
+  let escalado = false;
 
   const temporizador = setTimeout(() => {
     mostradoEn = Date.now();
     mostrarLoader(variante);
   }, retraso);
 
+  // Una espera muy larga casi siempre es el servidor gratuito despertando (~30-60 s): se pasa al volcán, que lo explica.
+  const temporizadorEscalada =
+    escalarA && escalarTras > retraso
+      ? setTimeout(() => {
+          escalado = true;
+          mostrarLoader(escalarA);
+        }, escalarTras)
+      : null;
+
   try {
     return await funcion.apply(contexto, argumentos);
   } finally {
     clearTimeout(temporizador);
+    clearTimeout(temporizadorEscalada);
     if (mostradoEn) {
       // El resultado se entrega de inmediato; solo se retrasa el ocultar el loader.
+      const ocultar = () => {
+        ocultarLoader(variante);
+        if (escalado) ocultarLoader(escalarA);
+      };
       const restante = minimo - (Date.now() - mostradoEn);
-      if (restante > 0) setTimeout(() => ocultarLoader(variante), restante);
-      else ocultarLoader(variante);
+      if (restante > 0) setTimeout(ocultar, restante);
+      else ocultar();
     }
   }
 }

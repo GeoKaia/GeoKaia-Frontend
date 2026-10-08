@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import BottomNav from "@/components/BottomNav";
 import AvisoConexion from "@/components/AvisoConexion";
+import GlobalLoader from "@/components/loaders/GlobalLoader";
 import { SCRIPT_PREFERENCIAS } from "@/lib/preferencias";
 import "./globals.css";
 
@@ -46,6 +47,7 @@ export default function RootLayout({ children }) {
         </a>
         {children}
         <AvisoConexion />
+        <GlobalLoader />
         <BottomNav />
       </body>
     </html>
