@@ -100,3 +100,26 @@ html[data-font-scale="muy-grande"] { font-size: 125%; }
     animation: none;
   }
 }
+
+/* Pantallas de carga */
+@keyframes loader-blink {
+  0%, 80%, 100% { opacity: 0.2; }
+  40% { opacity: 1; }
+}
+@keyframes loader-slide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+.loader-dot {
+  display: inline-block;
+  animation: loader-blink 1.2s ease-in-out infinite;
+}
+.loader-thumb {
+  animation: loader-slide 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .loader-dot,
+  .loader-thumb {
+    animation: none;
+  }
+}
