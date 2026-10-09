@@ -147,13 +147,13 @@ const SECCIONES = [
       <>
         <P>
           GeoKaia no usa cookies de publicidad ni de seguimiento, y no tiene herramientas de analítica de terceros. Sí
-          guarda en el almacenamiento local de tu navegador lo mínimo para funcionar:
+          guarda en tu navegador lo mínimo para funcionar:
         </P>
         <Lista
           items={[
-            "geokaia_token: tu sesión de negocio (se borra al cerrar sesión).",
-            "geokaia-onboarding: que ya viste la bienvenida.",
-            "geokaia-theme y geokaia-font-scale: tus preferencias de modo oscuro y tamaño de letra.",
+            "gk_sesion (cookie): tu sesión de negocio o de administración. Es una cookie técnica, httpOnly (los scripts de la página no pueden leerla) y vence a las 8 horas o al cerrar sesión.",
+            "geokaia-onboarding (almacenamiento local): que ya viste la bienvenida.",
+            "geokaia-theme y geokaia-font-scale (almacenamiento local): tus preferencias de modo oscuro y tamaño de letra.",
           ]}
         />
         <P>Podés borrarlos en cualquier momento desde la configuración de tu navegador.</P>
