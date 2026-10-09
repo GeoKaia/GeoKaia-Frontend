@@ -18,7 +18,7 @@ const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion")
   loading: () => <p className="text-sm text-brand-text/70 animate-pulse">Cargando mapa...</p>,
 });
 
-const PRECIO_PREMIUM = "15";
+const PRECIO_PREMIUM = "10";
 
 // Tolerante al formato: acepta un link por línea, separados por coma o por punto y coma
 // (o cualquier mezcla) — no todos pegan las URLs de la misma forma.
