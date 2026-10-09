@@ -204,7 +204,7 @@ src/
 | `/panel-negocio` | Negocio | Elegir plan, registrar y editar el lugar propio |
 | `/ajustes` | Público / Negocio | Modo oscuro, tamaño de letra y enlaces legales (todos); cerrar sesión y borrar cuenta (negocio) |
 | `/privacidad`, `/terminos` | Público | Política de Privacidad y Términos y Condiciones |
-| `/admin/login`, `/admin` | Admin | Cola de aprobación de lugares registrados por negocios |
+| `/admin/login`, `/admin` | Admin | Cola de aprobación de lugares registrados por negocios, con comentarios para el negocio (el admin ya no edita lugares ajenos) |
 | `/admin/rutas` | Admin | Crear, editar y borrar rutas a partir de lugares ya aprobados |
 
 ---
@@ -213,6 +213,7 @@ src/
 
 - **Formularios validados**: cada formulario valida en el cliente antes de enviar (longitudes mínimas, campos requeridos) y además confía en la validación del backend (Zod) como última barrera.
 - **Rutas protegidas por rol**: las páginas de negocio (`/panel-negocio`, `/ajustes`) chequean que exista un JWT válido; las de admin (`/admin`, `/admin/rutas`) además verifican contra el backend que la cuenta tenga `esAdmin: true` antes de mostrar contenido.
+- **Comentarios en vez de edición ajena**: el admin deja notas al negocio (`ComentariosNegocio`) y el negocio las ve en su panel y corrige lo suyo. El botón «Editar» del admin está oculto salvo que se active `NEXT_PUBLIC_ADMIN_EDICION=true` (y `ADMIN_EDICION_LUGARES=true` en el backend).
 - **Enlaces seguros**: los links que carga un negocio (video, menú, mapas, galería, 360°) solo se muestran si empiezan con `http://` o `https://` (`src/lib/urls.js`, `src/lib/panorama.js`); un texto como `javascript:...` nunca llega a un `href` ni a un `iframe`. El backend lo rechaza además al guardar.
 - **Sin HTML inyectado**: no se usa `dangerouslySetInnerHTML` con datos de usuarios; React escapa el texto que llega de la API.
 - **Consentimiento**: el registro de un negocio exige marcar la aceptación de los Términos y la Política de Privacidad, y el backend guarda la fecha y la versión aceptadas.
