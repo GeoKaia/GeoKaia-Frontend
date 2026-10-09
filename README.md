@@ -122,7 +122,7 @@ En producción, la app está deployada en [Vercel](https://vercel.com), con depl
   |-- src/components/     Componentes reutilizables (mapa, tarjetas, formularios)
   |-- src/lib/            Cliente de la API, auth (localStorage), paletas de color
             |
-            | fetch() -> NEXT_PUBLIC_API_URL
+            | fetch('/api/...') -> rewrites de Next -> BACKEND_URL
             v
 [ GeoKaia-Backend — API REST en Express, repo aparte ]
             |
@@ -213,7 +213,6 @@ src/
 ## Seguridad y validación
 
 - **Formularios validados**: cada formulario valida en el cliente antes de enviar (longitudes mínimas, campos requeridos) y además confía en la validación del backend (Zod) como última barrera.
-- **Rutas protegidas por rol**: las páginas de negocio (`/panel-negocio`, `/ajustes`) chequean que exista un JWT válido; las de admin (`/admin`, `/admin/rutas`) además verifican contra el backend que la cuenta tenga `esAdmin: true` antes de mostrar contenido.
 - **Contraseña fuerte al registrarse**: mínimo 12 caracteres con mayúscula, minúscula, número y símbolo, sin espacios ni claves comunes (`src/lib/password.js`, con lista de requisitos en vivo). El backend aplica la misma política y es quien decide.
 - **Pago simulado**: el plan Premium no pide datos de tarjeta. Ofrece «Pagar con Banpro» / «Pagar con Pagadito» (abre el link configurado en `NEXT_PUBLIC_PAGO_*_URL` o muestra una redirección simulada) y «Ya pagué — continuar con la demo» mantiene el flujo.
 - **Comentarios en vez de edición ajena**: el admin deja notas al negocio (`ComentariosNegocio`) y el negocio las ve en su panel y corrige lo suyo. El botón «Editar» del admin está oculto salvo que se active `NEXT_PUBLIC_ADMIN_EDICION=true` (y `ADMIN_EDICION_LUGARES=true` en el backend).
