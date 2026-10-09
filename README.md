@@ -212,7 +212,7 @@ src/
 ## Seguridad y validación
 
 - **Formularios validados**: cada formulario valida en el cliente antes de enviar (longitudes mínimas, campos requeridos) y además confía en la validación del backend (Zod) como última barrera.
-- **Rutas protegidas por rol**: las páginas de negocio (`/panel-negocio`, `/ajustes`) chequean que exista un JWT válido; las de admin (`/admin`, `/admin/rutas`) además verifican contra el backend que la cuenta tenga `esAdmin: true` antes de mostrar contenido.
+- **Rutas protegidas por rol, en el servidor**: `src/proxy.js` consulta al backend (`GET /api/auth/me`) antes de servir `/panel-negocio` y `/admin/*`. Sin sesión válida redirige al login; una cuenta que no es admin que escribe `/admin` vuelve al inicio sin ver la interfaz de administración. La API sigue validando cada petición por su cuenta.
 - **Enlaces seguros**: los links que carga un negocio (video, menú, mapas, galería, 360°) solo se muestran si empiezan con `http://` o `https://` (`src/lib/urls.js`, `src/lib/panorama.js`); un texto como `javascript:...` nunca llega a un `href` ni a un `iframe`. El backend lo rechaza además al guardar.
 - **Sin HTML inyectado**: no se usa `dangerouslySetInnerHTML` con datos de usuarios; React escapa el texto que llega de la API.
 - **Consentimiento**: el registro de un negocio exige marcar la aceptación de los Términos y la Política de Privacidad, y el backend guarda la fecha y la versión aceptadas.
