@@ -206,7 +206,7 @@ src/
 | `/panel-negocio` | Negocio | Elegir plan (Premium con pasarela de pago simulada: Banpro / Pagadito), registrar y editar el lugar propio |
 | `/ajustes` | Público / Negocio | Modo oscuro, tamaño de letra y enlaces legales (todos); cerrar sesión y borrar cuenta (negocio) |
 | `/privacidad`, `/terminos` | Público | Política de Privacidad y Términos y Condiciones |
-| `/admin/login`, `/admin` | Admin | Cola de aprobación de lugares registrados por negocios, con comentarios para el negocio (el admin ya no edita lugares ajenos) |
+| `/admin/login`, `/admin` | Admin | Cola de aprobación de lugares nuevos (aprobar o rechazar); supervisión de lugares en solo lectura |
 | `/admin/rutas` | Admin | Crear, editar y borrar rutas a partir de lugares ya aprobados |
 
 ---
@@ -216,7 +216,7 @@ src/
 - **Formularios validados**: cada formulario valida en el cliente antes de enviar (longitudes mínimas, campos requeridos) y además confía en la validación del backend (Zod) como última barrera.
 - **Contraseña fuerte**: mínimo 12 caracteres con una mayúscula, un número y un carácter especial (se permiten minúsculas, espacios y frases largas; máx. 128). `src/lib/password.js` + `RequisitosContrasena` muestran en vivo qué falta y los formularios no borran lo escrito al fallar; el backend repite todas las validaciones y es quien decide. Se aplica al registro, al cambio de contraseña (Ajustes → «Cambiar contraseña», con la actual y el código 2FA) y al restablecimiento (`/olvide-password` y `/restablecer-password`, con enlace de un solo uso y código 2FA). Las contraseñas se guardan con Argon2id en el backend.
 - **Pago simulado**: el plan Premium no pide datos de tarjeta. Ofrece «Pagar con Banpro» / «Pagar con Pagadito» (abre el link configurado en `NEXT_PUBLIC_PAGO_*_URL` o muestra una redirección simulada) y «Ya pagué — continuar con la demo» mantiene el flujo.
-- **Comentarios en vez de edición ajena**: el admin deja notas al negocio (`ComentariosNegocio`) y el negocio las ve en su panel y corrige lo suyo. El botón «Editar» del admin está oculto salvo que se active `NEXT_PUBLIC_ADMIN_EDICION=true` (y `ADMIN_EDICION_LUGARES=true` en el backend).
+- **Propiedad de los negocios (RBAC)**: cada negocio solo lo edita su propietario. Los administradores supervisan en **solo lectura** (`/admin/lugares`), aprueban o rechazan lugares nuevos y se comunican con el negocio por mensajes; no hay botones de editar o borrar negocios ajenos porque **el servidor no ofrece esas operaciones** (el rol se verifica en cada petición, no en la interfaz).
 - **Rutas protegidas por rol**: `src/app/admin/layout.jsx` pregunta al servidor (`GET /api/auth/me`) antes de mostrar cualquier pantalla de `/admin/*`: sin sesión redirige a `/admin/login`; con sesión sin rol de administrador muestra «Acceso denegado». Es solo para no mostrar pantallas que no corresponden: la API verifica sesión y rol en cada petición, y es lo que realmente protege.
 - **Enlaces seguros**: los links que carga un negocio (video, menú, mapas, galería, 360°) solo se muestran si empiezan con `http://` o `https://` (`src/lib/urls.js`, `src/lib/panorama.js`); un texto como `javascript:...` nunca llega a un `href` ni a un `iframe`. El backend lo rechaza además al guardar.
 - **Sin HTML inyectado**: no se usa `dangerouslySetInnerHTML` con datos de usuarios; React escapa el texto que llega de la API.

@@ -172,32 +172,6 @@ function obtenerRutasBase() {
 }
 export const obtenerRutas = conLoader(obtenerRutasBase, CON_LOADER);
 
-// --- Comentarios del equipo hacia los negocios ---
-
-export function obtenerComentariosLugar(id) {
-  return apiFetch(`/api/lugares/admin/${id}/comentarios`, {
-  });
-}
-
-export function crearComentarioLugar(id, texto) {
-  return apiFetch(`/api/lugares/admin/${id}/comentarios`, {
-    method: "POST",
-    body: JSON.stringify({ texto }),
-  });
-}
-
-export function eliminarComentarioLugar(comentarioId) {
-  return apiFetch(`/api/lugares/admin/comentarios/${comentarioId}`, {
-    method: "DELETE",
-  });
-}
-
-// [Negocio] comentarios que el equipo dejó en MI lugar
-export function obtenerMisComentarios() {
-  return apiFetch("/api/lugares/mi-lugar/comentarios", {
-  });
-}
-
 // --- Rutas [Admin] (requiere JWT de una cuenta con esAdmin) ---
 
 export function crearRuta(datos) {
@@ -284,19 +258,6 @@ function obtenerTodosLosLugaresBase() {
   });
 }
 export const obtenerTodosLosLugares = conLoader(obtenerTodosLosLugaresBase, CON_LOADER);
-
-export function actualizarLugarAdmin(id, cambios) {
-  return apiFetch(`/api/lugares/admin/${id}`, {
-    method: "PATCH",
-    body: JSON.stringify(cambios),
-  });
-}
-
-export function eliminarLugarAdmin(id) {
-  return apiFetch(`/api/lugares/admin/${id}`, {
-    method: "DELETE",
-  });
-}
 
 // --- Auth de negocio (público) ---
 
