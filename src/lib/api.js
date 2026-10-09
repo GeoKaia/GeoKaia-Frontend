@@ -317,11 +317,11 @@ export function loginNegocio({ email, password }) {
   });
 }
 
-export function verificar2FA({ negocioId, token }) {
+export function verificar2FA({ pasoToken, token }) {
   return apiFetch("/api/auth/verificar-2fa", {
     method: "POST",
     reintentable: true,
-    body: JSON.stringify({ negocioId, token }),
+    body: JSON.stringify({ pasoToken, token }),
   });
 }
 

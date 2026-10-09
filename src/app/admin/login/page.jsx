@@ -13,7 +13,8 @@ export default function LoginAdminPage() {
   const router = useRouter();
   const [step, setStep] = useState("credenciales"); // 'credenciales' | 'codigo'
   const [credenciales, setCredenciales] = useState({ email: "", password: "" });
-  const [negocioId, setNegocioId] = useState(null);
+  // Firmado por el servidor y válido 5 minutos: es lo único que permite presentar el código 2FA (no es una sesión).
+  const [pasoToken, setPasoToken] = useState(null);
   const [codigo, setCodigo] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +36,7 @@ export default function LoginAdminPage() {
     setLoading(true);
     try {
       const data = await loginNegocio(credenciales);
-      setNegocioId(data.negocioId);
+      setPasoToken(data.pasoToken);
       setStep("codigo");
     } catch (err) {
       setError(err.message);
@@ -56,7 +57,7 @@ export default function LoginAdminPage() {
     setLoading(true);
     try {
       // El backend deja la sesión en una cookie httpOnly: acá no se guarda ningún token.
-      await verificar2FA({ negocioId, token: codigo });
+      await verificar2FA({ pasoToken, token: codigo });
       router.push("/admin");
     } catch (err) {
       setError(err.message);
