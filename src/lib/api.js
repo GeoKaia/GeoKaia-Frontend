@@ -246,6 +246,12 @@ function obtenerLugaresPendientesBase(token) {
 }
 export const obtenerLugaresPendientes = conLoader(obtenerLugaresPendientesBase, CON_LOADER);
 
+// Comprobación de acceso al área /admin: sin pantalla de carga. El servidor responde 403 si la cuenta no
+// es admin y 401/403 "token" si la sesión no sirve; es el servidor quien decide, no algo guardado en el navegador.
+export function verificarAccesoAdmin(token) {
+  return obtenerLugaresPendientesBase(token);
+}
+
 export function actualizarEstadoLugar(token, id, estado) {
   return apiFetch(`/api/lugares/admin/${id}/estado`, {
     method: "PATCH",
