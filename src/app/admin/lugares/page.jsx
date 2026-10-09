@@ -113,7 +113,9 @@ export default function AdminLugaresPage() {
         setEstado("listo");
       })
       .catch((err) => {
-        if (err.tipo === "sesion" || err.message.includes("administrador")) {
+        if (err.tipo === "sesion") {
+          setEstado("sin-token");
+        } else if (err.message.includes("administrador")) {
           setEstado("sin-permiso");
         } else {
           setError(err.message);
