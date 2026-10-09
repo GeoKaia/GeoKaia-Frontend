@@ -1,7 +1,7 @@
 # GeoKaia Frontend
 
 Interfaz web de GeoKaia — Plataforma de turismo digital para Nicaragua.
-Deployada en: https://geo-kaia-frontend.vercel.app
+Deployada en: https://geokaia.northcentralus.cloudapp.azure.com
 
 > Plataforma interactiva de turismo creativo y cultural en Nicaragua que utiliza IA para recomendar rutas curadas y experiencias inmersivas 360°. Proyecto desarrollado por el equipo Techyardigans para el Hackathon Nicaragua 2026 (categoría Avanzado).
 
@@ -22,7 +22,9 @@ Deployada en: https://geo-kaia-frontend.vercel.app
   <a href="https://www.maptiler.com"><img src="https://img.shields.io/badge/MapTiler-mapa%20vectorial-AC6727?style=for-the-badge&logo=maptiler&logoColor=white&labelColor=3A2B1D" alt="MapTiler" /></a>
   <a href="https://pannellum.org"><img src="https://img.shields.io/badge/Pannellum-visor%20360%C2%B0-AC6727?style=for-the-badge&labelColor=3A2B1D" alt="Pannellum" /></a>
   <a href="https://turfjs.org"><img src="https://img.shields.io/badge/Turf.js-7-AC6727?style=for-the-badge&labelColor=3A2B1D" alt="Turf.js 7" /></a>
-  <a href="https://vercel.com"><img src="https://img.shields.io/badge/Vercel-deploy-3A2B1D?style=for-the-badge&logo=vercel&logoColor=white&labelColor=3A2B1D" alt="Desplegado en Vercel" /></a>
+  <a href="https://azure.microsoft.com"><img src="https://img.shields.io/badge/Azure-VM-3A2B1D?style=for-the-badge&logo=microsoftazure&logoColor=white&labelColor=3A2B1D" alt="Desplegado en Azure" /></a>
+  <a href="https://www.docker.com"><img src="https://img.shields.io/badge/Docker-contenedores-3A2B1D?style=for-the-badge&logo=docker&logoColor=white&labelColor=3A2B1D" alt="Docker" /></a>
+  <a href="https://nginx.org"><img src="https://img.shields.io/badge/Nginx-proxy%20inverso-3A2B1D?style=for-the-badge&logo=nginx&logoColor=white&labelColor=3A2B1D" alt="Nginx" /></a>
 </p>
 
 ---
@@ -39,6 +41,7 @@ Deployada en: https://geo-kaia-frontend.vercel.app
 - [Estructura modular](#estructura-modular)
 - [Páginas de la aplicación](#páginas-de-la-aplicación)
 - [Seguridad y validación](#seguridad-y-validación)
+- [Despliegue en Azure](#despliegue-en-azure)
 - [Contribuciones](#contribuciones)
 - [Licencia](#licencia)
 
@@ -76,7 +79,7 @@ El sistema atiende a dos tipos de usuarios:
 
 - Node.js >= 18
 - Git
-- El backend de GeoKaia corriendo (local o el deployado en Render)
+- El backend de GeoKaia corriendo (local o el desplegado en Azure)
 
 ```bash
 # 1. Clona el repositorio
@@ -86,10 +89,10 @@ cd GeoKaia-Frontend
 # 2. Instala las dependencias
 npm install
 
-# 3. (Opcional) configura la URL del backend
+# 3. Configura la URL del backend
 cp .env.example .env.local
-# Por defecto apunta al backend deployado en Render — editalo solo si vas a
-# levantar el backend en local (ver Variables de entorno más abajo)
+# Editala según dónde esté el backend: http://localhost:4000 en local, o
+# https://geokaia.northcentralus.cloudapp.azure.com (sin /api) para el de Azure
 ```
 
 ---
@@ -110,24 +113,26 @@ npm run start   # sirve el build de producción
 npm run lint    # ESLint
 ```
 
-En producción, la app está deployada en [Vercel](https://vercel.com), con deploy automático al pushear a `main`.
+En producción, la app corre en una VM de Azure dentro de un contenedor Docker, detrás de Nginx. Ver [Despliegue en Azure](#despliegue-en-azure).
 
 ---
 
 ## Arquitectura del sistema
 
 ```
-[ Next.js App Router — este repo ]
-  |-- src/app/            Páginas (una carpeta por ruta, patrón de Next.js)
-  |-- src/components/     Componentes reutilizables (mapa, tarjetas, formularios)
-  |-- src/lib/            Cliente de la API, auth (localStorage), paletas de color
-            |
-            | fetch() -> NEXT_PUBLIC_API_URL
-            v
-[ GeoKaia-Backend — API REST en Express, repo aparte ]
-            |
-            v
-[ PostgreSQL en Neon ]
+[ Navegador ]
+      |  HTTPS
+      v
+[ Nginx — proxy inverso, certificado Let's Encrypt ]
+      |-- /      -> [ Next.js App Router — este repo ]
+      |                |-- src/app/         Páginas (una carpeta por ruta)
+      |                |-- src/components/  Componentes reutilizables
+      |                |-- src/lib/         Cliente de la API, auth, paletas
+      |
+      |-- /api/  -> [ GeoKaia-Backend — API REST en Express, repo aparte ]
+                         |
+                         v
+                    [ PostgreSQL en contenedor Docker ]
 ```
 
 **Decisiones clave:**
@@ -155,11 +160,11 @@ En producción, la app está deployada en [Vercel](https://vercel.com), con depl
 
 ## Variables de entorno
 
-Copiá `.env.example` a `.env.local` si necesitás cambiar el valor por default:
+Copiá `.env.example` a `.env.local` para desarrollo local:
 
 | Variable | Obligatoria | Descripción |
 |---|---|---|
-| `NEXT_PUBLIC_API_URL` | No | URL base de la API del backend. Default: `https://geokaia-backend.onrender.com`. Usá `http://localhost:4000` para apuntar a un backend corriendo en local |
+| `NEXT_PUBLIC_API_URL` | Sí en producción | URL base de la API, **sin** `/api` (las rutas ya lo incluyen). Se fija al compilar: si cambia, hay que reconstruir la imagen. En Azure: `https://geokaia.northcentralus.cloudapp.azure.com`. En local: `http://localhost:4000` |
 
 ---
 
@@ -176,8 +181,9 @@ src/
 │   ├── negocio/login|registro/    # Auth de negocios (login + 2FA, registro)
 │   ├── panel-negocio/             # Elegir plan, alta y edición del lugar propio
 │   ├── admin/                     # Cola de aprobación de lugares + CRUD de rutas
-│   └── ajustes/                   # Modo oscuro, tamaño de letra, información legal; cerrar sesión y borrar cuenta
-├── components/                   # BottomNav, MapaBase, PlaceCard, Visor360, RouteCard, PaginaLegal, AuthHero...
+│   ├── ajustes/                   # Modo oscuro, tamaño de letra, información legal; cerrar sesión y borrar cuenta
+│   └── error.js, global-error.js, not-found.js   # Pantallas de error amigables (error inesperado, error del layout raíz y 404)
+├── components/                   # BottomNav, MapaBase, PlaceCard, Visor360, RouteCard, PaginaLegal, AuthHero, PantallaError...
 └── lib/
     ├── api.js                    # Un fetch tipado por endpoint del backend + paleta de categorías
     ├── auth.js                   # Guardar/leer/borrar el JWT en localStorage
@@ -218,6 +224,48 @@ src/
 - **Consentimiento**: el registro de un negocio exige marcar la aceptación de los Términos y la Política de Privacidad, y el backend guarda la fecha y la versión aceptadas.
 - **2FA**: el login de negocio no entrega acceso hasta verificar el código TOTP de Google Authenticator.
 - **Expiración de sesión**: el JWT vence a las 8 horas; al expirar, la app redirige a login en vez de mostrar un error genérico.
+- **Errores amigables, sin detalles técnicos**: `PantallaError` muestra mensajes claros según el tipo de fallo (sin conexión, servidor, sesión vencida, límite de intentos, 404). Los errores técnicos nunca llegan a pantalla: solo se muestran los mensajes ya redactados de `ErrorApi`; el resto va a la consola con un código de referencia.
+
+---
+
+## Despliegue en Azure
+
+La app corre en una VM de Azure (Ubuntu 24.04) con Docker Compose: PostgreSQL, backend, frontend y Nginx como proxy inverso con HTTPS. Solo Nginx publica puertos (80 y 443); el resto queda en una red interna.
+
+**URL:** https://geokaia.northcentralus.cloudapp.azure.com
+
+### Estructura esperada en la VM
+
+```
+~/geokaia/
+├── GeoKaia-Backend/    (repositorio del backend, rama main)
+├── GeoKaia-Frontend/   (este repositorio, rama main)
+└── deploy/             (docker-compose.yml, nginx.conf y .env; ver GeoKaia-Backend/deploy)
+```
+
+### Compilación
+
+El `Dockerfile` de este repositorio compila la app en dos etapas (build y ejecución) y corre con un usuario sin privilegios. `NEXT_PUBLIC_API_URL` se pasa como argumento de build desde `deploy/.env`.
+
+### Actualizar a la última versión de `main`
+
+```bash
+cd ~/geokaia/GeoKaia-Frontend && git checkout main && git pull origin main
+cd ~/geokaia/deploy
+docker compose up -d --build frontend
+docker compose exec -T nginx nginx -s reload
+```
+
+### Verificar que la VM coincide con `main`
+
+```bash
+cd ~/geokaia/GeoKaia-Frontend && git fetch && git status -sb && git rev-parse HEAD origin/main
+```
+
+Los dos hashes deben coincidir y el árbol debe estar limpio.
+
+Instalación completa desde cero (certificado HTTPS, base de datos y variables):
+[README del backend](https://github.com/GeoKaia/GeoKaia-Backend#despliegue-en-azure).
 
 ---
 
