@@ -205,7 +205,7 @@ src/
 | `/panel-negocio` | Negocio | Elegir plan (Premium con pasarela de pago simulada: Banpro / Pagadito), registrar y editar el lugar propio |
 | `/ajustes` | Público / Negocio | Modo oscuro, tamaño de letra y enlaces legales (todos); cerrar sesión y borrar cuenta (negocio) |
 | `/privacidad`, `/terminos` | Público | Política de Privacidad y Términos y Condiciones |
-| `/admin/login`, `/admin` | Admin | Cola de aprobación de lugares registrados por negocios |
+| `/admin/login`, `/admin` | Admin | Cola de aprobación de lugares registrados por negocios, con comentarios para el negocio (el admin ya no edita lugares ajenos) |
 | `/admin/rutas` | Admin | Crear, editar y borrar rutas a partir de lugares ya aprobados |
 
 ---
@@ -216,6 +216,7 @@ src/
 - **Rutas protegidas por rol**: las páginas de negocio (`/panel-negocio`, `/ajustes`) chequean que exista un JWT válido; las de admin (`/admin`, `/admin/rutas`) además verifican contra el backend que la cuenta tenga `esAdmin: true` antes de mostrar contenido.
 - **Contraseña fuerte al registrarse**: mínimo 12 caracteres con mayúscula, minúscula, número y símbolo, sin espacios ni claves comunes (`src/lib/password.js`, con lista de requisitos en vivo). El backend aplica la misma política y es quien decide.
 - **Pago simulado**: el plan Premium no pide datos de tarjeta. Ofrece «Pagar con Banpro» / «Pagar con Pagadito» (abre el link configurado en `NEXT_PUBLIC_PAGO_*_URL` o muestra una redirección simulada) y «Ya pagué — continuar con la demo» mantiene el flujo.
+- **Comentarios en vez de edición ajena**: el admin deja notas al negocio (`ComentariosNegocio`) y el negocio las ve en su panel y corrige lo suyo. El botón «Editar» del admin está oculto salvo que se active `NEXT_PUBLIC_ADMIN_EDICION=true` (y `ADMIN_EDICION_LUGARES=true` en el backend).
 - **Enlaces seguros**: los links que carga un negocio (video, menú, mapas, galería, 360°) solo se muestran si empiezan con `http://` o `https://` (`src/lib/urls.js`, `src/lib/panorama.js`); un texto como `javascript:...` nunca llega a un `href` ni a un `iframe`. El backend lo rechaza además al guardar.
 - **Sin HTML inyectado**: no se usa `dangerouslySetInnerHTML` con datos de usuarios; React escapa el texto que llega de la API.
 - **Consentimiento**: el registro de un negocio exige marcar la aceptación de los Términos y la Política de Privacidad, y el backend guarda la fecha y la versión aceptadas.
