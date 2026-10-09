@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loginNegocio, verificar2FA } from "@/lib/api";
-import { guardarToken } from "@/lib/auth";
 import CampoContrasena from "@/components/CampoContrasena";
 import AuthHero from "@/components/AuthHero";
 
@@ -54,8 +53,8 @@ export default function LoginNegocioPage() {
 
     setLoading(true);
     try {
-      const data = await verificar2FA({ negocioId, token: codigo });
-      guardarToken(data.token);
+      // El backend deja la sesión en una cookie httpOnly: acá no se guarda ningún token.
+      await verificar2FA({ negocioId, token: codigo });
       setStep("listo");
     } catch (err) {
       setError(err.message);

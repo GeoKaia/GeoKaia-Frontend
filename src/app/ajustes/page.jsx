@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { MoonStar, Type, LogOut, Trash2, Sparkles, ChevronRight, ShieldCheck, FileText } from "lucide-react";
 import Footer from "@/components/Footer";
-import { obtenerToken, borrarToken } from "@/lib/auth";
-import { eliminarCuenta } from "@/lib/api";
+import { eliminarCuenta, obtenerSesion, cerrarSesion } from "@/lib/api";
 import { useModoOscuro, useTamanoLetra } from "@/lib/usePreferencias";
 
 const OPCIONES_TAMANO = [
@@ -32,11 +31,17 @@ export default function AjustesPage() {
   const [errorBorrar, setErrorBorrar] = useState(null);
 
   useEffect(() => {
-    setLogueado(!!obtenerToken());
+    obtenerSesion()
+      .then((sesion) => setLogueado(!!sesion))
+      .catch(() => setLogueado(false));
   }, []);
 
-  function handleLogout() {
-    borrarToken();
+  async function handleLogout() {
+    try {
+      await cerrarSesion();
+    } catch {
+      // Si no hubo red, igual se vuelve al inicio: la cookie vence sola a las 8 horas.
+    }
     router.push("/");
   }
 
@@ -53,29 +58,21 @@ export default function AjustesPage() {
 
   async function handleBorrarCuenta(e) {
     e.preventDefault();
-    const token = obtenerToken();
-    if (!token) {
-      setEstadoSinToken();
-      return;
-    }
-
     setBorrando(true);
     setErrorBorrar(null);
     try {
-      await eliminarCuenta(token, password);
-      borrarToken();
+      await eliminarCuenta(password);
       router.push("/");
     } catch (err) {
+      if (err.tipo === "sesion") {
+        setLogueado(false);
+        setMostrarModal(false);
+        return;
+      }
       setErrorBorrar(err.message);
     } finally {
       setBorrando(false);
     }
-  }
-
-  function setEstadoSinToken() {
-    borrarToken();
-    setLogueado(false);
-    setMostrarModal(false);
   }
 
   return (
