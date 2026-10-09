@@ -17,9 +17,9 @@ const DEGRADES = {
 
 export default function AuthHero({ eyebrow, iconoEyebrow: IconoEyebrow, title, subtitle, tone = "negocio", children, footer }) {
   return (
-    <main id="contenido" className="min-h-screen flex flex-col bg-brand-bg">
+    <main id="contenido" className="min-h-dvh flex flex-col bg-brand-bg">
       <div
-        className="relative w-full h-72 shrink-0 flex flex-col items-center justify-center text-center px-4 bg-cover bg-center"
+        className="relative w-full h-72 corto:h-40 shrink-0 flex flex-col items-center justify-center text-center px-4 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.5)), url('${IMAGEN_HERO}'), ${DEGRADES[tone]}`,
         }}
@@ -33,7 +33,7 @@ export default function AuthHero({ eyebrow, iconoEyebrow: IconoEyebrow, title, s
         {subtitle && <p className="text-sm text-white/85 max-w-xs mt-1">{subtitle}</p>}
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col items-center px-4 -mt-14 pb-12">
+      <div className="relative z-10 flex-1 flex flex-col items-center px-4 -mt-14 corto:-mt-8 pb-12">
         <div className="w-full max-w-sm rounded-t-[2.5rem] rounded-b-xl border border-secondary/40 bg-surface p-6 pt-10 shadow-lg">
           {children}
         </div>

@@ -65,7 +65,7 @@ function EnfocarLugar({ lugarEnfocado, lugares, markersRef }) {
   return null;
 }
 
-export default function MapaBase({ lugaresIniciales, rutaParadas, mostrarLeyenda = true, lugarEnfocado }) {
+export default function MapaBase({ lugaresIniciales, rutaParadas, mostrarLeyenda = true, lugarEnfocado, altura = 'h-[65dvh] min-h-[300px] max-h-[640px]' }) {
   // Coordenadas base (ej. apuntando a Managua/Chiltepe)
   const posicionInicial = [12.1364, -86.2514];
 
@@ -99,7 +99,7 @@ export default function MapaBase({ lugaresIniciales, rutaParadas, mostrarLeyenda
   );
 
   return (
-    <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg relative">
+    <div className={`w-full ${altura} rounded-lg overflow-hidden shadow-lg relative`}>
       {error && (
         <p className="absolute z-[1000] top-2 left-1/2 -translate-x-1/2 bg-surface text-sm text-red-600 px-3 py-1 rounded shadow">
           {error}

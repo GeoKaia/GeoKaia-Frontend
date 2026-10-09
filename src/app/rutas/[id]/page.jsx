@@ -37,7 +37,7 @@ export default function RutaDetallePage() {
   const lugaresDeLaRuta = ruta ? ruta.paradas.map((p) => p.lugar) : [];
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-bg">
+    <div className="flex min-h-dvh flex-col bg-brand-bg">
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         {error && <p className="text-red-600 text-sm">{error}</p>}
@@ -51,17 +51,17 @@ export default function RutaDetallePage() {
         )}
 
         {ruta && (
-          <div className="w-full max-w-3xl flex flex-col gap-6">
+          <div className="w-full max-w-7xl flex flex-col gap-6 split:grid split:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] split:gap-x-8 split:items-start">
             {ruta.fotoUrl && !fotoError && (
               <img
                 src={normalizarUrlImagen(ruta.fotoUrl)}
                 alt={ruta.nombre}
                 onError={() => setFotoError(true)}
-                className="w-full h-56 object-cover rounded-xl"
+                className="w-full h-56 object-cover rounded-xl split:col-span-2 split:h-64"
               />
             )}
 
-            <div>
+            <div className="split:col-start-2 split:row-start-2">
               <h1 className="text-2xl font-bold text-brand-text flex items-center gap-2">
                 <span>{ruta.emoji || "🗺️"}</span>
                 {ruta.nombre}
@@ -69,8 +69,9 @@ export default function RutaDetallePage() {
               <p className="text-brand-text/80 mt-2">{ruta.descripcion}</p>
             </div>
 
-            <div className="bg-surface p-2 rounded-xl shadow-md border border-secondary/30">
+            <div className="bg-surface p-2 rounded-xl shadow-md border border-secondary/30 split:col-start-1 split:row-start-2 split:row-span-2 split:sticky split:top-4">
               <MapaBase
+                altura="h-[55dvh] min-h-[280px] max-h-[640px] split:h-[calc(100dvh-8rem)] split:max-h-none corto:h-[calc(100dvh-5.5rem)] corto:min-h-[240px]"
                 lugaresIniciales={lugaresDeLaRuta}
                 rutaParadas={lugaresDeLaRuta}
                 mostrarLeyenda={false}
@@ -78,7 +79,7 @@ export default function RutaDetallePage() {
               />
             </div>
 
-            <div>
+            <div className="split:col-start-2 split:row-start-3">
               <h2 className="text-sm font-semibold text-brand-text/70 mb-3">
                 Paradas de la ruta — tocá una para verla en el mapa
               </h2>
@@ -100,7 +101,7 @@ export default function RutaDetallePage() {
                         <MapPin size={12} /> Ver "{parada.lugar.nombre}" en el mapa
                       </button>
                       <div className="p-3 pt-1">
-                        <PlaceCard lugar={parada.lugar} />
+                        <PlaceCard lugar={parada.lugar} ancho="w-full max-w-sm" />
                       </div>
                     </div>
                     {i < ruta.paradas.length - 1 &&

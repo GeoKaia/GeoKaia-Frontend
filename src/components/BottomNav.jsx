@@ -53,14 +53,14 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-[1000] bg-surface border-t border-secondary/30 flex items-stretch pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 inset-x-0 z-[1000] bg-surface border-t border-secondary/30 flex items-stretch justify-center pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
       {items.map((item) => {
         const activo = item.href === "/" ? pathname === "/" : pathname?.startsWith(item.href);
         return (
           <Link
             key={item.key}
             href={item.href}
-            className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors"
+            className="flex-1 md:max-w-40 flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors corto:flex-row corto:gap-1.5 corto:py-1"
             style={{ color: activo ? "var(--color-accent-dark)" : "#9C9187" }}
           >
             {ICONOS[item.key]}

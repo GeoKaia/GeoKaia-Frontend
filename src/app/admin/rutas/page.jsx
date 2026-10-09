@@ -200,10 +200,10 @@ export default function AdminRutasPage() {
   const lugaresDisponibles = lugares.filter((l) => !paradas.some((p) => p.lugarId === l.id));
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-bg">
+    <div className="flex min-h-dvh flex-col bg-brand-bg">
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
-        <div className="w-full max-w-3xl">
+        <div className="w-full max-w-5xl">
           <div className="flex items-center justify-between mb-1">
             <h1 className="text-xl font-bold text-brand-text">Rutas</h1>
             <div className="flex gap-4">

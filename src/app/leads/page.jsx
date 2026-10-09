@@ -57,7 +57,7 @@ export default function LeadsPage() {
 
   if (enviado) {
     return (
-      <main id="contenido" className="flex min-h-screen flex-col items-center justify-center bg-surface px-4 py-12">
+      <main id="contenido" className="flex min-h-dvh flex-col items-center justify-center bg-surface px-4 py-12">
         <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-surface p-8 text-center shadow-lg">
           <h1 className="mb-2 text-2xl font-bold text-accent-fg">
             ¡Gracias por tu interés!
@@ -72,7 +72,7 @@ export default function LeadsPage() {
   }
 
   return (
-    <main id="contenido" className="flex min-h-screen flex-col items-center justify-center bg-surface px-4 py-12">
+    <main id="contenido" className="flex min-h-dvh flex-col items-center justify-center bg-surface px-4 py-12">
       <div className="w-full max-w-md rounded-xl border border-secondary/40 bg-surface p-8 shadow-lg">
         <h1 className="mb-1 text-2xl font-bold text-accent-fg">
           Quiero saber más

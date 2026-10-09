@@ -27,7 +27,7 @@ function BotonNav({ href, color, textColor = "#ffffff", Icono, children }) {
   return (
     <Link
       href={href}
-      className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
+      className="flex-1 min-w-[10rem] flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
       style={{ backgroundColor: color, color: textColor }}
     >
       <Icono size={18} />
@@ -50,15 +50,18 @@ export default function Home() {
     if (!onboardingVisto()) router.replace("/bienvenida");
   }, [router]);
 
-  if (!visto) return <div className="min-h-screen bg-brand-bg" aria-hidden="true" />;
+  if (!visto) return <div className="min-h-dvh bg-brand-bg" aria-hidden="true" />;
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-bg">
+    <div className="flex min-h-dvh flex-col bg-brand-bg">
 
-      <main id="contenido" className="flex-1 flex flex-col items-center gap-6 py-6">
+      <main
+        id="contenido"
+        className="flex-1 w-full max-w-7xl mx-auto flex flex-col items-center gap-6 py-6 split:grid split:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] split:grid-rows-[auto_auto_auto_1fr] split:items-start split:gap-x-8 split:gap-y-5 split:px-6"
+      >
         <ChatKaia />
 
-        <div className="w-full max-w-2xl flex gap-3 px-4">
+        <div className="w-full max-w-2xl flex gap-3 px-4 split:px-0 flex-wrap">
           <BotonNav href="/rutas" color="var(--color-primary)" Icono={Route}>
             Lista de recorridos
           </BotonNav>
@@ -67,16 +70,16 @@ export default function Home() {
           </BotonNav>
         </div>
 
-        <section className="w-full max-w-4xl px-4">
+        <section className="w-full max-w-4xl px-4 split:max-w-none split:px-0 split:col-start-2 split:row-start-1 split:row-span-4 split:sticky split:top-4">
           <h2 className="text-center text-sm font-semibold text-brand-text/70 mb-2">
             Explorá Nicaragua — Mapa de lugares
           </h2>
           <div className="bg-surface p-2 rounded-xl shadow-md border border-secondary/30">
-            <MapaBase />
+            <MapaBase altura="h-[65dvh] min-h-[300px] max-h-[640px] split:h-[calc(100dvh-9rem)] split:max-h-none corto:h-[calc(100dvh-5.5rem)] corto:min-h-[240px]" />
           </div>
         </section>
 
-        <div className="w-full max-w-2xl flex gap-3 px-4">
+        <div className="w-full max-w-2xl flex gap-3 px-4 split:px-0 flex-wrap">
           <BotonNav href="/sobre" color="var(--color-secondary)" textColor="var(--color-brand-text)" Icono={BookOpen}>
             Sobre GeoKaia
           </BotonNav>

@@ -380,7 +380,7 @@ export default function PanelNegocioPage() {
   const esPremium = lugar?.tier === "PREMIUM";
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-bg">
+    <div className="flex min-h-dvh flex-col bg-brand-bg">
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
         {estado === "cargando" && (

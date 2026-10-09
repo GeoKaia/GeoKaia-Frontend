@@ -79,7 +79,7 @@ export default function AjustesPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-bg">
+    <div className="flex min-h-dvh flex-col bg-brand-bg">
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-md flex flex-col gap-4">
