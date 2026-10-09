@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Route } from "lucide-react";
 import Footer from "@/components/Footer";
 import RouteCard from "@/components/RouteCard";
+import EsqueletoTarjetas from "@/components/carga/EsqueletoTarjetas";
 import { obtenerRutas } from "@/lib/api";
 
 export default function RutasPage() {
@@ -30,7 +31,7 @@ export default function RutasPage() {
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
           {rutas === null && !error && (
-            <p className="text-brand-text/70 animate-pulse">Cargando rutas...</p>
+            <EsqueletoTarjetas cantidad={6} alto="h-[18.5rem]" />
           )}
 
           {rutas?.length === 0 && (

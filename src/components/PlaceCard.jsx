@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ImageOff, Clock, MapPin, Orbit } from 'lucide-react';
 import { CATEGORIAS } from '@/lib/api';
 import { normalizarUrlImagen } from '@/lib/imagenes';
+import ImagenRemota from './ImagenRemota';
 import { tipoPanorama } from '@/lib/panorama';
 import { urlHttpSegura } from '@/lib/urls';
 import Visor360 from './Visor360';
@@ -20,13 +21,8 @@ function Miniatura({ url, alt }) {
   }
 
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer" className="flex-none snap-start">
-      <img
-        src={normalizarUrlImagen(url)}
-        alt={alt}
-        onError={() => setError(true)}
-        className="w-14 h-14 rounded object-cover"
-      />
+    <a href={url} target="_blank" rel="noopener noreferrer" className="relative h-14 w-14 flex-none snap-start overflow-hidden rounded">
+      <ImagenRemota src={normalizarUrlImagen(url)} alt={alt} sizes="56px" onError={() => setError(true)} />
     </a>
   );
 }
@@ -66,13 +62,13 @@ export default function PlaceCard({ lugar }) {
   return (
     <div className="w-56 text-brand-text rounded-xl overflow-hidden bg-surface shadow-sm">
       {lugar.fotoUrl && (
-        <div className="relative">
+        <div className="relative h-32 w-full">
           {!fotoError ? (
-            <img
+            <ImagenRemota
               src={normalizarUrlImagen(lugar.fotoUrl)}
               alt={lugar.nombre}
+              sizes="224px"
               onError={() => setFotoError(true)}
-              className="w-full h-32 object-cover"
             />
           ) : (
             <div className="w-full h-32 bg-secondary/20 flex flex-col items-center justify-center text-center px-2">

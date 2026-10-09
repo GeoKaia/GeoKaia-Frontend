@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { normalizarUrlImagen } from "@/lib/imagenes";
+import ImagenRemota from "./ImagenRemota";
 
 export default function RouteCard({ ruta }) {
   const [fotoError, setFotoError] = useState(false);
@@ -16,12 +17,14 @@ export default function RouteCard({ ruta }) {
       className="block bg-surface border border-secondary/40 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
     >
       {ruta.fotoUrl && !fotoError && (
-        <img
-          src={normalizarUrlImagen(ruta.fotoUrl)}
-          alt={ruta.nombre}
-          onError={() => setFotoError(true)}
-          className="w-full h-32 object-cover"
-        />
+        <div className="relative h-32 w-full">
+          <ImagenRemota
+            src={normalizarUrlImagen(ruta.fotoUrl)}
+            alt={ruta.nombre}
+            sizes="(max-width: 640px) 100vw, 33vw"
+            onError={() => setFotoError(true)}
+          />
+        </div>
       )}
 
       <div className="p-4">

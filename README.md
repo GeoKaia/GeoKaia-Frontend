@@ -39,6 +39,7 @@ Deployada en: https://geo-kaia-frontend.vercel.app
 - [Estructura modular](#estructura-modular)
 - [Páginas de la aplicación](#páginas-de-la-aplicación)
 - [Seguridad y validación](#seguridad-y-validación)
+- [Compilación de producción y rendimiento](#compilación-de-producción-y-rendimiento)
 - [Contribuciones](#contribuciones)
 - [Licencia](#licencia)
 
@@ -218,6 +219,39 @@ src/
 - **Consentimiento**: el registro de un negocio exige marcar la aceptación de los Términos y la Política de Privacidad, y el backend guarda la fecha y la versión aceptadas.
 - **2FA**: el login de negocio no entrega acceso hasta verificar el código TOTP de Google Authenticator.
 - **Expiración de sesión**: el JWT vence a las 8 horas; al expirar, la app redirige a login en vez de mostrar un error genérico.
+
+---
+
+## Compilación de producción y rendimiento
+
+```bash
+npm run build   # build optimizado y comprimido de Next.js
+npm start       # sirve esa build (puerto 3000)
+```
+
+Qué hace la build lista para producción:
+
+- **Fotos de lugares optimizadas**: las de Wikimedia Commons pasan por el optimizador de Next (`components/ImagenRemota.jsx`): se redimensionan, se sirven en AVIF/WebP desde nuestro dominio y se cargan de forma diferida. Antes cada tarjeta bajaba el original (hasta 3,4 MB); ahora pesa ~30-45 KB. Si una foto falla en la primera carga (Wikimedia tarda unos segundos en generar cada miniatura nueva), se reintenta sola una vez.
+- **Archivos estáticos comprimidos y cacheados**: gzip en las respuestas; `/_next/static` con caché de un año (`immutable`); íconos, imágenes y el GeoJSON con caché de una semana (`next.config.mjs`).
+- **Recursos livianos**: los PNG de `public/icons` y el GeoJSON de departamentos se comprimieron sin pérdida visible (logo largo 727 → 160 KB, emblema 610 → 161 KB).
+- **Sin saltos de diseño**: las listas muestran tarjetas "fantasma" del tamaño real mientras cargan (CLS 0,117 → 0).
+- **Cabeceras de seguridad** (`nosniff`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`) y sin la cabecera `X-Powered-By`.
+- **Código dividido por demanda**: Leaflet, Pannellum y los loaders se descargan solo en las pantallas que los usan.
+
+Medición con Lighthouse (móvil emulado, build local, antes → después):
+
+| Página | Rendimiento | LCP | Peso transferido | Cambio de diseño (CLS) |
+|---|---|---|---|---|
+| `/destacados` | 54 → 83-88 | 14,5 s → 3,0-3,4 s | 17,3 MB → ~0,36 MB | 0,117 → 0 |
+| `/rutas` | 84 → 85 | 3,3 s → 3,8 s | sin cambio relevante | 0,117 → 0 |
+| `/` (bienvenida) | 72 → 76 | sin cambio relevante | sin cambio relevante | 0 |
+
+Las diferencias de unos pocos puntos en `/` y `/rutas` están dentro del ruido de la medición (varía ±5 con la carga de la máquina); la mejora real está en `/destacados`, donde se concentraban las fotos pesadas. Para repetir la medición:
+
+```bash
+npm run build && npm start &
+npx lighthouse http://localhost:3000/destacados --only-categories=performance --view
+```
 
 ---
 

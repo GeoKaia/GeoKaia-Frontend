@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
+import EsqueletoTarjetas from "@/components/carga/EsqueletoTarjetas";
 import { obtenerLugares } from "@/lib/api";
 
 export default function DestacadosPage() {
@@ -30,7 +31,7 @@ export default function DestacadosPage() {
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
           {lugares === null && !error && (
-            <p className="text-brand-text/70 animate-pulse">Cargando destacados...</p>
+            <EsqueletoTarjetas cantidad={6} alto="h-[30rem]" />
           )}
 
           {lugares?.length === 0 && (
