@@ -47,7 +47,7 @@ export default function AdminLayout({ children }) {
 
   if (estado === "denegado") {
     return (
-      <main id="contenido" className="flex min-h-screen flex-col items-center justify-center gap-4 bg-brand-bg px-4 text-center">
+      <main id="contenido" className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-brand-bg px-4 text-center">
         <h1 className="text-xl font-bold text-brand-text">Acceso denegado</h1>
         <p className="max-w-sm text-sm text-brand-text/70">Esta área es solo para administradores de GeoKaia.</p>
         <Link href="/" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark">
@@ -58,5 +58,5 @@ export default function AdminLayout({ children }) {
   }
 
   // Verificando (o redirigiendo): no se dibuja nada del panel.
-  return <div className="min-h-screen bg-brand-bg" aria-busy="true" />;
+  return <div className="min-h-dvh bg-brand-bg" aria-busy="true" />;
 }

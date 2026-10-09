@@ -31,7 +31,7 @@ function Miniatura({ url, alt }) {
   );
 }
 
-export default function PlaceCard({ lugar }) {
+export default function PlaceCard({ lugar, ancho = 'w-56' }) {
   const cat = CATEGORIAS[lugar.categoria] || { label: lugar.categoria, Icono: MapPin };
   const esPremium = lugar.tier === 'PREMIUM';
   const [fotoError, setFotoError] = useState(false);
@@ -64,7 +64,7 @@ export default function PlaceCard({ lugar }) {
   );
 
   return (
-    <div className="w-56 text-brand-text rounded-xl overflow-hidden bg-surface shadow-sm">
+    <div className={`${ancho} text-brand-text rounded-xl overflow-hidden bg-surface shadow-sm`}>
       {lugar.fotoUrl && (
         <div className="relative">
           {!fotoError ? (

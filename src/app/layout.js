@@ -25,6 +25,8 @@ export const viewport = {
   // El tema por defecto es el claro sin importar el del sistema, así que el color de la barra del
   // navegador también es fijo.
   themeColor: "#ffffff",
+  // El contenido usa el ancho real en celulares con notch al girarlos (los bordes se compensan con safe-area).
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }) {
@@ -36,7 +38,7 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col pb-16 bg-brand-bg text-brand-text">
+      <body className="min-h-full flex flex-col pb-16 corto:pb-11 bg-brand-bg text-brand-text pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
         {/* beforeInteractive: se ejecuta antes de hidratar y antes del primer pintado, sin destello de tema. */}
         <Script id="preferencias-gk" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: SCRIPT_PREFERENCIAS }} />
         <a

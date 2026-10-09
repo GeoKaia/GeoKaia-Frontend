@@ -4,6 +4,18 @@
    y los controles de /ajustes). Habilita el prefijo `dark:` por si algún componente lo necesita. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Pantalla "ancha": escritorio/tablet grande, o cualquier pantalla en horizontal con 700px+ de ancho
+   (un celular girado). Ahí la home y el detalle de ruta pasan a dos columnas. */
+@custom-variant split {
+  @media (min-width: 64rem) { @slot; }
+  @media (min-width: 43.75rem) and (orientation: landscape) { @slot; }
+}
+
+/* Celular girado: horizontal y poco alto. Ahí se compactan la barra inferior y los encabezados. */
+@custom-variant corto {
+  @media (orientation: landscape) and (max-height: 31.25rem) { @slot; }
+}
+
 @theme {
   --color-primary: #AC6727;
   --color-secondary: #BCB1A1;

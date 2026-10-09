@@ -17,10 +17,10 @@ export default function DestacadosPage() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-bg">
+    <div className="flex min-h-dvh flex-col bg-brand-bg">
 
       <main id="contenido" className="flex-1 flex flex-col items-center px-4 py-8 gap-6">
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-7xl">
           <Star size={32} className="text-accent-fg" />
           <h1 className="text-xl font-bold text-brand-text mb-1">Lugares Destacados</h1>
           <p className="text-sm text-brand-text/70 mb-6">
@@ -40,10 +40,10 @@ export default function DestacadosPage() {
           )}
 
           {lugares && lugares.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {lugares.map((lugar) => (
                 <div key={lugar.id} className="bg-surface border border-secondary/40 rounded-xl p-3 shadow-sm">
-                  <PlaceCard lugar={lugar} />
+                  <PlaceCard lugar={lugar} ancho="w-full" />
                 </div>
               ))}
             </div>
