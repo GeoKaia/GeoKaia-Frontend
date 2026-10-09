@@ -6,7 +6,6 @@ import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
-import ComentariosNegocio from "@/components/ComentariosNegocio";
 import { obtenerLugaresPendientes, actualizarEstadoLugar } from "@/lib/api";
 
 export default function AdminPage() {
@@ -103,9 +102,8 @@ export default function AdminPage() {
                   <div className="flex-1">
                     <PlaceCard lugar={lugar} />
                     <p className="text-xs text-brand-text/70 mt-2">
-                      Negocio: {lugar.negocio?.nombreContacto} · {lugar.negocio?.email} · {lugar.negocio?.whatsapp}
+                      Negocio: {lugar.negocio?.nombreContacto}
                     </p>
-                    <ComentariosNegocio lugarId={lugar.id} />
                   </div>
                   <div className="flex sm:flex-col gap-2 shrink-0">
                     <button
