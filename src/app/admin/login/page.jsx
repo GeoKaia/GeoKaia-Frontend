@@ -36,6 +36,11 @@ export default function LoginAdminPage() {
     setLoading(true);
     try {
       const data = await loginNegocio(credenciales);
+      // Esta versión del frontend necesita el backend con login en dos pasos (pasoToken). Contra un backend anterior
+      // (por ejemplo el de main, que devuelve negocioId) el código 2FA fallaría con un error de validación confuso.
+      if (!data.pasoToken) {
+        throw new Error("El servidor todavía tiene la versión anterior del inicio de sesión. Esta pantalla necesita el backend de la rama staging: apuntá BACKEND_URL a un backend actualizado.");
+      }
       setPasoToken(data.pasoToken);
       setStep("codigo");
     } catch (err) {
