@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { Star, CreditCard, Clock, Check } from "lucide-react";
+import { Star, CreditCard, Clock, Check, ExternalLink, Loader2, Lock } from "lucide-react";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import CampoContrasena from "@/components/CampoContrasena";
 import { obtenerMiLugar, actualizarMiLugar, crearLugar, eliminarMiLugar, CATEGORIAS } from "@/lib/api";
+import { PROVEEDORES_PAGO, urlDePagoValida } from "@/lib/pagos";
 import { obtenerToken, borrarToken } from "@/lib/auth";
 import { normalizarUrlImagen } from "@/lib/imagenes";
 import { normalizarUrlPanorama } from "@/lib/panorama";
@@ -46,8 +47,6 @@ const BULLETS_PREMIUM = [
   "Menú digital o PDF",
   "Audio descriptivo (accesibilidad)",
 ];
-
-const DATOS_TARJETA_VACIO = { numero: "", vencimiento: "", cvv: "", nombre: "" };
 
 const FORM_ALTA_VACIO = { nombre: "", descripcion: "", categoria: "GASTRONOMIA", ubicacion: null };
 
@@ -111,8 +110,9 @@ export default function PanelNegocioPage() {
   // Alta de lugar: elegir plan -> (si es premium) mock de pago -> formulario de alta
   const [pasoSinLugar, setPasoSinLugar] = useState("elegir-plan"); // elegir-plan | pago-mock | alta
   const [tierElegido, setTierElegido] = useState(null);
-  const [datosTarjeta, setDatosTarjeta] = useState(DATOS_TARJETA_VACIO);
-  const [pagoMostrarAviso, setPagoMostrarAviso] = useState(false);
+  const [pagoProveedor, setPagoProveedor] = useState(null); // id del medio de pago elegido
+  const [pagoFase, setPagoFase] = useState("redirigiendo"); // redirigiendo | esperando | confirmando
+  const temporizadorPago = useRef(null);
   const [formAlta, setFormAlta] = useState(FORM_ALTA_VACIO);
   const [creando, setCreando] = useState(false);
   const [errorAlta, setErrorAlta] = useState(null);
@@ -188,14 +188,35 @@ export default function PanelNegocioPage() {
   }
 
   function volverAElegirPlan() {
-    setPagoMostrarAviso(false);
-    setDatosTarjeta(DATOS_TARJETA_VACIO);
+    clearTimeout(temporizadorPago.current);
+    setPagoProveedor(null);
     setPasoSinLugar("elegir-plan");
   }
 
+  // Elegir el medio de pago: pantalla de redirección y, a los pocos segundos, la espera de confirmación.
+  function elegirMedioPago(p) {
+    clearTimeout(temporizadorPago.current);
+    setPagoProveedor(p.id);
+    setPagoFase("redirigiendo");
+    // Con link configurado se abre en otra pestaña.
+    if (urlDePagoValida(p.url)) window.open(p.url, "_blank", "noopener,noreferrer");
+    temporizadorPago.current = setTimeout(() => setPagoFase("esperando"), 2500);
+  }
+
+  function elegirOtroMedioPago() {
+    clearTimeout(temporizadorPago.current);
+    setPagoProveedor(null);
+  }
+
+  // "Ya realicé mi pago": breve confirmación y se sigue al registro del lugar Premium.
   function confirmarPagoMock() {
-    setTierElegido("PREMIUM");
-    setPasoSinLugar("alta");
+    clearTimeout(temporizadorPago.current);
+    setPagoFase("confirmando");
+    temporizadorPago.current = setTimeout(() => {
+      setTierElegido("PREMIUM");
+      setPasoSinLugar("alta");
+      setPagoProveedor(null);
+    }, 1800);
   }
 
   function cambiarPlan() {
@@ -347,8 +368,7 @@ export default function PanelNegocioPage() {
       setForm(CAMPO_VACIO);
       setTierElegido(null);
       setPasoSinLugar("elegir-plan");
-      setPagoMostrarAviso(false);
-      setDatosTarjeta(DATOS_TARJETA_VACIO);
+      setPagoProveedor(null);
       setEstado("sin-lugar");
     } catch (err) {
       setErrorBorrarLugar(err.message);
@@ -440,87 +460,100 @@ export default function PanelNegocioPage() {
 
         {estado === "sin-lugar" && pasoSinLugar === "pago-mock" && (
           <div className="w-full max-w-sm">
-            <h1 className="text-xl font-bold text-brand-text mb-1">Suscripción Premium</h1>
-            <p className="text-sm text-brand-text/70 mb-4">${PRECIO_PREMIUM}/mes</p>
+            <h1 className="text-xl font-bold text-brand-text mb-4">Finalizar suscripción</h1>
 
-            <div className="rounded-xl border border-secondary/40 bg-surface p-5 flex flex-col gap-3">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-brand-text">Número de tarjeta</label>
-                <input
-                  type="text"
-                  placeholder="4242 4242 4242 4242"
-                  value={datosTarjeta.numero}
-                  onChange={(e) => setDatosTarjeta((prev) => ({ ...prev, numero: e.target.value }))}
-                  disabled={pagoMostrarAviso}
-                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
-                />
-              </div>
-              <div className="flex gap-3">
-                <div className="flex-1">
-                  <label className="mb-1 block text-sm font-medium text-brand-text">Vencimiento</label>
-                  <input
-                    type="text"
-                    placeholder="MM/AA"
-                    value={datosTarjeta.vencimiento}
-                    onChange={(e) => setDatosTarjeta((prev) => ({ ...prev, vencimiento: e.target.value }))}
-                    disabled={pagoMostrarAviso}
-                    className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
-                  />
+            <div className="rounded-xl border border-secondary/40 bg-surface p-5 flex flex-col gap-4">
+              <div className="flex items-start justify-between gap-3 border-b border-secondary/30 pb-4">
+                <div>
+                  <p className="font-semibold text-brand-text">Plan Premium GeoKaia</p>
+                  <p className="text-xs text-brand-text/70">Suscripción mensual</p>
                 </div>
-                <div className="flex-1">
-                  <label className="mb-1 block text-sm font-medium text-brand-text">CVV</label>
-                  <input
-                    type="text"
-                    placeholder="123"
-                    value={datosTarjeta.cvv}
-                    onChange={(e) => setDatosTarjeta((prev) => ({ ...prev, cvv: e.target.value }))}
-                    disabled={pagoMostrarAviso}
-                    className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
-                  />
-                </div>
+                <p className="text-lg font-bold text-brand-text">${PRECIO_PREMIUM}.00</p>
               </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-brand-text">Nombre en la tarjeta</label>
-                <input
-                  type="text"
-                  placeholder="Como aparece en la tarjeta"
-                  value={datosTarjeta.nombre}
-                  onChange={(e) => setDatosTarjeta((prev) => ({ ...prev, nombre: e.target.value }))}
-                  disabled={pagoMostrarAviso}
-                  className="w-full rounded-lg border border-secondary/50 px-3 py-2 text-sm text-brand-text outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
-                />
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-brand-text/70">Total a pagar hoy</span>
+                <strong className="text-brand-text">${PRECIO_PREMIUM}.00 USD</strong>
               </div>
 
-              {!pagoMostrarAviso ? (
-                <button
-                  onClick={() => setPagoMostrarAviso(true)}
-                  className="rounded-lg bg-accent text-white font-semibold px-4 py-2.5 hover:opacity-90 transition-opacity"
-                >
-                  Pagar ${PRECIO_PREMIUM}/mes
-                </button>
-              ) : (
+              {!pagoProveedor && (
                 <>
-                  <p className="flex items-start gap-2 rounded-lg bg-secondary/20 px-3 py-2 text-sm text-brand-text">
-                    <CreditCard size={16} className="shrink-0 mt-0.5" />
-                    Los pagos en línea todavía son una función próxima — mientras tanto activamos tu plan
-                    Premium sin cargo para que puedas probarlo.
-                  </p>
-                  <button
-                    onClick={confirmarPagoMock}
-                    className="rounded-lg bg-primary text-white font-semibold px-4 py-2.5 hover:opacity-90 transition-opacity"
-                  >
-                    Continuar
-                  </button>
+                  <p className="text-sm font-medium text-brand-text">Elegí cómo pagar</p>
+                  {PROVEEDORES_PAGO.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => elegirMedioPago(p)}
+                      className="flex items-center justify-between rounded-lg border border-accent-dark px-4 py-2.5 text-left text-accent-fg font-semibold hover:bg-accent-dark hover:text-white transition-colors"
+                    >
+                      <span className="flex items-center gap-2">
+                        <CreditCard size={16} aria-hidden="true" />
+                        Pagar con {p.nombre}
+                      </span>
+                      <ExternalLink size={14} aria-hidden="true" />
+                    </button>
+                  ))}
                 </>
               )}
 
-              <button
-                type="button"
-                onClick={volverAElegirPlan}
-                className="text-sm text-brand-text/70 underline self-start"
-              >
-                Volver
-              </button>
+              {pagoProveedor && (() => {
+                const p = PROVEEDORES_PAGO.find((x) => x.id === pagoProveedor);
+                return (
+                  <div role="status" aria-live="polite" className="flex flex-col gap-3">
+                    {pagoFase === "redirigiendo" && (
+                      <div className="flex flex-col items-center gap-3 rounded-lg bg-secondary/20 px-3 py-6 text-center text-sm text-brand-text">
+                        <Loader2 size={28} className="animate-spin text-accent-fg" aria-hidden="true" />
+                        <p className="font-semibold">Te estamos redirigiendo a {p.nombre}…</p>
+                        <p className="text-brand-text/70">No cierres esta ventana.</p>
+                      </div>
+                    )}
+
+                    {pagoFase === "esperando" && (
+                      <>
+                        <div className="rounded-lg bg-secondary/20 px-3 py-3 text-sm text-brand-text">
+                          <p className="font-semibold mb-1">Completá tu pago en {p.nombre}</p>
+                          <p>Cuando termines, volvé a esta página y confirmá para activar tu plan Premium.</p>
+                          {urlDePagoValida(p.url) && (
+                            <a
+                              href={p.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-2 inline-flex items-center gap-1 text-accent-fg underline"
+                            >
+                              Abrir {p.nombre} de nuevo <ExternalLink size={12} aria-hidden="true" />
+                            </a>
+                          )}
+                        </div>
+                        <button
+                          onClick={confirmarPagoMock}
+                          className="rounded-lg bg-primary text-white font-semibold px-4 py-2.5 hover:opacity-90 transition-opacity"
+                        >
+                          Ya realicé mi pago
+                        </button>
+                        <button type="button" onClick={elegirOtroMedioPago} className="text-sm text-brand-text/70 underline self-start">
+                          Elegir otro medio de pago
+                        </button>
+                      </>
+                    )}
+
+                    {pagoFase === "confirmando" && (
+                      <div className="flex flex-col items-center gap-3 rounded-lg bg-secondary/20 px-3 py-6 text-center text-sm text-brand-text">
+                        <Loader2 size={28} className="animate-spin text-accent-fg" aria-hidden="true" />
+                        <p className="font-semibold">Confirmando tu pago…</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              <p className="flex items-center gap-1.5 text-xs text-brand-text/70">
+                <Lock size={12} aria-hidden="true" /> GeoKaia no almacena los datos de tu tarjeta.
+              </p>
+
+              {pagoFase !== "confirmando" && (
+                <button type="button" onClick={volverAElegirPlan} className="text-sm text-brand-text/70 underline self-start">
+                  Volver
+                </button>
+              )}
             </div>
           </div>
         )}
