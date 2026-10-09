@@ -160,6 +160,7 @@ Copiá `.env.example` a `.env.local` si necesitás cambiar el valor por default:
 | Variable | Obligatoria | Descripción |
 |---|---|---|
 | `NEXT_PUBLIC_API_URL` | No | URL base de la API del backend. Default: `https://geokaia-backend.onrender.com`. Usá `http://localhost:4000` para apuntar a un backend corriendo en local |
+| `NEXT_PUBLIC_PAGO_BANPRO_URL` / `NEXT_PUBLIC_PAGO_PAGADITO_URL` | No | Links de pago `https` para la pasarela **simulada** del plan Premium. Con link, se abre en otra pestaña; sin link, se muestra una redirección simulada. La demo siempre puede continuar con «Ya pagué — continuar con la demo» |
 
 ---
 
