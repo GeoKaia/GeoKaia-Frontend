@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { MoonStar, Type, LogOut, Trash2, Sparkles, ChevronRight, ShieldCheck, FileText } from "lucide-react";
 import Footer from "@/components/Footer";
+import CambiarPassword from "@/components/CambiarPassword";
 import { eliminarCuenta, obtenerSesion, cerrarSesion } from "@/lib/api";
 import { useModoOscuro, useTamanoLetra } from "@/lib/usePreferencias";
 
@@ -162,6 +163,8 @@ export default function AjustesPage() {
               </Link>
             ))}
           </section>
+
+          {logueado && <CambiarPassword />}
 
           {logueado && (
             <button

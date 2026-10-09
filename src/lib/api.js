@@ -325,6 +325,30 @@ export function verificar2FA({ pasoToken, token }) {
   });
 }
 
+// Cambiar la propia contraseña (con sesión): contraseña actual + código 2FA + contraseña nueva.
+export function cambiarPassword({ passwordActual, passwordNueva, codigo2fa }) {
+  return apiFetch("/api/auth/cambiar-password", {
+    method: "POST",
+    body: JSON.stringify({ passwordActual, passwordNueva, codigo2fa }),
+  });
+}
+
+// Pide el enlace de restablecimiento. El servidor responde igual exista o no la cuenta.
+export function olvidePassword(email) {
+  return apiFetch("/api/auth/olvide-password", {
+    method: "POST",
+    reintentable: true,
+    body: JSON.stringify({ email }),
+  });
+}
+
+export function restablecerPassword({ token, password, codigo2fa }) {
+  return apiFetch("/api/auth/restablecer-password", {
+    method: "POST",
+    body: JSON.stringify({ token, password, codigo2fa }),
+  });
+}
+
 export function eliminarCuenta(password) {
   return apiFetch("/api/auth/cuenta", {
     method: "DELETE",

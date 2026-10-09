@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
 import { loginNegocio, verificar2FA } from "@/lib/api";
@@ -105,6 +106,9 @@ export default function LoginAdminPage() {
                   onChange={handleCredencialesChange}
                   placeholder="Tu contraseña"
                 />
+                <Link href="/olvide-password" className="mt-1 inline-block text-xs text-accent-fg hover:underline">
+                  ¿Olvidaste tu contraseña?
+                </Link>
               </div>
 
               {error && (

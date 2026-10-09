@@ -131,6 +131,9 @@ export default function LoginNegocioPage() {
                   onChange={handleCredencialesChange}
                   placeholder="Tu contraseña"
                 />
+                <Link href="/olvide-password" className="mt-1 inline-block text-xs text-accent-fg hover:underline">
+                  ¿Olvidaste tu contraseña?
+                </Link>
               </div>
 
               {error && (
