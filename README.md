@@ -202,7 +202,7 @@ src/
 | `/destacados` | Público | Lugares con tier Premium (galería, video y visor 360°) |
 | `/negocios`, `/sobre`, `/leads` | Público | Información institucional y formulario de contacto |
 | `/negocio/registro`, `/negocio/login` | Público | Alta de cuenta de negocio (2FA) e inicio de sesión |
-| `/panel-negocio` | Negocio | Elegir plan, registrar y editar el lugar propio |
+| `/panel-negocio` | Negocio | Elegir plan (Premium con pasarela de pago simulada: Banpro / Pagadito), registrar y editar el lugar propio |
 | `/ajustes` | Público / Negocio | Modo oscuro, tamaño de letra y enlaces legales (todos); cerrar sesión y borrar cuenta (negocio) |
 | `/privacidad`, `/terminos` | Público | Política de Privacidad y Términos y Condiciones |
 | `/admin/login`, `/admin` | Admin | Cola de aprobación de lugares registrados por negocios |
@@ -215,6 +215,7 @@ src/
 - **Formularios validados**: cada formulario valida en el cliente antes de enviar (longitudes mínimas, campos requeridos) y además confía en la validación del backend (Zod) como última barrera.
 - **Rutas protegidas por rol**: las páginas de negocio (`/panel-negocio`, `/ajustes`) chequean que exista un JWT válido; las de admin (`/admin`, `/admin/rutas`) además verifican contra el backend que la cuenta tenga `esAdmin: true` antes de mostrar contenido.
 - **Contraseña fuerte al registrarse**: mínimo 12 caracteres con mayúscula, minúscula, número y símbolo, sin espacios ni claves comunes (`src/lib/password.js`, con lista de requisitos en vivo). El backend aplica la misma política y es quien decide.
+- **Pago simulado**: el plan Premium no pide datos de tarjeta. Ofrece «Pagar con Banpro» / «Pagar con Pagadito» (abre el link configurado en `NEXT_PUBLIC_PAGO_*_URL` o muestra una redirección simulada) y «Ya pagué — continuar con la demo» mantiene el flujo.
 - **Enlaces seguros**: los links que carga un negocio (video, menú, mapas, galería, 360°) solo se muestran si empiezan con `http://` o `https://` (`src/lib/urls.js`, `src/lib/panorama.js`); un texto como `javascript:...` nunca llega a un `href` ni a un `iframe`. El backend lo rechaza además al guardar.
 - **Sin HTML inyectado**: no se usa `dangerouslySetInnerHTML` con datos de usuarios; React escapa el texto que llega de la API.
 - **Consentimiento**: el registro de un negocio exige marcar la aceptación de los Términos y la Política de Privacidad, y el backend guarda la fecha y la versión aceptadas.
