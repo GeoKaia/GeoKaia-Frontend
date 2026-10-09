@@ -65,7 +65,7 @@ export default function ChatKaia() {
     : respuesta?.mensaje || MENSAJE_INICIAL;
 
   return (
-    <section className="w-full max-w-2xl px-4 split:max-w-none split:px-0">
+    <section className="w-full max-w-2xl px-4 split:max-w-none split:px-0 split:mt-7">
       <div className="rounded-3xl bg-gradient-to-br from-accent/15 via-secondary/10 to-primary/10 px-4 pt-6 pb-4 flex flex-col items-center">
         <Image
           ref={mascotaRef}
