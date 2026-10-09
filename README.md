@@ -132,7 +132,7 @@ En producción, la app está deployada en [Vercel](https://vercel.com), con depl
 
 **Decisiones clave:**
 - **Sin estado global ni librería de fetching**: cada página hace `fetch` directo a través de las funciones de `src/lib/api.js` y maneja su propio estado de carga/error con `useState`/`useEffect` — a este tamaño de proyecto, Redux/React Query hubiera sido sobre-ingeniería.
-- **Sesión en `localStorage`**: el JWT del negocio se guarda en `localStorage` (`src/lib/auth.js`), sin cookies ni SSR de datos privados — todo lo que requiere sesión se renderiza como Client Component (`"use client"`).
+- **Sesión en cookie httpOnly**: el backend deja el JWT en la cookie `gk_sesion` (httpOnly, Secure, SameSite=Lax, 8 h); JavaScript no puede leerla. El frontend llama a `/api/*` en su propio dominio (rewrites hacia el backend), pregunta `GET /api/auth/me` para saber quién es y `src/proxy.js` valida la sesión en el servidor antes de mostrar `/admin/*` y `/panel-negocio`.
 - **Mapa cargado dinámicamente sin SSR**: `MapaBase` se importa con `next/dynamic({ ssr: false })` porque Leaflet depende de `window`, que no existe en el servidor.
 - **Imágenes por URL, no upload**: igual que el backend, las fotos se pegan como link (con normalización automática de links de Google Drive/Dropbox y fallback visual si la imagen no carga) — no hay infraestructura de storage de archivos.
 
@@ -159,7 +159,7 @@ Copiá `.env.example` a `.env.local` si necesitás cambiar el valor por default:
 
 | Variable | Obligatoria | Descripción |
 |---|---|---|
-| `NEXT_PUBLIC_API_URL` | No | URL base de la API del backend. Default: `https://geokaia-backend.onrender.com`. Usá `http://localhost:4000` para apuntar a un backend corriendo en local |
+| `BACKEND_URL` | No | URL del backend, solo del lado del servidor. Next reenvía `/api/*` a esa dirección (rewrites) y el proxy de sesión la usa para validar la cookie. Default: `https://geokaia-backend.onrender.com`. Usá `http://localhost:4000` para un backend local |
 | `NEXT_PUBLIC_PAGO_BANPRO_URL` / `NEXT_PUBLIC_PAGO_PAGADITO_URL` | No | Links de pago `https` para la pasarela **simulada** del plan Premium. Con link, se abre en otra pestaña; sin link, se muestra una redirección simulada. La demo siempre puede continuar con «Ya pagué — continuar con la demo» |
 
 ---

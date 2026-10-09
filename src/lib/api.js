@@ -2,7 +2,10 @@ import { Utensils, Drama, Mountain, Landmark, Palette, BedDouble } from "lucide-
 
 import { conLoader } from "./conLoader";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://geokaia-backend.onrender.com";
+// Vacío = mismo origen: el navegador llama a /api/... en el propio dominio del frontend y next.config.mjs
+// reenvía esas peticiones al backend (rewrites). Así la cookie de sesión es de primera parte (httpOnly) y el
+// CORS casi no entra en juego. NEXT_PUBLIC_API_URL queda solo como atajo para desarrollo contra otro puerto.
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 // La paleta oficial (con logo) solo trae 4 colores de acento para 5 categorías -> ARTESANIA reutiliza GASTRONOMIA.
 // "Icono" es el componente de lucide-react, no un string: se renderiza como <cat.Icono />.
@@ -75,6 +78,8 @@ async function apiFetch(path, options = {}) {
     try {
       res = await fetch(`${API_URL}${path}`, {
         ...opcionesFetch,
+        // La sesión es una cookie httpOnly: el navegador la manda sola, JavaScript nunca ve el token.
+        credentials: "include",
         signal: controlador.signal,
         headers: { "Content-Type": "application/json", ...opcionesFetch.headers },
       });
@@ -111,14 +116,14 @@ async function apiFetch(path, options = {}) {
       continue;
     }
 
-    throw errorDeRespuesta(res.status, data, opcionesFetch.headers);
+    throw errorDeRespuesta(res.status, data);
   }
 
   throw ultimo;
 }
 
 // Traduce una respuesta de error del backend a un mensaje claro.
-function errorDeRespuesta(status, data, headers = {}) {
+function errorDeRespuesta(status, data) {
   const textoServidor = typeof data?.error === "string" ? data.error : null;
 
   // El middleware de validación del backend manda el motivo real por campo en "detalles"
@@ -128,9 +133,9 @@ function errorDeRespuesta(status, data, headers = {}) {
     return new ErrorApi(data.detalles.map((d) => d.mensaje).join(" "), { tipo: "validacion", status });
   }
 
-  // Con un token en la petición, 401/403 significa sesión vencida o inválida (no credenciales mal escritas).
-  const llevaToken = Boolean(headers?.Authorization);
-  if (llevaToken && (status === 401 || status === 403) && /token/i.test(textoServidor || "")) {
+  // 401/403 con un mensaje de token o de sesión significa sesión vencida, inválida o inexistente (no credenciales
+  // mal escritas: esas dicen "Contraseña incorrecta" o "Código 2FA incorrecto").
+  if ((status === 401 || status === 403) && /token|sesi[oó]n/i.test(textoServidor || "")) {
     return new ErrorApi("Tu sesión venció. Iniciá sesión de nuevo para continuar.", { tipo: "sesion", status });
   }
 
@@ -169,56 +174,49 @@ export const obtenerRutas = conLoader(obtenerRutasBase, CON_LOADER);
 
 // --- Comentarios del equipo hacia los negocios ---
 
-export function obtenerComentariosLugar(token, id) {
+export function obtenerComentariosLugar(id) {
   return apiFetch(`/api/lugares/admin/${id}/comentarios`, {
-    headers: { Authorization: `Bearer ${token}` },
   });
 }
 
-export function crearComentarioLugar(token, id, texto) {
+export function crearComentarioLugar(id, texto) {
   return apiFetch(`/api/lugares/admin/${id}/comentarios`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify({ texto }),
   });
 }
 
-export function eliminarComentarioLugar(token, comentarioId) {
+export function eliminarComentarioLugar(comentarioId) {
   return apiFetch(`/api/lugares/admin/comentarios/${comentarioId}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
   });
 }
 
 // [Negocio] comentarios que el equipo dejó en MI lugar
-export function obtenerMisComentarios(token) {
+export function obtenerMisComentarios() {
   return apiFetch("/api/lugares/mi-lugar/comentarios", {
-    headers: { Authorization: `Bearer ${token}` },
   });
 }
 
 // --- Rutas [Admin] (requiere JWT de una cuenta con esAdmin) ---
 
-export function crearRuta(token, datos) {
+export function crearRuta(datos) {
   return apiFetch("/api/rutas", {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(datos),
   });
 }
 
-export function actualizarRuta(token, id, datos) {
+export function actualizarRuta(id, datos) {
   return apiFetch(`/api/rutas/${id}`, {
     method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(datos),
   });
 }
 
-export function eliminarRuta(token, id) {
+export function eliminarRuta(id) {
   return apiFetch(`/api/rutas/${id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
   });
 }
 
@@ -234,78 +232,69 @@ export function recomendarRuta(consulta) {
 
 // --- Panel de negocio (requiere JWT) ---
 
-function obtenerMiLugarBase(token) {
+function obtenerMiLugarBase() {
   return apiFetch("/api/lugares/mi-lugar", {
     cache: "no-store",
-    headers: { Authorization: `Bearer ${token}` },
   });
 }
 export const obtenerMiLugar = conLoader(obtenerMiLugarBase, CON_LOADER);
 
-export function actualizarMiLugar(token, cambios) {
+export function actualizarMiLugar(cambios) {
   return apiFetch("/api/lugares/mi-lugar", {
     method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(cambios),
   });
 }
 
-export function crearLugar(token, datos) {
+export function crearLugar(datos) {
   return apiFetch("/api/lugares", {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(datos),
   });
 }
 
-export function eliminarMiLugar(token, password) {
+export function eliminarMiLugar(password) {
   return apiFetch("/api/lugares/mi-lugar", {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify({ password }),
   });
 }
 
 // --- Admin (requiere JWT de una cuenta con esAdmin) ---
 
-function obtenerLugaresPendientesBase(token) {
+function obtenerLugaresPendientesBase() {
   return apiFetch("/api/lugares/admin/pendientes", {
     cache: "no-store",
-    headers: { Authorization: `Bearer ${token}` },
   });
 }
 export const obtenerLugaresPendientes = conLoader(obtenerLugaresPendientesBase, CON_LOADER);
 
-export function actualizarEstadoLugar(token, id, estado) {
+export function actualizarEstadoLugar(id, estado) {
   return apiFetch(`/api/lugares/admin/${id}/estado`, {
     method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify({ estado }),
   });
 }
 
 // Acceso amplio de admin a TODOS los lugares (cualquier negocio, cualquier estado) —
 // pedido puntual para acelerar la carga de contenido antes de la entrega final.
-function obtenerTodosLosLugaresBase(token) {
+function obtenerTodosLosLugaresBase() {
   return apiFetch("/api/lugares/admin/todos", {
     cache: "no-store",
-    headers: { Authorization: `Bearer ${token}` },
   });
 }
 export const obtenerTodosLosLugares = conLoader(obtenerTodosLosLugaresBase, CON_LOADER);
 
-export function actualizarLugarAdmin(token, id, cambios) {
+export function actualizarLugarAdmin(id, cambios) {
   return apiFetch(`/api/lugares/admin/${id}`, {
     method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(cambios),
   });
 }
 
-export function eliminarLugarAdmin(token, id) {
+export function eliminarLugarAdmin(id) {
   return apiFetch(`/api/lugares/admin/${id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
   });
 }
 
@@ -336,10 +325,9 @@ export function verificar2FA({ negocioId, token }) {
   });
 }
 
-export function eliminarCuenta(token, password) {
+export function eliminarCuenta(password) {
   return apiFetch("/api/auth/cuenta", {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify({ password }),
   });
 }
@@ -351,4 +339,22 @@ export function crearLead({ nombreNegocio, nombreContacto, whatsapp, mensaje }) 
     method: "POST",
     body: JSON.stringify({ nombreNegocio, nombreContacto, whatsapp, mensaje }),
   });
+}
+
+// --- Sesión (cookie httpOnly) ---
+
+// Quién soy según la cookie: { id, email, nombreContacto, esAdmin, tieneLugar } o null si no hay sesión.
+// El frontend ya no puede leer el token, así que le pregunta al backend.
+export async function obtenerSesion() {
+  try {
+    return await apiFetch("/api/auth/me", { cache: "no-store" });
+  } catch (err) {
+    if (err instanceof ErrorApi && err.tipo === "sesion") return null;
+    if (err instanceof ErrorApi && (err.status === 401 || err.status === 403)) return null;
+    throw err;
+  }
+}
+
+export function cerrarSesion() {
+  return apiFetch("/api/auth/logout", { method: "POST", reintentable: true });
 }

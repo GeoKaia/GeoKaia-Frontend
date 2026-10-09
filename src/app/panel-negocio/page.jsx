@@ -9,7 +9,6 @@ import PlaceCard from "@/components/PlaceCard";
 import CampoContrasena from "@/components/CampoContrasena";
 import { obtenerMiLugar, obtenerMisComentarios, actualizarMiLugar, crearLugar, eliminarMiLugar, CATEGORIAS } from "@/lib/api";
 import { PROVEEDORES_PAGO, urlDePagoValida } from "@/lib/pagos";
-import { obtenerToken, borrarToken } from "@/lib/auth";
 import { normalizarUrlImagen } from "@/lib/imagenes";
 import { normalizarUrlPanorama } from "@/lib/panorama";
 
@@ -123,13 +122,7 @@ export default function PanelNegocioPage() {
   const [errorBorrarLugar, setErrorBorrarLugar] = useState(null);
 
   useEffect(() => {
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-
-    obtenerMiLugar(token)
+    obtenerMiLugar()
       .then((data) => {
         setLugar(data);
         setFormUbicacion({
@@ -152,7 +145,7 @@ export default function PanelNegocioPage() {
           galeriaUrls: (data.galeriaUrls || []).join("\n"),
         });
         // Notas del equipo de GeoKaia (solo lectura). Si falla, el panel funciona igual sin ellas.
-        obtenerMisComentarios(token)
+        obtenerMisComentarios()
           .then(setComentariosEquipo)
           .catch(() => {});
         setEstado("listo");
@@ -161,7 +154,6 @@ export default function PanelNegocioPage() {
         if (err.message.includes("todavía no tiene un lugar")) {
           setEstado("sin-lugar");
         } else if (err.tipo === "sesion" || err.message.includes("Token") || err.message.includes("autorizado")) {
-          borrarToken();
           setEstado("sin-token");
         } else {
           setError(err.message);
@@ -232,15 +224,9 @@ export default function PanelNegocioPage() {
       return;
     }
 
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-
     setCreando(true);
     try {
-      const data = await crearLugar(token, {
+      const data = await crearLugar({
         nombre: formAlta.nombre.trim(),
         descripcion: formAlta.descripcion.trim(),
         categoria: formAlta.categoria,
@@ -254,7 +240,7 @@ export default function PanelNegocioPage() {
       // lo repita (y arriesgar que ya exista), se consulta el servidor: si el lugar está, se sigue normal.
       if (err.resultadoIncierto) {
         try {
-          aplicarLugarCreado(await obtenerMiLugar(token));
+          aplicarLugarCreado(await obtenerMiLugar());
           return;
         } catch {
           // Sin lugar (o sin conexión todavía): se muestra el mensaje original.
@@ -274,12 +260,6 @@ export default function PanelNegocioPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-
     if (!formUbicacion.nombre.trim() || formUbicacion.nombre.trim().length < 3) {
       setError("El nombre debe tener al menos 3 caracteres.");
       return;
@@ -311,7 +291,7 @@ export default function PanelNegocioPage() {
     setGuardando(true);
     setError(null);
     try {
-      const data = await actualizarMiLugar(token, cambios);
+      const data = await actualizarMiLugar(cambios);
       setLugar(data.lugar);
       setGuardado(true);
     } catch (err) {
@@ -334,16 +314,10 @@ export default function PanelNegocioPage() {
 
   async function handleBorrarLugar(e) {
     e.preventDefault();
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-
     setBorrandoLugar(true);
     setErrorBorrarLugar(null);
     try {
-      await eliminarMiLugar(token, passwordBorrar);
+      await eliminarMiLugar(passwordBorrar);
       setMostrarModalBorrar(false);
       setLugar(null);
       setForm(CAMPO_VACIO);

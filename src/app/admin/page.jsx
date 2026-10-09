@@ -8,7 +8,6 @@ import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import ComentariosNegocio from "@/components/ComentariosNegocio";
 import { obtenerLugaresPendientes, actualizarEstadoLugar } from "@/lib/api";
-import { obtenerToken } from "@/lib/auth";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -18,13 +17,7 @@ export default function AdminPage() {
   const [procesando, setProcesando] = useState(null); // id del lugar en proceso
 
   function cargar() {
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-
-    obtenerLugaresPendientes(token)
+    obtenerLugaresPendientes()
       .then((data) => {
         setPendientes(data);
         setEstado("listo");
@@ -42,14 +35,9 @@ export default function AdminPage() {
   useEffect(cargar, []);
 
   async function resolver(id, nuevoEstado) {
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
     setProcesando(id);
     try {
-      await actualizarEstadoLugar(token, id, nuevoEstado);
+      await actualizarEstadoLugar(id, nuevoEstado);
       setPendientes((prev) => prev.filter((l) => l.id !== id));
     } catch (err) {
       setError(err.message);

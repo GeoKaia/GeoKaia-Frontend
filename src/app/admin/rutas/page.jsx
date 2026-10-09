@@ -13,7 +13,6 @@ import {
   actualizarRuta,
   eliminarRuta,
 } from "@/lib/api";
-import { obtenerToken } from "@/lib/auth";
 import { PALETA_EXTENDIDA } from "@/lib/colores";
 
 const FORM_VACIO = {
@@ -43,13 +42,7 @@ export default function AdminRutasPage() {
   const [borrandoId, setBorrandoId] = useState(null); // confirmación de un click antes de borrar
 
   function cargar() {
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-
-    obtenerLugaresPendientes(token)
+    obtenerLugaresPendientes()
       .then(() => Promise.all([obtenerLugares(), obtenerRutas()]))
       .then(([lugaresData, rutasData]) => {
         setLugares(lugaresData);
@@ -136,12 +129,6 @@ export default function AdminRutasPage() {
       return;
     }
 
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-
     const payload = {
       ...form,
       fotoUrl: form.fotoUrl.trim() || undefined,
@@ -156,10 +143,10 @@ export default function AdminRutasPage() {
     setGuardando(true);
     try {
       if (editandoId) {
-        const data = await actualizarRuta(token, editandoId, payload);
+        const data = await actualizarRuta(editandoId, payload);
         setRutas((prev) => prev.map((r) => (r.id === editandoId ? data.ruta : r)));
       } else {
-        const data = await crearRuta(token, payload);
+        const data = await crearRuta(payload);
         setRutas((prev) => [...prev, data.ruta]);
       }
       cancelarEdicion();
@@ -176,14 +163,8 @@ export default function AdminRutasPage() {
       return;
     }
 
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-
     try {
-      await eliminarRuta(token, id);
+      await eliminarRuta(id);
       setRutas((prev) => prev.filter((r) => r.id !== id));
       if (editandoId === id) cancelarEdicion();
     } catch (err) {

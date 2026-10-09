@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { obtenerToken } from "@/lib/auth";
+import { obtenerSesion } from "@/lib/api";
+import { limpiarTokenAntiguo } from "@/lib/auth";
 
 const ICONOS = {
   inicio: (
@@ -41,7 +42,14 @@ export default function BottomNav() {
   const [logueado, setLogueado] = useState(false);
 
   useEffect(() => {
-    setLogueado(!!obtenerToken());
+    limpiarTokenAntiguo();
+    let vigente = true;
+    obtenerSesion()
+      .then((sesion) => vigente && setLogueado(!!sesion))
+      .catch(() => vigente && setLogueado(false));
+    return () => {
+      vigente = false;
+    };
   }, [pathname]);
 
   const items = [

@@ -14,7 +14,6 @@ import {
   eliminarLugarAdmin,
   CATEGORIAS,
 } from "@/lib/api";
-import { obtenerToken } from "@/lib/auth";
 import { normalizarUrlImagen } from "@/lib/imagenes";
 import { normalizarUrlPanorama } from "@/lib/panorama";
 
@@ -108,12 +107,7 @@ export default function AdminLugaresPage() {
   const [errorBorrar, setErrorBorrar] = useState(null);
 
   function cargar() {
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
-    obtenerTodosLosLugares(token)
+    obtenerTodosLosLugares()
       .then((data) => {
         setLugares(data);
         setEstado("listo");
@@ -161,11 +155,6 @@ export default function AdminLugaresPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
     if (!formUbicacion.nombre.trim() || formUbicacion.nombre.trim().length < 3) {
       setErrorGuardar("El nombre debe tener al menos 3 caracteres.");
       return;
@@ -195,7 +184,7 @@ export default function AdminLugaresPage() {
     setGuardando(true);
     setErrorGuardar(null);
     try {
-      const data = await actualizarLugarAdmin(token, editandoId, cambios);
+      const data = await actualizarLugarAdmin(editandoId, cambios);
       setLugares((prev) => prev.map((l) => (l.id === editandoId ? { ...l, ...data.lugar } : l)));
       setGuardado(true);
     } catch (err) {
@@ -206,15 +195,10 @@ export default function AdminLugaresPage() {
   }
 
   async function handleBorrar() {
-    const token = obtenerToken();
-    if (!token) {
-      setEstado("sin-token");
-      return;
-    }
     setEliminando(true);
     setErrorBorrar(null);
     try {
-      await eliminarLugarAdmin(token, borrandoId);
+      await eliminarLugarAdmin(borrandoId);
       setLugares((prev) => prev.filter((l) => l.id !== borrandoId));
       setBorrandoId(null);
       if (editandoId === borrandoId) setEditandoId(null);

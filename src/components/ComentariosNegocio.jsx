@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { MessageSquare, Send, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { obtenerComentariosLugar, crearComentarioLugar, eliminarComentarioLugar } from "@/lib/api";
-import { obtenerToken } from "@/lib/auth";
 
 export function formatearFecha(iso) {
   return new Date(iso).toLocaleDateString("es-NI", { day: "numeric", month: "short", year: "numeric" });
@@ -20,9 +19,7 @@ export default function ComentariosNegocio({ lugarId }) {
 
   useEffect(() => {
     if (!abierto || comentarios !== null) return;
-    const token = obtenerToken();
-    if (!token) return;
-    obtenerComentariosLugar(token, lugarId)
+    obtenerComentariosLugar(lugarId)
       .then(setComentarios)
       .catch((err) => setError(err.message));
   }, [abierto, comentarios, lugarId]);
@@ -34,12 +31,10 @@ export default function ComentariosNegocio({ lugarId }) {
       setError("El comentario debe tener al menos 3 caracteres.");
       return;
     }
-    const token = obtenerToken();
-    if (!token) return;
     setEnviando(true);
     setError(null);
     try {
-      const { comentario } = await crearComentarioLugar(token, lugarId, limpio);
+      const { comentario } = await crearComentarioLugar(lugarId, limpio);
       setComentarios((prev) => [comentario, ...(prev || [])]);
       setTexto("");
     } catch (err) {
@@ -50,10 +45,8 @@ export default function ComentariosNegocio({ lugarId }) {
   }
 
   async function handleBorrar(id) {
-    const token = obtenerToken();
-    if (!token) return;
     try {
-      await eliminarComentarioLugar(token, id);
+      await eliminarComentarioLugar(id);
       setComentarios((prev) => prev.filter((c) => c.id !== id));
     } catch (err) {
       setError(err.message);

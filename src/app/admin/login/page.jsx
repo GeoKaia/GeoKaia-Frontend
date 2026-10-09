@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
 import { loginNegocio, verificar2FA } from "@/lib/api";
-import { guardarToken } from "@/lib/auth";
 import CampoContrasena from "@/components/CampoContrasena";
 import AuthHero from "@/components/AuthHero";
 
@@ -56,8 +55,8 @@ export default function LoginAdminPage() {
 
     setLoading(true);
     try {
-      const data = await verificar2FA({ negocioId, token: codigo });
-      guardarToken(data.token);
+      // El backend deja la sesión en una cookie httpOnly: acá no se guarda ningún token.
+      await verificar2FA({ negocioId, token: codigo });
       router.push("/admin");
     } catch (err) {
       setError(err.message);
