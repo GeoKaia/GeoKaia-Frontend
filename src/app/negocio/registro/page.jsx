@@ -5,6 +5,8 @@ import Link from "next/link";
 import { registrarNegocio } from "@/lib/api";
 import CampoContrasena from "@/components/CampoContrasena";
 import AuthHero from "@/components/AuthHero";
+import RequisitosContrasena from "@/components/RequisitosContrasena";
+import { validarPassword } from "@/lib/password";
 
 const initialForm = {
   email: "",
@@ -16,8 +18,8 @@ const initialForm = {
 
 function validar(form) {
   if (!form.email.trim()) return "El correo es obligatorio.";
-  if (!form.password || form.password.length < 6)
-    return "La contraseña debe tener al menos 6 caracteres.";
+  const errorPassword = validarPassword(form.password, form.email);
+  if (errorPassword) return errorPassword;
   if (!form.nombreContacto.trim() || form.nombreContacto.trim().length < 3)
     return "El nombre de contacto debe tener al menos 3 caracteres.";
   if (!form.whatsapp.trim() || form.whatsapp.trim().length < 8)
@@ -124,8 +126,9 @@ export default function RegistroNegocioPage() {
               autoComplete="new-password"
               value={form.password}
               onChange={handleChange}
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 12 caracteres"
             />
+            <RequisitosContrasena password={form.password} />
           </div>
 
           <div>
