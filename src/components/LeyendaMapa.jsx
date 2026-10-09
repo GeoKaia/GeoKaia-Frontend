@@ -37,7 +37,7 @@ export default function LeyendaMapa({ lugares, seleccionada, onSeleccionar }) {
                 className="flex items-center gap-2 text-xs px-2 py-1 rounded transition-colors text-left shrink-0"
                 style={{
                   backgroundColor: activa ? color : `${color}22`,
-                  color: activa ? '#ffffff' : '#2B2B2B',
+                  color: activa ? '#ffffff' : 'var(--color-brand-text)',
                 }}
               >
                 <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
