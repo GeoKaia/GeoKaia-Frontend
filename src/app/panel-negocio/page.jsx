@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { Star, CreditCard, Clock, Check } from "lucide-react";
+import { Star, CreditCard, Clock, Check, MessageSquare } from "lucide-react";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
 import CampoContrasena from "@/components/CampoContrasena";
-import { obtenerMiLugar, actualizarMiLugar, crearLugar, eliminarMiLugar, CATEGORIAS } from "@/lib/api";
+import { obtenerMiLugar, obtenerMisComentarios, actualizarMiLugar, crearLugar, eliminarMiLugar, CATEGORIAS } from "@/lib/api";
 import { obtenerToken, borrarToken } from "@/lib/auth";
 import { normalizarUrlImagen } from "@/lib/imagenes";
 import { normalizarUrlPanorama } from "@/lib/panorama";
@@ -102,6 +102,7 @@ export default function PanelNegocioPage() {
   const router = useRouter();
   const [estado, setEstado] = useState("cargando"); // cargando | sin-token | sin-lugar | listo | error
   const [lugar, setLugar] = useState(null);
+  const [comentariosEquipo, setComentariosEquipo] = useState([]); // notas que el equipo dejó en mi lugar
   const [form, setForm] = useState(CAMPO_VACIO);
   const [formUbicacion, setFormUbicacion] = useState({ nombre: "", categoria: "GASTRONOMIA", ubicacion: null });
   const [guardando, setGuardando] = useState(false);
@@ -152,6 +153,10 @@ export default function PanelNegocioPage() {
           audioUrl: data.audioUrl || "",
           galeriaUrls: (data.galeriaUrls || []).join("\n"),
         });
+        // Notas del equipo de GeoKaia (solo lectura). Si falla, el panel funciona igual sin ellas.
+        obtenerMisComentarios(token)
+          .then(setComentariosEquipo)
+          .catch(() => {});
         setEstado("listo");
       })
       .catch((err) => {
@@ -632,6 +637,28 @@ export default function PanelNegocioPage() {
                     <Clock size={16} className="shrink-0 mt-0.5" />
                     Tu lugar está en revisión — todavía no se ve en el mapa público. Podés seguir editando mientras tanto.
                   </p>
+                )}
+                {comentariosEquipo.length > 0 && (
+                  <section
+                    aria-labelledby="comentarios-equipo"
+                    className="rounded-lg border border-amber-700/30 bg-amber-50 px-3 py-3 text-sm text-amber-700"
+                  >
+                    <h2 id="comentarios-equipo" className="flex items-center gap-2 font-semibold mb-2">
+                      <MessageSquare size={16} aria-hidden="true" />
+                      Comentarios del equipo de GeoKaia
+                    </h2>
+                    <ul className="flex flex-col gap-2">
+                      {comentariosEquipo.map((c) => (
+                        <li key={c.id}>
+                          <p className="whitespace-pre-wrap">{c.texto}</p>
+                          <p className="text-xs opacity-80">
+                            {new Date(c.createdAt).toLocaleDateString("es-NI", { day: "numeric", month: "short", year: "numeric" })}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-2 text-xs">Corregí lo que te piden en el formulario de abajo y guardá los cambios.</p>
+                  </section>
                 )}
                 {lugar.estado === "RECHAZADO" && (
                   <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">

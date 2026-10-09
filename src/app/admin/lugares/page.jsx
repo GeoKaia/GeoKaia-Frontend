@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Pencil, Trash2, ArrowLeft } from "lucide-react";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
+import ComentariosNegocio from "@/components/ComentariosNegocio";
 import {
   obtenerTodosLosLugares,
   actualizarLugarAdmin,
@@ -16,6 +17,12 @@ import {
 import { obtenerToken } from "@/lib/auth";
 import { normalizarUrlImagen } from "@/lib/imagenes";
 import { normalizarUrlPanorama } from "@/lib/panorama";
+
+// La edición directa de lugares ajenos está OCULTA por defecto: no es buena imagen que el equipo cambie lo que
+// escribió cada negocio. Se deja un comentario y el negocio corrige lo suyo. Para volver a mostrar el botón
+// «Editar» (por ejemplo para cargar contenido antes de una entrega) hay que poner NEXT_PUBLIC_ADMIN_EDICION=true
+// acá y ADMIN_EDICION_LUGARES=true en el backend: son dos candados.
+const EDICION_ADMIN = process.env.NEXT_PUBLIC_ADMIN_EDICION === "true";
 
 const SelectorUbicacion = dynamic(() => import("@/components/SelectorUbicacion"), {
   ssr: false,
@@ -234,12 +241,10 @@ export default function AdminLugaresPage() {
                 </Link>
               </div>
               <p className="text-sm text-brand-text/70 mb-1">
-                Ver, editar y borrar cualquier lugar sin pasar por la cuenta del negocio dueño — útil para corregir
-                pines o cargar contenido rápido antes de la entrega.
+                Revisá cualquier lugar y dejale un comentario al negocio para que corrija lo suyo desde su panel.
               </p>
-              <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2 mb-6">
-                Esto omite el modelo normal de permisos (cada negocio administra lo suyo). Es un atajo puntual, no
-                el flujo pensado para producción.
+              <p className="text-xs text-brand-text/70 mb-6">
+                Cada negocio administra su propio lugar: el equipo comenta, aprueba o rechaza, pero no lo reescribe.
               </p>
             </>
           )}
@@ -280,14 +285,17 @@ export default function AdminLugaresPage() {
                       )}
                       {!lugar.negocio && <> · Sin negocio dueño (cargado directamente)</>}
                     </p>
+                    {lugar.negocio && <ComentariosNegocio lugarId={lugar.id} />}
                   </div>
                   <div className="flex sm:flex-col gap-2 shrink-0">
-                    <button
-                      onClick={() => abrirEdicion(lugar)}
-                      className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-primary text-white text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity"
-                    >
-                      <Pencil size={14} /> Editar
-                    </button>
+                    {EDICION_ADMIN && (
+                      <button
+                        onClick={() => abrirEdicion(lugar)}
+                        className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-primary text-white text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity"
+                      >
+                        <Pencil size={14} /> Editar
+                      </button>
+                    )}
                     <button
                       onClick={() => { setBorrandoId(lugar.id); setErrorBorrar(null); }}
                       className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-red-300 text-red-700 text-sm font-semibold px-4 py-2 hover:bg-red-50 transition-colors"

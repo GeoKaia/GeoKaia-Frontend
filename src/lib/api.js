@@ -167,6 +167,36 @@ function obtenerRutasBase() {
 }
 export const obtenerRutas = conLoader(obtenerRutasBase, CON_LOADER);
 
+// --- Comentarios del equipo hacia los negocios ---
+
+export function obtenerComentariosLugar(token, id) {
+  return apiFetch(`/api/lugares/admin/${id}/comentarios`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function crearComentarioLugar(token, id, texto) {
+  return apiFetch(`/api/lugares/admin/${id}/comentarios`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ texto }),
+  });
+}
+
+export function eliminarComentarioLugar(token, comentarioId) {
+  return apiFetch(`/api/lugares/admin/comentarios/${comentarioId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+// [Negocio] comentarios que el equipo dejó en MI lugar
+export function obtenerMisComentarios(token) {
+  return apiFetch("/api/lugares/mi-lugar/comentarios", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
 // --- Rutas [Admin] (requiere JWT de una cuenta con esAdmin) ---
 
 export function crearRuta(token, datos) {
