@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import PlaceCard from "@/components/PlaceCard";
+import SugerenciaNegocio from "@/components/SugerenciaNegocio";
 import { obtenerTodosLosLugares } from "@/lib/api";
 import { obtenerToken } from "@/lib/auth";
 
@@ -58,6 +59,7 @@ export default function AdminLugaresPage() {
                     )}
                     {!lugar.negocio && <> · Sin negocio dueño (cargado directamente)</>}
                   </p>
+                  <SugerenciaNegocio lugar={lugar} />
                 </div>
               ))}
             </div>
