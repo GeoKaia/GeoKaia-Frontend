@@ -110,7 +110,7 @@ const SECCIONES = [
         <P>
           El plan Gratis incluye tu pin en el mapa con enlaces a Waze y Google Maps y los datos básicos del lugar. El plan
           Premium agrega foto 360°, video, galería de fotos, menú digital y audio descriptivo, y se informa con un precio
-          de referencia de USD 15 por mes.
+          de referencia de USD 10 por mes.
         </P>
         <P>
           Los pagos en línea todavía no están habilitados: durante esta etapa el plan Premium se activa sin costo para que
