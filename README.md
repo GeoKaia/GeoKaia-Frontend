@@ -159,7 +159,7 @@ Copiá `.env.example` a `.env.local` si necesitás cambiar el valor por default:
 
 | Variable | Obligatoria | Descripción |
 |---|---|---|
-| `BACKEND_URL` | No | URL del backend, solo del lado del servidor. Next reenvía `/api/*` a esa dirección (rewrites) y el proxy de sesión la usa para validar la cookie. Default: `https://geokaia-backend.onrender.com`. Usá `http://localhost:4000` para un backend local |
+| `BACKEND_URL` | No | URL del backend, solo del lado del servidor. Next reenvía `/api/*` a esa dirección (rewrites). Default: `https://geokaia-backend.onrender.com`. Usá `http://localhost:4000` para un backend local |
 
 ---
 
