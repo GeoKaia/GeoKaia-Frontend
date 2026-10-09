@@ -202,6 +202,7 @@ src/
 | `/destacados` | Público | Lugares con tier Premium (galería, video y visor 360°) |
 | `/negocios`, `/sobre`, `/leads` | Público | Información institucional y formulario de contacto |
 | `/negocio/registro`, `/negocio/login` | Público | Alta de cuenta de negocio (2FA) e inicio de sesión |
+| `/olvide-password`, `/restablecer-password` | Público | Pedir el enlace de restablecimiento y elegir una contraseña nueva (enlace de un solo uso + código 2FA) |
 | `/panel-negocio` | Negocio | Elegir plan (Premium con pasarela de pago simulada: Banpro / Pagadito), registrar y editar el lugar propio |
 | `/ajustes` | Público / Negocio | Modo oscuro, tamaño de letra y enlaces legales (todos); cerrar sesión y borrar cuenta (negocio) |
 | `/privacidad`, `/terminos` | Público | Política de Privacidad y Términos y Condiciones |
@@ -213,7 +214,7 @@ src/
 ## Seguridad y validación
 
 - **Formularios validados**: cada formulario valida en el cliente antes de enviar (longitudes mínimas, campos requeridos) y además confía en la validación del backend (Zod) como última barrera.
-- **Contraseña fuerte al registrarse**: mínimo 12 caracteres con mayúscula, minúscula, número y símbolo, sin espacios ni claves comunes (`src/lib/password.js`, con lista de requisitos en vivo). El backend aplica la misma política y es quien decide.
+- **Contraseña fuerte**: mínimo 12 caracteres con una mayúscula, un número y un carácter especial (se permiten minúsculas, espacios y frases largas; máx. 128). `src/lib/password.js` + `RequisitosContrasena` muestran en vivo qué falta y los formularios no borran lo escrito al fallar; el backend repite todas las validaciones y es quien decide. Se aplica al registro, al cambio de contraseña (Ajustes → «Cambiar contraseña», con la actual y el código 2FA) y al restablecimiento (`/olvide-password` y `/restablecer-password`, con enlace de un solo uso y código 2FA). Las contraseñas se guardan con Argon2id en el backend.
 - **Pago simulado**: el plan Premium no pide datos de tarjeta. Ofrece «Pagar con Banpro» / «Pagar con Pagadito» (abre el link configurado en `NEXT_PUBLIC_PAGO_*_URL` o muestra una redirección simulada) y «Ya pagué — continuar con la demo» mantiene el flujo.
 - **Comentarios en vez de edición ajena**: el admin deja notas al negocio (`ComentariosNegocio`) y el negocio las ve en su panel y corrige lo suyo. El botón «Editar» del admin está oculto salvo que se active `NEXT_PUBLIC_ADMIN_EDICION=true` (y `ADMIN_EDICION_LUGARES=true` en el backend).
 - **Rutas protegidas por rol**: `src/app/admin/layout.jsx` pregunta al servidor (`GET /api/auth/me`) antes de mostrar cualquier pantalla de `/admin/*`: sin sesión redirige a `/admin/login`; con sesión sin rol de administrador muestra «Acceso denegado». Es solo para no mostrar pantallas que no corresponden: la API verifica sesión y rol en cada petición, y es lo que realmente protege.
