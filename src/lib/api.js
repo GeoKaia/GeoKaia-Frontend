@@ -260,8 +260,7 @@ export function actualizarEstadoLugar(token, id, estado) {
   });
 }
 
-// Acceso amplio de admin a TODOS los lugares (cualquier negocio, cualquier estado) —
-// pedido puntual para acelerar la carga de contenido antes de la entrega final.
+// Supervisión de solo lectura de TODOS los lugares (cualquier negocio, cualquier estado).
 function obtenerTodosLosLugaresBase(token) {
   return apiFetch("/api/lugares/admin/todos", {
     cache: "no-store",
@@ -269,21 +268,6 @@ function obtenerTodosLosLugaresBase(token) {
   });
 }
 export const obtenerTodosLosLugares = conLoader(obtenerTodosLosLugaresBase, CON_LOADER);
-
-export function actualizarLugarAdmin(token, id, cambios) {
-  return apiFetch(`/api/lugares/admin/${id}`, {
-    method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` },
-    body: JSON.stringify(cambios),
-  });
-}
-
-export function eliminarLugarAdmin(token, id) {
-  return apiFetch(`/api/lugares/admin/${id}`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-}
 
 // --- Auth de negocio (público) ---
 
