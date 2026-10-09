@@ -132,7 +132,7 @@ En producción, la app está deployada en [Vercel](https://vercel.com), con depl
 
 **Decisiones clave:**
 - **Sin estado global ni librería de fetching**: cada página hace `fetch` directo a través de las funciones de `src/lib/api.js` y maneja su propio estado de carga/error con `useState`/`useEffect` — a este tamaño de proyecto, Redux/React Query hubiera sido sobre-ingeniería.
-- **Sesión en cookie httpOnly**: el backend deja el JWT en la cookie `gk_sesion` (httpOnly, Secure, SameSite=Lax, 8 h); JavaScript no puede leerla. El frontend llama a `/api/*` en su propio dominio (rewrites hacia el backend), pregunta `GET /api/auth/me` para saber quién es y `src/proxy.js` valida la sesión en el servidor antes de mostrar `/admin/*` y `/panel-negocio`.
+- **Sesión en cookies httpOnly**: el backend deja el JWT en la cookie `gk_sesion` (httpOnly, Secure, SameSite=Lax, 8 h) y un token de dispositivo en `gk_dispositivo` (7 días): si alguien borra solo `gk_sesion` desde F12, el servidor la renueva y no se cierra la sesión. JavaScript no puede leer ninguna. El frontend llama a `/api/*` en su propio dominio (rewrites hacia el backend), pregunta `GET /api/auth/me` para saber quién es.
 - **Mapa cargado dinámicamente sin SSR**: `MapaBase` se importa con `next/dynamic({ ssr: false })` porque Leaflet depende de `window`, que no existe en el servidor.
 - **Imágenes por URL, no upload**: igual que el backend, las fotos se pegan como link (con normalización automática de links de Google Drive/Dropbox y fallback visual si la imagen no carga) — no hay infraestructura de storage de archivos.
 
@@ -159,7 +159,7 @@ Copiá `.env.example` a `.env.local` si necesitás cambiar el valor por default:
 
 | Variable | Obligatoria | Descripción |
 |---|---|---|
-| `BACKEND_URL` | No | URL del backend, solo del lado del servidor. Next reenvía `/api/*` a esa dirección (rewrites) y el proxy de sesión la usa para validar la cookie. Default: `https://geokaia-backend.onrender.com`. Usá `http://localhost:4000` para un backend local |
+| `BACKEND_URL` | No | URL del backend, solo del lado del servidor. Next reenvía `/api/*` a esa dirección (rewrites). Default: `https://geokaia-backend.onrender.com`. Usá `http://localhost:4000` para un backend local |
 | `NEXT_PUBLIC_PAGO_BANPRO_URL` / `NEXT_PUBLIC_PAGO_PAGADITO_URL` | No | Links de pago `https` para la pasarela **simulada** del plan Premium. Con link, se abre en otra pestaña; sin link, se muestra una redirección simulada. La demo siempre puede continuar con «Ya pagué — continuar con la demo» |
 
 ---
@@ -216,7 +216,7 @@ src/
 - **Contraseña fuerte al registrarse**: mínimo 12 caracteres con mayúscula, minúscula, número y símbolo, sin espacios ni claves comunes (`src/lib/password.js`, con lista de requisitos en vivo). El backend aplica la misma política y es quien decide.
 - **Pago simulado**: el plan Premium no pide datos de tarjeta. Ofrece «Pagar con Banpro» / «Pagar con Pagadito» (abre el link configurado en `NEXT_PUBLIC_PAGO_*_URL` o muestra una redirección simulada) y «Ya pagué — continuar con la demo» mantiene el flujo.
 - **Comentarios en vez de edición ajena**: el admin deja notas al negocio (`ComentariosNegocio`) y el negocio las ve en su panel y corrige lo suyo. El botón «Editar» del admin está oculto salvo que se active `NEXT_PUBLIC_ADMIN_EDICION=true` (y `ADMIN_EDICION_LUGARES=true` en el backend).
-- **Rutas protegidas por rol, en el servidor**: `src/proxy.js` consulta al backend (`GET /api/auth/me`) antes de servir `/panel-negocio` y `/admin/*`. Sin sesión válida redirige al login; una cuenta que no es admin que escribe `/admin` vuelve al inicio sin ver la interfaz de administración. La API sigue validando cada petición por su cuenta.
+- **Rutas protegidas por rol**: sin sesión, `/admin/*` y `/panel-negocio` muestran el aviso «Necesitás iniciar sesión» con el botón al login; una cuenta sin permisos de admin ve «Tu cuenta no tiene permisos de administrador». La API valida cada petición (`authMiddleware` y `adminMiddleware`), así que ningún dato se entrega sin sesión válida.
 - **Enlaces seguros**: los links que carga un negocio (video, menú, mapas, galería, 360°) solo se muestran si empiezan con `http://` o `https://` (`src/lib/urls.js`, `src/lib/panorama.js`); un texto como `javascript:...` nunca llega a un `href` ni a un `iframe`. El backend lo rechaza además al guardar.
 - **Sin HTML inyectado**: no se usa `dangerouslySetInnerHTML` con datos de usuarios; React escapa el texto que llega de la API.
 - **Consentimiento**: el registro de un negocio exige marcar la aceptación de los Términos y la Política de Privacidad, y el backend guarda la fecha y la versión aceptadas.

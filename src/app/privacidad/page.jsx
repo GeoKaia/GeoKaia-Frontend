@@ -152,6 +152,7 @@ const SECCIONES = [
         <Lista
           items={[
             "gk_sesion (cookie): tu sesión de negocio o de administración. Es una cookie técnica, httpOnly (los scripts de la página no pueden leerla) y vence a las 8 horas o al cerrar sesión.",
+            "gk_dispositivo (cookie): identifica este dispositivo para renovar tu sesión sin pedirte el código otra vez. Es técnica, httpOnly, solo viaja a la API y vence a los 7 días o al cerrar sesión.",
             "geokaia-onboarding (almacenamiento local): que ya viste la bienvenida.",
             "geokaia-theme y geokaia-font-scale (almacenamiento local): tus preferencias de modo oscuro y tamaño de letra.",
           ]}
